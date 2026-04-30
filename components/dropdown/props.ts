@@ -3,8 +3,6 @@ import PropTypes from '../_util/vue-types';
 
 import buttonTypes from '../button/buttonTypes';
 import type { MouseEventHandler } from '../_util/EventInterface';
-import type { MenuProps } from '../menu';
-import { booleanType, eventType, objectType, someType } from '../_util/type';
 
 export type Align = {
   points?: [string, string];
@@ -25,19 +23,17 @@ export type DropdownArrowOptions = {
   pointAtCenter?: boolean;
 };
 const dropdownProps = () => ({
-  arrow: someType<boolean | DropdownArrowOptions>([Boolean, Object]),
+  arrow: {
+    type: [Boolean, Object] as PropType<boolean | DropdownArrowOptions>,
+    default: undefined,
+  },
   trigger: {
     type: [Array, String] as PropType<Trigger[] | Trigger>,
   },
-  menu: objectType<MenuProps>(),
   overlay: PropTypes.any,
-  /** @deprecated Please use `open` instead */
-  visible: booleanType(),
-  open: booleanType(),
-  disabled: booleanType(),
-  danger: booleanType(),
-  autofocus: booleanType(),
-  align: objectType<Align>(),
+  visible: { type: Boolean, default: undefined },
+  disabled: { type: Boolean, default: undefined },
+  align: { type: Object as PropType<Align> },
   getPopupContainer: Function as PropType<(triggerNode: HTMLElement) => HTMLElement>,
   prefixCls: String,
   transitionName: String,
@@ -52,25 +48,17 @@ const dropdownProps = () => ({
     | 'bottomRight'
   >,
   overlayClassName: String,
-  overlayStyle: objectType<CSSProperties>(),
-  forceRender: booleanType(),
+  overlayStyle: { type: Object as PropType<CSSProperties>, default: undefined as CSSProperties },
+  forceRender: { type: Boolean, default: undefined },
   mouseEnterDelay: Number,
   mouseLeaveDelay: Number,
   openClassName: String,
-  minOverlayWidthMatchTrigger: booleanType(),
-  destroyPopupOnHide: booleanType(),
-  /** @deprecated Please use `onOpenChange` instead */
+  minOverlayWidthMatchTrigger: { type: Boolean, default: undefined },
+  destroyPopupOnHide: { type: Boolean, default: undefined },
   onVisibleChange: {
     type: Function as PropType<(val: boolean) => void>,
   },
-  /** @deprecated Please use `onUpdate:open` instead */
   'onUpdate:visible': {
-    type: Function as PropType<(val: boolean) => void>,
-  },
-  onOpenChange: {
-    type: Function as PropType<(val: boolean) => void>,
-  },
-  'onUpdate:open': {
     type: Function as PropType<(val: boolean) => void>,
   },
 });
@@ -82,12 +70,14 @@ const dropdownButtonProps = () => ({
   size: String as PropType<'small' | 'large'>,
   htmlType: buttonTypesProps.htmlType,
   href: String,
-  disabled: booleanType(),
+  disabled: { type: Boolean, default: undefined },
   prefixCls: String,
   icon: PropTypes.any,
   title: String,
   loading: buttonTypesProps.loading,
-  onClick: eventType<MouseEventHandler>(),
+  onClick: {
+    type: Function as PropType<MouseEventHandler>,
+  },
 });
 
 export { dropdownProps, dropdownButtonProps };

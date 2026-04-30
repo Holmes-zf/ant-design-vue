@@ -51,8 +51,7 @@ If you want to use a customized trigger, you can hide the default one by setting
     </a-layout>
   </a-layout>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import {
   UserOutlined,
   VideoCameraOutlined,
@@ -60,8 +59,22 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from '@ant-design/icons-vue';
-const selectedKeys = ref<string[]>(['1']);
-const collapsed = ref<boolean>(false);
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    UserOutlined,
+    VideoCameraOutlined,
+    UploadOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined,
+  },
+  setup() {
+    return {
+      selectedKeys: ref<string[]>(['1']),
+      collapsed: ref<boolean>(false),
+    };
+  },
+});
 </script>
 <style>
 #components-layout-demo-custom-trigger .trigger {

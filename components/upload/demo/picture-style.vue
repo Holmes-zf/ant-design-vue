@@ -43,42 +43,54 @@ If uploaded file is a picture, the thumbnail can be shown.
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import { UploadOutlined } from '@ant-design/icons-vue';
+import { defineComponent, ref } from 'vue';
 import type { UploadProps } from 'ant-design-vue';
-const fileList = ref<UploadProps['fileList']>([
-  {
-    uid: '-1',
-    name: 'xxx.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+
+export default defineComponent({
+  components: {
+    UploadOutlined,
   },
-  {
-    uid: '-2',
-    name: 'yyy.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  setup() {
+    const fileList = ref<UploadProps['fileList']>([
+      {
+        uid: '-1',
+        name: 'xxx.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+      {
+        uid: '-2',
+        name: 'yyy.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+    ]);
+    const fileList1 = ref<UploadProps['fileList']>([
+      {
+        uid: '-1',
+        name: 'xxx.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+      {
+        uid: '-2',
+        name: 'yyy.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+    ]);
+    return {
+      fileList,
+      fileList1,
+    };
   },
-]);
-const fileList1 = ref<UploadProps['fileList']>([
-  {
-    uid: '-1',
-    name: 'xxx.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: '-2',
-    name: 'yyy.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-]);
+});
 </script>
 <style scoped>
 /* tile uploaded pictures */

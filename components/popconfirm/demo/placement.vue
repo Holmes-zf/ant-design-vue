@@ -112,18 +112,28 @@ There are 12 `placement` options available. Use `arrowPointAtCenter` if you want
     </div>
   </div>
 </template>
-<script lang="ts" setup>
+<script>
 import { message } from 'ant-design-vue';
-const buttonWidth = 70;
+import { defineComponent } from 'vue';
+export default defineComponent({
+  setup() {
+    const buttonWidth = 70;
 
-const text = 'Are you sure to delete this task?';
+    const text = 'Are you sure to delete this task?';
 
-const confirm = () => {
-  message.info('Clicked on Yes.');
-};
+    const confirm = () => {
+      message.info('Clicked on Yes.');
+    };
+    return {
+      buttonWidth,
+      text,
+      confirm,
+    };
+  },
+});
 </script>
 <style scoped>
-:deep(#components-a-popconfirm-demo-placement) .ant-btn {
+#components-a-popconfirm-demo-placement .ant-btn {
   width: 70px;
   text-align: center;
   padding: 0;

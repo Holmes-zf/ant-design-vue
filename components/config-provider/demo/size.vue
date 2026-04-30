@@ -59,32 +59,40 @@ Config component default size.
     </div>
   </a-config-provider>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-type SizeType = 'small' | 'middle' | 'large';
+<script>
+import { defineComponent, ref } from 'vue';
 
-const componentSize = ref<SizeType>('small');
-const columns = [
-  { title: 'Name', dataIndex: 'name' },
-  { title: 'Age', dataIndex: 'age' },
-];
-const dataSource = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
+export default defineComponent({
+  setup() {
+    const componentSize = ref('small');
+    const columns = [
+      { title: 'Name', dataIndex: 'name' },
+      { title: 'Age', dataIndex: 'age' },
+    ];
+    const dataSource = [
+      {
+        key: '1',
+        name: 'John Brown',
+        age: 32,
+      },
+      {
+        key: '2',
+        name: 'Jim Green',
+        age: 42,
+      },
+      {
+        key: '3',
+        name: 'Joe Black',
+        age: 32,
+      },
+    ];
+    return {
+      componentSize,
+      columns,
+      dataSource,
+    };
   },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-  },
-];
+});
 </script>
 <style scoped>
 .example {

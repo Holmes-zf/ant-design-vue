@@ -1,12 +1,10 @@
 import type { ExtractPropTypes, PropType } from 'vue';
-import { shallowRef, onMounted, defineComponent, onBeforeUnmount } from 'vue';
+import { onMounted, ref, defineComponent, onBeforeUnmount } from 'vue';
 import Button from '../button';
 import type { ButtonProps } from '../button';
 import type { LegacyButtonType } from '../button/buttonTypes';
 import { convertLegacyProps } from '../button/buttonTypes';
 import useDestroyed from './hooks/useDestroyed';
-import { objectType } from './type';
-import { findDOMNode } from './props-util';
 
 const actionButtonProps = {
   type: {
@@ -16,15 +14,15 @@ const actionButtonProps = {
   close: Function,
   autofocus: Boolean,
   prefixCls: String,
-  buttonProps: objectType<ButtonProps>(),
+  buttonProps: Object as PropType<ButtonProps>,
   emitEvent: Boolean,
   quitOnNullishReturnValue: Boolean,
 };
 
 export type ActionButtonProps = ExtractPropTypes<typeof actionButtonProps>;
 
-function isThenable<T>(thing?: PromiseLike<T>): boolean {
-  return !!(thing && thing.then);
+function isThenable(thing?: PromiseLike<any>): boolean {
+  return !!(thing && !!thing.then);
 }
 
 export default defineComponent({
@@ -32,25 +30,22 @@ export default defineComponent({
   name: 'ActionButton',
   props: actionButtonProps,
   setup(props, { slots }) {
-    const clickedRef = shallowRef<boolean>(false);
-    const buttonRef = shallowRef();
-    const loading = shallowRef(false);
+    const clickedRef = ref<boolean>(false);
+    const buttonRef = ref();
+    const loading = ref(false);
     let timeoutId: any;
     const isDestroyed = useDestroyed();
     onMounted(() => {
       if (props.autofocus) {
-        timeoutId = setTimeout(() => findDOMNode(buttonRef.value)?.focus?.());
+        timeoutId = setTimeout(() => buttonRef.value.$el?.focus());
       }
     });
     onBeforeUnmount(() => {
       clearTimeout(timeoutId);
     });
 
-    const onInternalClose = (...args: any[]) => {
-      props.close?.(...args);
-    };
-
     const handlePromiseOnOk = (returnValueOfOnOk?: PromiseLike<any>) => {
+      const { close } = props;
       if (!isThenable(returnValueOfOnOk)) {
         return;
       }
@@ -60,46 +55,48 @@ export default defineComponent({
           if (!isDestroyed.value) {
             loading.value = false;
           }
-          onInternalClose(...args);
+          close(...args);
           clickedRef.value = false;
         },
         (e: Error) => {
+          // Emit error when catch promise reject
+          // eslint-disable-next-line no-console
+          console.error(e);
           // See: https://github.com/ant-design/ant-design/issues/6183
           if (!isDestroyed.value) {
             loading.value = false;
           }
           clickedRef.value = false;
-          return Promise.reject(e);
         },
       );
     };
 
     const onClick = (e: MouseEvent) => {
-      const { actionFn } = props;
+      const { actionFn, close = () => {} } = props;
       if (clickedRef.value) {
         return;
       }
       clickedRef.value = true;
       if (!actionFn) {
-        onInternalClose();
+        close();
         return;
       }
-      let returnValueOfOnOk: PromiseLike<any>;
+      let returnValueOfOnOk;
       if (props.emitEvent) {
         returnValueOfOnOk = actionFn(e);
         if (props.quitOnNullishReturnValue && !isThenable(returnValueOfOnOk)) {
           clickedRef.value = false;
-          onInternalClose(e);
+          close(e);
           return;
         }
       } else if (actionFn.length) {
-        returnValueOfOnOk = actionFn(props.close);
+        returnValueOfOnOk = actionFn(close);
         // https://github.com/ant-design/ant-design/issues/23358
         clickedRef.value = false;
       } else {
         returnValueOfOnOk = actionFn();
         if (!returnValueOfOnOk) {
-          onInternalClose();
+          close();
           return;
         }
       }

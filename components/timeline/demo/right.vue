@@ -27,6 +27,12 @@ Right alternate timeline.
     <a-timeline-item>Network problems being solved 2015-09-01</a-timeline-item>
   </a-timeline>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    ClockCircleOutlined,
+  },
+});
 </script>

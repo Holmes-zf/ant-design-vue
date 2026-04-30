@@ -1,6 +1,40 @@
 <template>
   <header id="header" :class="headerClassName">
-    <a-row :style="{ flexFlow: 'nowrap', height: 64, position: 'relative' }">
+    <!-- <div v-if="visibleAdblockBanner" class="adblock-banner">
+      <template v-if="isZhCN">
+        我们检测到你可能使用了 AdBlock 或 Adblock
+        Plus，它会影响到正常功能的使用（如复制、展开代码等）。
+        <br />
+        你可以将 Ant Design Vue 加入白名单，以便我们更好地提供服务。
+      </template>
+      <template v-else>
+        We have detected that you may use AdBlock or Adblock Plus, which will affect the use of
+        normal functions (such as copying, expanding code, etc.)
+        <br />
+        You can add Ant Design Vue to the whitelist so that we can provide better services.
+      </template>
+
+      <CloseOutlined class="close-icon" @click="visibleAdblockBanner = false" />
+    </div> -->
+    <div v-if="visibleAlertBanner && isZhCN" class="alert-banner">
+      Surely Form 2.0 发布，快速定制自己的问卷平台 &nbsp;&nbsp;
+      <a href="https://form.antdv.com">立即体验</a>
+
+      <CloseOutlined class="close-icon" @click="visibleAlertBanner = false" />
+    </div>
+    <a-popover
+      v-model:visible="menuVisible"
+      overlay-class-name="popover-menu"
+      placement="bottomRight"
+      trigger="click"
+      arrow-point-at-center
+    >
+      <UnorderedListOutlined class="nav-phone-icon" />
+      <template #content>
+        <Menu :is-mobile="isMobile" />
+      </template>
+    </a-popover>
+    <a-row :style="{ flexFlow: 'nowrap', height: 64 }">
       <a-col v-bind="colProps[0]">
         <Logo />
       </a-col>
@@ -13,73 +47,36 @@
         />
         <Menu v-if="!isMobile" />
       </a-col>
-      <a-popover
-        v-model:open="menuOpen"
-        overlay-class-name="popover-menu"
-        placement="bottomRight"
-        trigger="click"
-        arrow-point-at-center
-      >
-        <UnorderedListOutlined class="nav-phone-icon" />
-        <template #content>
-          <Menu :is-mobile="isMobile" />
-        </template>
-      </a-popover>
     </a-row>
-    <a-modal
-      title="新版发布，邀您体验"
-      :open="visibleAlertBanner"
-      :footer="null"
-      @update:open="visibleAlertBanner = false"
-    >
-      <ul>
-        <li class="alert-list-item">
-          <strong>Ant Design Vue 4</strong>
-          ：五大新组件，全新 Design Token
-        </li>
-        <li class="alert-list-item">
-          <strong>Surely Table</strong>
-          ：支持高性能编辑模式了
-          <a target="_blank" href="https://www.surelyvue.com/">立即体验</a>
-        </li>
-        <li class="alert-list-item">
-          <strong>Admin Pro</strong>
-          ：已同步更新 v4 版本
-          <a target="_blank" href="https://store.antdv.com/pro/preview/workplace">立即体验</a>
-        </li>
-      </ul>
-    </a-modal>
   </header>
 </template>
 <script lang="ts">
-import type { GlobalConfig } from '../../type';
+import type { GlobalConfig } from '../../App.vue';
 import { GLOBAL_CONFIG } from '../../SymbolKey';
 import { getLocalizedPathname } from '../../utils/util';
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Logo from './Logo.vue';
 import Menu from './Menu.vue';
-import { UnorderedListOutlined } from '@ant-design/icons-vue';
+import { UnorderedListOutlined, CloseOutlined } from '@ant-design/icons-vue';
 import SearchBox from './SearchBox.vue';
+import { version } from 'ant-design-vue';
 export default defineComponent({
   components: {
     Logo,
     Menu,
     UnorderedListOutlined,
     SearchBox,
-    // CloseOutlined,
+    CloseOutlined,
   },
   setup() {
     const route = useRoute();
-    const cancelButtonProps: any = {
-      style: { display: 'none' },
-    };
     const globalConfig = inject<GlobalConfig>(GLOBAL_CONFIG);
     const isHome = computed(() => {
       return ['', 'index', 'index-cn'].includes(route.path);
     });
 
-    const menuOpen = ref(false);
+    const menuVisible = ref(false);
     const colProps = isHome.value
       ? [{ flex: 'none' }, { flex: 'auto' }]
       : [
@@ -131,13 +128,12 @@ export default defineComponent({
     watch(globalConfig?.blocked, val => {
       visibleAdblockBanner.value = val;
     });
-    // const alertKey = 'ant-design-vue-4-alert';
-    const visibleAlertBanner = ref(false);
-    // watch(visibleAlertBanner, () => {
-    //   if (!visibleAlertBanner.value) {
-    //     localStorage.setItem(alertKey, version);
-    //   }
-    // });
+    const visibleAlertBanner = ref(!localStorage.getItem('surelyform_v2'));
+    watch(visibleAlertBanner, () => {
+      if (!visibleAlertBanner.value) {
+        localStorage.setItem('surelyform_v2', version);
+      }
+    });
     return {
       isZhCN: globalConfig.isZhCN,
       isMobile: globalConfig.isMobile,
@@ -149,10 +145,9 @@ export default defineComponent({
         'home-header': isHome.value,
       },
       colProps,
-      menuOpen,
+      menuVisible,
       onTriggerSearching,
       visibleAlertBanner,
-      cancelButtonProps,
     };
   },
 });
@@ -167,9 +162,10 @@ export default defineComponent({
   line-height: 28px;
   color: #8590a6;
   text-align: center;
-  background-color: #141414;
+  background-color: #ebebeb;
 }
 .alert-banner {
+  background-color: var(--ant-primary-color);
   color: #fff;
   padding: 5px;
 }
@@ -184,8 +180,5 @@ export default defineComponent({
   position: absolute;
   top: 15px;
   right: 15px;
-}
-.alert-list-item {
-  padding: 8px 0;
 }
 </style>

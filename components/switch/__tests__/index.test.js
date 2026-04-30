@@ -39,7 +39,7 @@ describe('Switch', () => {
       },
     });
     expect(errorSpy).toHaveBeenCalledWith(
-      'Warning: [ant-design-vue: Switch] `value` is not validate prop, do you mean `checked`?',
+      'Warning: [antdv: Switch] `value` is not validate prop, do you mean `checked`?',
     );
     errorSpy.mockRestore();
   });
@@ -93,12 +93,12 @@ describe('Switch', () => {
       wrapper.find('button').trigger('click');
     });
     expect(checked.value).toBe(2);
-    expect(wrapper.find('.ant-switch-inner').text()).toBe('onoff');
+    expect(wrapper.find('.ant-switch-inner').text()).toBe('on');
 
     await asyncExpect(() => {
       wrapper.find('button').trigger('click');
     });
     expect(checked.value).toBe(1);
-    expect(wrapper.find('.ant-switch-inner').text()).toBe('onoff');
+    expect(wrapper.find('.ant-switch-inner').text()).toBe('off');
   });
 });

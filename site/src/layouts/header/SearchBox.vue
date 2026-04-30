@@ -5,7 +5,7 @@
       ref="inputRef"
       :placeholder="searchPlaceholder"
       @focus="triggerFocus(true)"
-      @blur="triggerFocus(false)"
+      @blue="triggerFocus(false)"
     ></a-input>
   </div>
 </template>

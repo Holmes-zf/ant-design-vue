@@ -80,8 +80,15 @@ Create a reusable Vue component by using `Icon`. The property / slot `component`
     <HomeOutlined />
   </a-space>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import Icon, { HomeOutlined } from '@ant-design/icons-vue';
+export default defineComponent({
+  components: {
+    Icon,
+    HomeOutlined,
+  },
+});
 </script>
 <style scoped>
 .custom-icons-list :deep(.anticon) {

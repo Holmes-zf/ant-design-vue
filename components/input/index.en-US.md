@@ -2,8 +2,7 @@
 category: Components
 type: Data Entry
 title: Input
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*Y3R0RowXHlAAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*sBqqTatJ-AkAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 ---
 
 A basic widget for getting the user input is a text field. Keyboard and mouse can be used for providing or changing data.
@@ -23,15 +22,13 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | addonBefore | The label text displayed before (on the left side of) the input field. | string\|slot |  |  |
 | allowClear | allow to remove input content with clear icon | boolean |  |  |
 | bordered | Whether has border style | boolean | true | 4.5.0 |
-| clearIcon | custom clear icon when allowClear | slot | `<CloseCircleFilled />` | 3.3.0 |
 | defaultValue | The initial input content | string |  |  |
 | disabled | Whether the input is disabled. | boolean | false |  |
 | id | The ID for input | string |  |  |
 | maxlength | max length | number |  | 1.5.0 |
 | prefix | The prefix icon for the Input. | string\|slot |  |  |
-| showCount | Whether show text count | boolean \| { formatter: (info: { value: string, count: number, maxLength?: number }) => string | false | 3.0 |
-| status | Set validation status | 'error' \| 'warning' | - | 3.3.0 |
-| size | The size of the input box. Note: in the context of a form, the `middle` size is used. Available: `large` `middle` `small` | string | - |  |
+| showCount | Whether show text count | boolean | false | 3.0 |
+| size | The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small` | string | `default` |  |
 | suffix | The suffix icon for the Input. | string\|slot |  |  |
 | type | The type of input, see: [MDN](https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types)(use `<a-textarea />` instead of `type="textarea"`) | string | `text` |  |
 | value(v-model) | The input content value | string |  |  |
@@ -52,7 +49,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | allowClear | allow to remove input content with clear icon | boolean |  | 1.5.0 |  |
 | autosize | Height autosize feature, can be set to `true | false`or an object`{ minRows: 2, maxRows: 6 }` | boolean\|object | false |  |
 | defaultValue | The initial input content | string |  |  |  |
-| showCount | Whether show text count | boolean \| { formatter: (info: { value: string, count: number, maxLength?: number }) => string | false |  |  |
+| showCount | Whether show text count | boolean | false |  |  |
 | value(v-model) | The input content value | string |  |  |  |
 
 ### TextArea Events
@@ -94,8 +91,6 @@ Supports all props of `Input`.
 
 #### Input.Password (Added in 1.14.0)
 
-| Property         | Description                                            | Type    | Default |
-| ---------------- | ------------------------------------------------------ | ------- | ------- |
-| visible(v-model) | password visibility                                    | boolean | false   |
-| iconRender       | Custom toggle button                                   | slot    | -       |
-| visibilityToggle | Whether show toggle button or control password visible | boolean | true    |
+| Property         | Description                | Type    | Default |
+| ---------------- | -------------------------- | ------- | ------- |
+| visibilityToggle | Whether show toggle button | boolean | true    |

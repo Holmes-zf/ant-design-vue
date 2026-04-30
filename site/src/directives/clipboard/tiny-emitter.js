@@ -1,4 +1,3 @@
-/* eslint-disable prefer-rest-params */
 function E() {
   // Keep this empty so it's easier to inherit from
   // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
@@ -6,7 +5,7 @@ function E() {
 
 E.prototype = {
   on(name, callback, ctx) {
-    const e = this.e || (this.e = {});
+    let e = this.e || (this.e = {});
 
     (e[name] || (e[name] = [])).push({
       fn: callback,
@@ -17,8 +16,7 @@ E.prototype = {
   },
 
   once(name, callback, ctx) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
+    let self = this;
     function listener() {
       self.off(name, listener);
       callback.apply(ctx, arguments);
@@ -29,10 +27,10 @@ E.prototype = {
   },
 
   emit(name) {
-    const data = [].slice.call(arguments, 1);
-    const evtArr = ((this.e || (this.e = {}))[name] || []).slice();
+    let data = [].slice.call(arguments, 1);
+    let evtArr = ((this.e || (this.e = {}))[name] || []).slice();
     let i = 0;
-    const len = evtArr.length;
+    let len = evtArr.length;
 
     for (i; i < len; i++) {
       evtArr[i].fn.apply(evtArr[i].ctx, data);
@@ -42,9 +40,9 @@ E.prototype = {
   },
 
   off(name, callback) {
-    const e = this.e || (this.e = {});
-    const evts = e[name];
-    const liveEvents = [];
+    let e = this.e || (this.e = {});
+    let evts = e[name];
+    let liveEvents = [];
 
     if (evts && callback) {
       for (let i = 0, len = evts.length; i < len; i++) {

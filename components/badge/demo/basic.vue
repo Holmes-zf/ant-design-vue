@@ -30,6 +30,12 @@ Simplest Usage. Badge will be hidden when `count` is `0`, but we can use `showZe
   </a-badge>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
+export default defineComponent({
+  components: {
+    ClockCircleOutlined,
+  },
+});
 </script>

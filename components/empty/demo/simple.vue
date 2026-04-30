@@ -18,7 +18,15 @@ You can choose another style of `image` by setting image to `Empty.PRESENTED_IMA
 <template>
   <a-empty :image="simpleImage" />
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { Empty } from 'ant-design-vue';
-const simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
+export default defineComponent({
+  setup() {
+    return {
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+    };
+  },
+});
 </script>
+```

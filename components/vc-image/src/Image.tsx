@@ -1,4 +1,4 @@
-import type { CSSProperties, PropType } from 'vue';
+import type { ImgHTMLAttributes, CSSProperties, PropType } from 'vue';
 import { ref, watch, defineComponent, computed, onMounted, onUnmounted } from 'vue';
 import isNumber from 'lodash-es/isNumber';
 import cn from '../../_util/classNames';
@@ -32,8 +32,6 @@ export const imageProps = () => ({
   rootClassName: String,
   prefixCls: String,
   previewPrefixCls: String,
-  width: [Number, String],
-  height: [Number, String],
   previewMask: {
     type: [Boolean, Function] as PropType<false | (() => any)>,
     default: undefined,
@@ -66,7 +64,7 @@ export const mergeDefaultValue = <T extends object>(obj: T, defaultValues: objec
 let uuid = 0;
 const ImageInternal = defineComponent({
   compatConfig: { MODE: 3 },
-  name: 'VcImage',
+  name: 'Image',
   inheritAttrs: false,
   props: imageProps(),
   emits: ['click', 'error'],
@@ -99,6 +97,9 @@ const ImageInternal = defineComponent({
       onChange: onPreviewVisibleChange,
     });
 
+    watch(isShowPreview, (val, preVal) => {
+      onPreviewVisibleChange(val, preVal);
+    });
     const status = ref<ImageStatus>(isCustomPlaceholder.value ? 'loading' : 'normal');
     watch(
       () => props.src,
@@ -203,6 +204,8 @@ const ImageInternal = defineComponent({
         placeholder,
         wrapperStyle,
         rootClassName,
+      } = props;
+      const {
         width,
         height,
         crossorigin,
@@ -213,7 +216,7 @@ const ImageInternal = defineComponent({
         usemap,
         class: cls,
         style,
-      } = { ...props, ...attrs } as any;
+      } = attrs as ImgHTMLAttributes;
       const { icons, maskClassName, ...dialogProps } = preview.value;
 
       const wrappperClass = cn(prefixCls, wrapperClassName, rootClassName, {
@@ -227,8 +230,6 @@ const ImageInternal = defineComponent({
         sizes,
         srcset,
         usemap,
-        width,
-        height,
         class: cn(
           `${prefixCls}-img`,
           {
@@ -237,7 +238,7 @@ const ImageInternal = defineComponent({
           cls,
         ),
         style: {
-          height: toSizePx(height),
+          height,
           ...(style as CSSProperties),
         },
       };

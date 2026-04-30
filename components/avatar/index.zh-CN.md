@@ -3,8 +3,7 @@ category: Components
 subtitle: 头像
 type: 数据展示
 title: Avatar
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*JJBSS5lBG4IAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*YbgyQaRGz-UAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg
 ---
 
 用来代表用户或事物，支持图片、图标或字符展示。
@@ -39,4 +38,3 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*YbgyQaRGz-UAAA
 | maxPopoverTrigger | 设置多余头像 Popover 的触发方式 | `hover` \| `focus` \| `click` | `hover` | 3.0 |
 | maxStyle | 多余头像样式 | CSSProperties | - |  |
 | size | 设置头像的大小 | number \| `large` \| `small` \| `default` \| { xs: number, sm: number, ...} | `default` |  |
-| shape | 设置头像的形状 | `circle` \| `square` | `circle` | 4.0 |

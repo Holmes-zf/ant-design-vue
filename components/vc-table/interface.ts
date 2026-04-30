@@ -1,8 +1,8 @@
 /**
- * ColumnType which applied in antd: https://ant.design/components/table-cn/#column
+ * ColumnType which applied in antd: https://ant.design/components/table-cn/#Column
  * - defaultSortOrder
  * - filterDropdown
- * - filterDropdownOpen
+ * - filterDropdownVisible
  * - filtered
  * - filteredValue
  * - filterIcon
@@ -12,7 +12,7 @@
  * - sortOrder
  * - sortDirections
  * - onFilter
- * - onFilterDropdownOpenChange
+ * - onFilterDropdownVisibleChange
  */
 
 import type { CSSProperties, Ref, TdHTMLAttributes } from 'vue';

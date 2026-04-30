@@ -74,9 +74,9 @@ function injectFilter<RecordType>(
   dropdownPrefixCls: string,
   columns: ColumnsType<RecordType>,
   filterStates: FilterState<RecordType>[],
-  locale: TableLocale,
   triggerFilter: (filterState: FilterState<RecordType>) => void,
-  getPopupContainer?: GetPopupContainer | undefined,
+  getPopupContainer: GetPopupContainer | undefined,
+  locale: TableLocale,
   pos?: string,
 ): ColumnsType<RecordType> {
   return columns.map((column, index) => {
@@ -121,9 +121,9 @@ function injectFilter<RecordType>(
           dropdownPrefixCls,
           newColumn.children,
           filterStates,
-          locale,
           triggerFilter,
           getPopupContainer,
+          locale,
           columnPos,
         ),
       };
@@ -187,17 +187,6 @@ export function getFilterData<RecordType>(
   }, data);
 }
 
-function getMergedColumns<RecordType>(
-  rawMergedColumns: ColumnsType<RecordType>,
-): ColumnsType<RecordType> {
-  return rawMergedColumns.flatMap(column => {
-    if ('children' in column) {
-      return [column, ...getMergedColumns(column.children || [])];
-    }
-    return [column];
-  });
-}
-
 interface FilterConfig<RecordType> {
   prefixCls: Ref<string>;
   dropdownPrefixCls: Ref<string>;
@@ -213,7 +202,7 @@ interface FilterConfig<RecordType> {
 function useFilter<RecordType>({
   prefixCls,
   dropdownPrefixCls,
-  mergedColumns: rawMergedColumns,
+  mergedColumns,
   locale,
   onFilterChange,
   getPopupContainer,
@@ -222,52 +211,30 @@ function useFilter<RecordType>({
   Ref<FilterState<RecordType>[]>,
   Ref<Record<string, FilterValue | null>>,
 ] {
-  const mergedColumns = computed(() => getMergedColumns(rawMergedColumns.value));
-
   const [filterStates, setFilterStates] = useState<FilterState<RecordType>[]>(
     collectFilterStates(mergedColumns.value, true),
   );
 
   const mergedFilterStates = computed(() => {
     const collectedStates = collectFilterStates(mergedColumns.value, false);
-    if (collectedStates.length === 0) {
-      return collectedStates;
-    }
-    let filteredKeysIsAllNotControlled = true;
-    let filteredKeysIsAllControlled = true;
-    collectedStates.forEach(({ filteredKeys }) => {
-      if (filteredKeys !== undefined) {
-        filteredKeysIsAllNotControlled = false;
-      } else {
-        filteredKeysIsAllControlled = false;
-      }
-    });
+
+    const filteredKeysIsNotControlled = collectedStates.every(
+      ({ filteredKeys }) => filteredKeys === undefined,
+    );
 
     // Return if not controlled
-    if (filteredKeysIsAllNotControlled) {
-      // Filter column may have been removed
-      const keyList = (mergedColumns.value || []).map((column, index) =>
-        getColumnKey(column, getColumnPos(index)),
-      );
-      return filterStates.value
-        .filter(({ key }) => keyList.includes(key))
-        .map(item => {
-          const col = mergedColumns.value[keyList.findIndex(key => key === item.key)];
-          return {
-            ...item,
-            column: {
-              ...item.column,
-              ...col,
-            },
-            forceFiltered: col.filtered,
-          };
-        });
+    if (filteredKeysIsNotControlled) {
+      return filterStates.value;
     }
 
+    const filteredKeysIsAllControlled = collectedStates.every(
+      ({ filteredKeys }) => filteredKeys !== undefined,
+    );
+
     devWarning(
-      filteredKeysIsAllControlled,
+      filteredKeysIsNotControlled || filteredKeysIsAllControlled,
       'Table',
-      'Columns should all contain `filteredValue` or not contain `filteredValue`.',
+      '`FilteredKeys` should all be controlled or not controlled.',
     );
 
     return collectedStates;
@@ -288,9 +255,9 @@ function useFilter<RecordType>({
       dropdownPrefixCls.value,
       innerColumns,
       mergedFilterStates.value,
-      locale.value,
       triggerFilter,
       getPopupContainer.value,
+      locale.value,
     );
   };
   return [transformColumns, mergedFilterStates, filters];

@@ -3,8 +3,7 @@ category: Components
 cols: 1
 type: Navigation
 title: Menu
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*KeyQQL5iKkkAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*Vn4XSqJFAxcAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 ---
 
 A versatile menu for navigation.
@@ -23,20 +22,30 @@ More layouts with navigation: [Layout](/components/layout).
 
 ## API
 
+```html
+<template>
+  <a-menu>
+    <a-menu-item>Menu</a-menu-item>
+    <a-sub-menu key="sub1" title="SubMenu">
+      <a-menu-item>SubMenuItem</a-menu-item>
+    </a-sub-menu>
+  </a-menu>
+</template>
+```
+
 ### Menu
 
 | Param | Description | Type | Default value |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | forceSubMenuRender | render submenu into DOM before it shows | boolean | false |
 | inlineCollapsed | specifies the collapsed status when menu is inline mode | boolean | - |
 | inlineIndent | indent px of inline menu item on each level | number | 24 |
-| items | Menu item content | [ItemType\[\]](#itemtype) | - | 4.20.0 |
 | mode | type of the menu; `vertical`, `horizontal`, and `inline` modes are supported | `vertical` \| `horizontal` \| `inline` | `vertical` |
 | multiple | Allow selection of multiple items | boolean | false |
-| openKeys(v-model) | array with the keys of currently opened sub menus | (string \| number)[] |  |
+| openKeys(v-model) | array with the keys of currently opened sub menus | string\[] |  |
 | overflowedIndicator | Customized the ellipsis icon when menu is collapsed horizontally | slot | `<EllipsisOutlined />` |
 | selectable | allow selecting menu items | boolean | true |
-| selectedKeys(v-model) | array with the keys of currently selected menu items | (string \| number)[] |  |
+| selectedKeys(v-model) | array with the keys of currently selected menu items | string\[] |  |
 | style | style of the root node | object |  |
 | subMenuCloseDelay | delay time to hide submenu when mouse leave, unit: second | number | 0.1 |
 | subMenuOpenDelay | delay time to show submenu when mouse enter, unit: second | number | 0 |
@@ -49,77 +58,16 @@ More layouts with navigation: [Layout](/components/layout).
 | --- | --- | --- |
 | click | callback executed when a menu item is clicked | function({ item, key, keyPath }) |
 | deselect | callback executed when a menu item is deselected, only supported for multiple mode | function({ item, key, selectedKeys }) |
-| openChange | called when open/close sub menu | function(openKeys: (string \| number)[]) |
+| openChange | called when open/close sub menu | function(openKeys: string\[]) |
 | select | callback executed when a menu item is selected | function({ item, key, selectedKeys }) |
 
 ### Menu.Item
 
-| Param    | Description                          | Type             | Default value |
-| -------- | ------------------------------------ | ---------------- | ------------- |
-| disabled | whether menu item is disabled or not | boolean          | false         |
-| key      | unique id of the menu item           | string \| number |               |
-| title    | set display title for collapsed item | string \| slot   |               |
-
-### ItemType
-
-> type ItemType = [MenuItemType](#menuitemtype) | [SubMenuType](#submenutype) | [MenuItemGroupType](#menuitemgrouptype) | [MenuDividerType](#menudividertype);
-
-#### MenuItemType
-
-| Param | Description | Type | Default value | Version |
-| --- | --- | --- | --- | --- |
-| danger | Display the danger style | boolean | false |  |
-| disabled | Whether menu item is disabled | boolean | false |  |
-| icon | The icon of the menu item | VueNode \| (item: MenuItemType) => VNode | - |  |
-| key | Unique ID of the menu item | string \| number | - |  |
-| label | Menu label | VueNode | - |  |
-| title | Set display title for collapsed item | string | - |  |
-
-#### SubMenuType
-
-<!-- prettier-ignore -->
-| Property | Description | Type | Default value | Version |
-| --- | --- | --- | --- | --- |
-| children | Sub-menus or sub-menu items | [ItemType\[\]](#itemtype) | - |  |
-| disabled | Whether sub-menu is disabled | boolean | false |  |
-| icon | Icon of sub menu | VueNode \| (item: SubMenuType) => VueNode | - |  |
-| key | Unique ID of the sub-menu | string \| number | - |  |
-| label | Menu label | VueNode | - |  |
-| popupClassName | Sub-menu class name, not working when `mode="inline"` | string | - |  |
-| popupOffset | Sub-menu offset, not working when `mode="inline"` | \[number, number] | - |  |
-| theme | Color theme of the SubMenu (inherits from Menu by default) |  | `light` \| `dark` | - |  |
-| onTitleClick | Callback executed when the sub-menu title is clicked | function({ key, domEvent }) | - |  |
-
-#### MenuItemGroupType
-
-Define `type` as `group` to make as group:
-
-```ts
-const groupItem = {
-  type: 'group', // Must have
-  label: 'My Group',
-  children: [],
-};
-```
-
-| Param    | Description            | Type                              | Default value | Version |
-| -------- | ---------------------- | --------------------------------- | ------------- | ------- |
-| children | Sub-menu items         | [MenuItemType\[\]](#menuitemtype) | -             |         |
-| label    | The title of the group | VueNode                           | -             |         |
-
-#### MenuDividerType
-
-Divider line in between menu items, only used in vertical popup Menu or Dropdown Menu. Need define the `type` as `divider`：
-
-```ts
-const dividerItem = {
-  type: 'divider', // Must have
-};
-```
-
-| Param  | Description            | Type    | Default value | Version |
-| ------ | ---------------------- | ------- | ------------- | ------- |
-| dashed | Whether line is dashed | boolean | false         |         |
+| Param    | Description                          | Type           | Default value |
+| -------- | ------------------------------------ | -------------- | ------------- |
+| disabled | whether menu item is disabled or not | boolean        | false         |
+| key      | unique id of the menu item           | string         |               |
+| title    | set display title for collapsed item | string \| slot |               |
 
 ### Menu.SubMenu
 
@@ -127,7 +75,7 @@ const dividerItem = {
 | --- | --- | --- | --- | --- |
 | disabled | whether sub menu is disabled or not | boolean | false |  |
 | expandIcon | Customized expandIcon | slot | arrow icon | ｜ |
-| key | Unique ID of the sub menu, required | string \| number |  |  |
+| key | Unique ID of the sub menu, required | string |  |  |
 | popupClassName | Sub-menu class name | string |  | 1.5.0 |
 | popupOffset | Sub-menu offset, not working when `mode="inline"` | \[number, number] | - |  |
 | title | title of the sub menu | string\|slot |  |  |

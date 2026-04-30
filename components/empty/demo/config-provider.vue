@@ -50,13 +50,23 @@ Use ConfigProvider set global Empty style.
     </div>
   </a-config-provider>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import { SmileOutlined } from '@ant-design/icons-vue';
-const customize = ref<boolean>(false);
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    SmileOutlined,
+  },
+  setup() {
+    const customize = ref<boolean>(false);
 
-const style = { width: '200px' };
-const columns = [{ title: 'Name' }, { title: 'Age' }];
+    return {
+      customize,
+      style: { width: '200px' },
+      columns: [{ title: 'Name' }, { title: 'Age' }],
+    };
+  },
+});
 </script>
 <style scoped>
 .code-box-demo .config-provider h3 {

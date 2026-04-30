@@ -6,11 +6,7 @@ import warning from '../_util/warning';
 import Option from './Option';
 import OptGroup from './OptGroup';
 import omit from '../_util/omit';
-
-import useConfigInject from '../config-provider/hooks/useConfigInject';
-import type { InputStatus } from '../_util/statusUtils';
-
-import type { CustomSlotsType } from '../_util/type';
+import useConfigInject from '../_util/hooks/useConfigInject';
 
 function isSelectOptionOrSelectOptGroup(child: any): boolean {
   return child?.type?.isSelectOption || child?.type?.isSelectOptGroup;
@@ -34,7 +30,6 @@ export const autoCompleteProps = () => ({
   // optionLabelProp: PropTypes.string.def('children'),
   filterOption: { type: [Boolean, Function], default: false },
   defaultActiveFirstOption: { type: Boolean, default: true },
-  status: String as PropType<InputStatus>,
 });
 
 export type AutoCompleteProps = Partial<ExtractPropTypes<ReturnType<typeof autoCompleteProps>>>;
@@ -49,15 +44,7 @@ const AutoComplete = defineComponent({
   inheritAttrs: false,
   props: autoCompleteProps(),
   // emits: ['change', 'select', 'focus', 'blur'],
-  slots: Object as CustomSlotsType<{
-    option: any;
-    // deprecated, should use props `options` instead, not slot
-    options: any;
-    default: any;
-    notFoundContent: any;
-    dataSource: any;
-    clearIcon: any;
-  }>,
+  slots: ['option'],
   setup(props, { slots, attrs, expose }) {
     warning(
       !('dataSource' in slots),
@@ -68,11 +55,6 @@ const AutoComplete = defineComponent({
       !('options' in slots),
       'AutoComplete',
       '`options` slot is deprecated, please use props `options` instead.',
-    );
-    warning(
-      !props.dropdownClassName,
-      'AutoComplete',
-      '`dropdownClassName` is deprecated, please use `popupClassName` instead.',
     );
     const selectRef = ref();
     const getInputElement = () => {
@@ -148,7 +130,6 @@ const AutoComplete = defineComponent({
           notFoundContent,
           // placeholder: '',
           class: cls,
-          popupClassName: props.popupClassName || props.dropdownClassName,
           ref: selectRef,
         },
         ['dataSource', 'loading'],

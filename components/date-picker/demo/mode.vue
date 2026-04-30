@@ -34,29 +34,46 @@ Determing which panel to show with `mode` and `onPanelChange`.
     />
   </a-space>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import { Dayjs } from 'dayjs';
-const mode1 = ref<any>('time');
-const mode2 = ref<any>(['month', 'month']);
-const value = ref<[Dayjs, Dayjs]>();
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const mode1 = ref<any>('time');
+    const mode2 = ref<any>(['month', 'month']);
+    const value = ref<[Dayjs, Dayjs]>();
 
-const handleOpenChange1 = (open: boolean) => {
-  if (open) {
-    mode1.value = 'time';
-  }
-};
+    const handleOpenChange1 = (open: boolean) => {
+      if (open) {
+        mode1.value = 'time';
+      }
+    };
 
-const handleChange = (val: [Dayjs, Dayjs]) => {
-  value.value = val;
-};
+    const handleChange = (val: [Dayjs, Dayjs]) => {
+      value.value = val;
+    };
 
-const handlePanelChange1 = (_val: [Dayjs, Dayjs], mode: any) => {
-  mode1.value = mode;
-};
+    const handlePanelChange1 = (_val: [Dayjs, Dayjs], mode: any) => {
+      mode1.value = mode;
+    };
 
-const handlePanelChange2 = (val: [Dayjs, Dayjs], mode: any[]) => {
-  value.value = val;
-  mode2.value = [mode[0] === 'date' ? 'month' : mode[0], mode[1] === 'date' ? 'month' : mode[1]];
-};
+    const handlePanelChange2 = (val: [Dayjs, Dayjs], mode: any[]) => {
+      value.value = val;
+      mode2.value = [
+        mode[0] === 'date' ? 'month' : mode[0],
+        mode[1] === 'date' ? 'month' : mode[1],
+      ];
+    };
+
+    return {
+      mode1,
+      mode2,
+      value,
+      handleOpenChange1,
+      handleChange,
+      handlePanelChange1,
+      handlePanelChange2,
+    };
+  },
+});
 </script>

@@ -1,11 +1,16 @@
+@import '../../theme/static/theme.less';
 @import './SearchBox.less';
+
+@header-height: 64px;
+@menu-item-border: 2px;
+@mobile-max-width: 767.99px;
 
 #header {
   position: relative;
   z-index: 10;
   max-width: 100%;
-  background: var(--component-background);
-  box-shadow: var(--box-shadow);
+  background: @component-background;
+  box-shadow: 0 2px 8px rgba(240, 241, 242, 65);
 
   .menu-row {
     display: flex;
@@ -37,11 +42,12 @@
 
   // Buttons
   .header-button {
-    color: var(--text-color);
+    color: @text-color;
+    border-color: @border-color-base;
   }
 }
 
-@media only screen and (max-width: 767.99px) {
+@media only screen and (max-width: @mobile-max-width) {
   #header {
     text-align: center;
   }

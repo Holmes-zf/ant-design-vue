@@ -35,6 +35,7 @@ export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'OptionList',
   inheritAttrs: false,
+  slots: ['notFoundContent', 'menuItemSelectedIcon'],
   setup(_, { slots, expose }) {
     const baseProps = useBaseProps();
     const legacyContext = useInjectLegacySelectContext();
@@ -181,8 +182,7 @@ export default defineComponent({
         open,
         notFoundContent = slots.notFoundContent?.(),
       } = baseProps;
-      const { listHeight, listItemHeight, virtual, dropdownMatchSelectWidth, treeExpandAction } =
-        context;
+      const { listHeight, listItemHeight, virtual } = context;
       const {
         checkable,
         treeDefaultExpandAll,
@@ -229,7 +229,7 @@ export default defineComponent({
             treeData={memoTreeData.value as TreeDataNode[]}
             height={listHeight}
             itemHeight={listItemHeight}
-            virtual={virtual !== false && dropdownMatchSelectWidth !== false}
+            virtual={virtual}
             multiple={multiple}
             icon={treeIcon}
             showIcon={showTreeIcon}
@@ -252,7 +252,6 @@ export default defineComponent({
             onExpand={onInternalExpand}
             onLoad={onTreeLoad}
             filterTreeNode={filterTreeNode}
-            expandAction={treeExpandAction}
             v-slots={{ ...slots, checkable: legacyContext.customSlots.treeCheckable }}
           />
         </div>

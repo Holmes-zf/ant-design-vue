@@ -1,6 +1,5 @@
 <template>
   <demo-sort>
-    <Hook />
     <info />
     <duration />
     <other />
@@ -21,7 +20,6 @@ import customStyleVue from './custom-style.vue';
 import CN from '../index.zh-CN.md';
 import US from '../index.en-US.md';
 import { defineComponent } from 'vue';
-import Hook from './hook.vue';
 export default defineComponent({
   CN,
   US,
@@ -33,7 +31,6 @@ export default defineComponent({
     Thenable,
     Update,
     customStyleVue,
-    Hook,
   },
   setup() {
     return {};

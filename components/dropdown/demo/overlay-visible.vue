@@ -17,7 +17,7 @@ The default is to close the menu when you click on menu items, this feature can 
 </docs>
 
 <template>
-  <a-dropdown v-model:open="visible">
+  <a-dropdown v-model:visible="visible">
     <a class="ant-dropdown-link" @click.prevent>
       Hover me
       <DownOutlined />
@@ -31,14 +31,26 @@ The default is to close the menu when you click on menu items, this feature can 
     </template>
   </a-dropdown>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import type { MenuProps } from 'ant-design-vue';
-const visible = ref(false);
-const handleMenuClick: MenuProps['onClick'] = e => {
-  if (e.key === '3') {
-    visible.value = false;
-  }
-};
+
+export default defineComponent({
+  components: {
+    DownOutlined,
+  },
+  setup() {
+    const visible = ref(false);
+    const handleMenuClick: MenuProps['onClick'] = e => {
+      if (e.key === '3') {
+        visible.value = false;
+      }
+    };
+    return {
+      visible,
+      handleMenuClick,
+    };
+  },
+});
 </script>

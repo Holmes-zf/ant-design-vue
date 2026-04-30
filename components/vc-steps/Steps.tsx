@@ -1,13 +1,25 @@
 import PropTypes from '../_util/vue-types';
-import { defineComponent } from 'vue';
-import classNames from '../_util/classNames';
-import type { VCStepProps } from './Step';
-import Step from './Step';
-import type { VueNode } from '../_util/type';
-import { functionType, stringType } from '../_util/type';
 import { filterEmpty } from '../_util/props-util';
 import { cloneElement } from '../_util/vnode';
-import type { Status, StepIconRender } from './interface';
+import { defineComponent } from 'vue';
+import classNames from '../_util/classNames';
+
+export type Status = 'error' | 'process' | 'finish' | 'wait';
+export type StepIconRender = (info: {
+  index: number;
+  status: Status;
+  title: any;
+  description: any;
+  node: any;
+}) => any;
+
+export type ProgressDotRender = (info: {
+  iconDot: any;
+  index: number;
+  status: Status;
+  title: any;
+  description: any;
+}) => any;
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
@@ -18,89 +30,25 @@ export default defineComponent({
     iconPrefix: PropTypes.string.def('vc'),
     direction: PropTypes.string.def('horizontal'),
     labelPlacement: PropTypes.string.def('horizontal'),
-    status: stringType<Status>('process'),
+    status: PropTypes.string.def('process'),
     size: PropTypes.string.def(''),
     progressDot: PropTypes.oneOfType([PropTypes.looseBool, PropTypes.func]).def(undefined),
     initial: PropTypes.number.def(0),
     current: PropTypes.number.def(0),
-    items: PropTypes.array.def(() => []),
     icons: PropTypes.shape({
       finish: PropTypes.any,
       error: PropTypes.any,
     }).loose,
-    stepIcon: functionType<StepIconRender>(),
-    isInline: PropTypes.looseBool,
-    itemRender: functionType<(item: Record<string, any>, stepItem: VueNode) => VueNode>(),
+    stepIcon: Function,
   },
+  slots: ['stepIcon', 'progressDot'],
   emits: ['change'],
   setup(props, { slots, emit }) {
-    const onStepClick = (next: number) => {
+    const onStepClick = next => {
       const { current } = props;
       if (current !== next) {
         emit('change', next);
       }
-    };
-    const renderStep = (item: VCStepProps, index: number, legacyRender?: any) => {
-      const {
-        prefixCls,
-        iconPrefix,
-        status,
-        current,
-        initial,
-        icons,
-        stepIcon = slots.stepIcon,
-        isInline,
-        itemRender,
-        progressDot = slots.progressDot,
-      } = props;
-      const mergedProgressDot = isInline || progressDot;
-      const mergedItem = { ...item, class: '' };
-      const stepNumber = initial + index;
-      const commonProps = {
-        active: stepNumber === current,
-        stepNumber: stepNumber + 1,
-        stepIndex: stepNumber,
-        key: stepNumber,
-        prefixCls,
-        iconPrefix,
-        progressDot: mergedProgressDot,
-        stepIcon,
-        icons,
-        onStepClick,
-      };
-      // fix tail color
-      if (status === 'error' && index === current - 1) {
-        mergedItem.class = `${prefixCls}-next-error`;
-      }
-
-      if (!mergedItem.status) {
-        if (stepNumber === current) {
-          mergedItem.status = status;
-        } else if (stepNumber < current) {
-          mergedItem.status = 'finish';
-        } else {
-          mergedItem.status = 'wait';
-        }
-      }
-
-      if (isInline) {
-        mergedItem.icon = undefined;
-        mergedItem.subTitle = undefined;
-      }
-      if (legacyRender) {
-        return legacyRender({ ...mergedItem, ...commonProps });
-      }
-      if (itemRender) {
-        mergedItem.itemRender = stepItem => itemRender(mergedItem, stepItem);
-      }
-
-      return <Step {...mergedItem} {...commonProps} __legacy={false} />;
-    };
-    const renderStepWithNode = (node: any, index: number) => {
-      return renderStep({ ...node.props }, index, stepProps => {
-        const stepNode = cloneElement(node, stepProps);
-        return stepNode;
-      });
     };
     return () => {
       const {
@@ -115,29 +63,57 @@ export default defineComponent({
         progressDot = slots.progressDot,
         initial,
         icons,
-        items,
-        isInline,
-        itemRender,
-        ...restProps
+        stepIcon = slots.stepIcon,
       } = props;
       const isNav = type === 'navigation';
-      const mergedProgressDot = isInline || progressDot;
-      const mergedDirection = isInline ? 'horizontal' : direction;
-      const mergedSize = isInline ? undefined : size;
-
-      const adjustedLabelPlacement = mergedProgressDot ? 'vertical' : labelPlacement;
+      const adjustedLabelPlacement = progressDot ? 'vertical' : labelPlacement;
       const classString = classNames(prefixCls, `${prefixCls}-${direction}`, {
-        [`${prefixCls}-${mergedSize}`]: mergedSize,
-        [`${prefixCls}-label-${adjustedLabelPlacement}`]: mergedDirection === 'horizontal',
-        [`${prefixCls}-dot`]: !!mergedProgressDot,
+        [`${prefixCls}-${size}`]: size,
+        [`${prefixCls}-label-${adjustedLabelPlacement}`]: direction === 'horizontal',
+        [`${prefixCls}-dot`]: !!progressDot,
         [`${prefixCls}-navigation`]: isNav,
-        [`${prefixCls}-inline`]: isInline,
       });
-
+      const children = filterEmpty(slots.default?.());
       return (
-        <div class={classString} {...restProps}>
-          {items.filter(item => item).map((item, index) => renderStep(item, index))}
-          {filterEmpty(slots.default?.()).map(renderStepWithNode)}
+        <div class={classString}>
+          {children.map((child, index) => {
+            // description: PropTypes.any,
+            // icon: PropTypes.any,
+            // status: PropTypes.oneOf(tuple('wait', 'process', 'finish', 'error')),
+            // disabled: { type: Boolean, default: undefined },
+            // title: PropTypes.any,
+            // subTitle: PropTypes.any,
+            const { prefixCls: pre = prefixCls, ...restProps } = child.props || {};
+            const stepNumber = initial + index;
+            const stepProps = {
+              ...restProps,
+              stepNumber: stepNumber + 1,
+              stepIndex: stepNumber,
+              key: stepNumber,
+              prefixCls: pre,
+              iconPrefix,
+              progressDot,
+              icons,
+              stepIcon,
+              onStepClick,
+            };
+
+            // fix tail color
+            if (status === 'error' && index === current - 1) {
+              stepProps.class = `${prefixCls}-next-error`;
+            }
+            if (!restProps.status) {
+              if (stepNumber === current) {
+                stepProps.status = status;
+              } else if (stepNumber < current) {
+                stepProps.status = 'finish';
+              } else {
+                stepProps.status = 'wait';
+              }
+            }
+            stepProps.active = stepNumber === current;
+            return cloneElement(child, stepProps);
+          })}
         </div>
       );
     };

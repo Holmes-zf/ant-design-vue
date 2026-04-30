@@ -19,9 +19,13 @@ You can set different preview image.
 <template>
   <a-image
     :width="200"
-    src="https://www.antdv.com/logo.png"
+    src="https://aliyuncdn.antdv.com/logo.png"
     :preview="{
       src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     }"
   />
 </template>
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({});
+</script>

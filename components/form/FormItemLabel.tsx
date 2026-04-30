@@ -4,12 +4,10 @@ import type { FormLabelAlign } from './interface';
 import { useInjectForm } from './context';
 import type { RequiredMark } from './Form';
 import { useLocaleReceiver } from '../locale-provider/LocaleReceiver';
-import defaultLocale from '../locale/en_US';
+import defaultLocale from '../locale/default';
 import classNames from '../_util/classNames';
 import type { VueNode } from '../_util/type';
 import type { FunctionalComponent, HTMLAttributes } from 'vue';
-import Tooltip from '../tooltip';
-import QuestionCircleOutlined from '@ant-design/icons-vue/QuestionCircleOutlined';
 
 export interface FormItemLabelProps {
   colon?: boolean;
@@ -21,7 +19,6 @@ export interface FormItemLabelProps {
   required?: boolean;
   prefixCls: string;
   onClick: Function;
-  tooltip: string;
 }
 
 const FormItemLabel: FunctionalComponent<FormItemLabelProps> = (props, { slots, emit, attrs }) => {
@@ -62,23 +59,12 @@ const FormItemLabel: FunctionalComponent<FormItemLabelProps> = (props, { slots, 
     labelChildren = (label as string).replace(/[:|：]\s*$/, '');
   }
 
-  // Tooltip
-  if (props.tooltip || slots.tooltip) {
-    const tooltipNode = (
-      <span class={`${prefixCls}-item-tooltip`}>
-        <Tooltip title={props.tooltip}>
-          <QuestionCircleOutlined />
-        </Tooltip>
-      </span>
-    );
-
-    labelChildren = (
-      <>
-        {labelChildren}
-        {slots.tooltip ? slots.tooltip?.({ class: `${prefixCls}-item-tooltip` }) : tooltipNode}
-      </>
-    );
-  }
+  labelChildren = (
+    <>
+      {labelChildren}
+      {slots.tooltip?.({ class: `${prefixCls}-item-tooltip` })}
+    </>
+  );
 
   // Add required mark if optional
   if (requiredMark === 'optional' && !required) {

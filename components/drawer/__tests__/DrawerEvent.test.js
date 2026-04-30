@@ -107,7 +107,7 @@ describe('Drawer', () => {
     });
   });
 
-  fit('destroyOnClose is true onClose', async () => {
+  it('destroyOnClose is true onClose', async () => {
     const wrapper = mount(DrawerEventTester, {
       props: {
         destroyOnClose: true,
@@ -119,9 +119,7 @@ describe('Drawer', () => {
       expect(wrapper.find('.ant-drawer-wrapper-body').exists()).toBe(true);
 
       wrapper.vm.visible = false;
-      wrapper
-        .find('.ant-drawer-content-wrapper')
-        .trigger('transitionend', { propertyName: 'transform' });
+      wrapper.find('.ant-drawer-wrapper-body').trigger('transitionend');
     });
     await asyncExpect(() => {
       expect(wrapper.find('.ant-drawer-wrapper-body').exists()).toBe(false);

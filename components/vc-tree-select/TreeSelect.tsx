@@ -30,7 +30,6 @@ import { conductCheck } from '../vc-tree/utils/conductUtil';
 import { warning } from '../vc-util/warning';
 import { toReactive } from '../_util/toReactive';
 import useMaxLevel from '../vc-tree/useMaxLevel';
-import type { ExpandAction } from '../vc-tree/props';
 
 export type OnInternalSelect = (value: RawValueType, info: { selected: boolean }) => void;
 
@@ -181,7 +180,6 @@ export function treeSelectProps<
     switcherIcon: PropTypes.any,
     treeMotion: PropTypes.any,
     children: Array as PropType<VueNode[]>,
-    treeExpandAction: String as PropType<ExpandAction>,
 
     showArrow: { type: Boolean, default: undefined },
     showSearch: { type: Boolean, default: undefined },
@@ -624,10 +622,8 @@ export default defineComponent({
       switcherIcon,
       treeMotion,
       customSlots,
-
-      dropdownMatchSelectWidth,
-      treeExpandAction,
     } = toRefs(props);
+    toRaw;
     useProvideLegacySelectContext(
       toReactive({
         checkable: mergedCheckable,
@@ -659,8 +655,6 @@ export default defineComponent({
         treeData: filteredTreeData,
         fieldNames: mergedFieldNames,
         onSelect: onOptionSelect,
-        dropdownMatchSelectWidth,
-        treeExpandAction,
       } as unknown as TreeSelectContextProps),
     );
     const selectRef = ref<BaseSelectRef>();
@@ -679,7 +673,6 @@ export default defineComponent({
       const restProps = omit(props, [
         'id',
         'prefixCls',
-        'customSlots',
 
         // Value
         'value',

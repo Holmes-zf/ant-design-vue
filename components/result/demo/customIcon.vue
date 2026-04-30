@@ -26,6 +26,12 @@ Custom icon.
     </template>
   </a-result>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { SmileTwoTone } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    SmileTwoTone,
+  },
+});
 </script>

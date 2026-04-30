@@ -26,8 +26,10 @@ Responsive columns.
     </template>
   </a-table>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import type { ColumnsType } from 'ant-design-vue/es/table/interface';
+import { defineComponent } from 'vue';
+
 const columns: ColumnsType = [
   {
     title: 'Name (all screens)',
@@ -56,4 +58,13 @@ const data = [
     address: 'New York No. 1 Lake Park',
   },
 ];
+
+export default defineComponent({
+  setup() {
+    return {
+      data,
+      columns,
+    };
+  },
+});
 </script>

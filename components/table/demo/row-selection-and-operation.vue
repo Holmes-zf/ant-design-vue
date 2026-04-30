@@ -19,24 +19,24 @@ To perform operations and clear selections after selecting some rows, use `rowSe
 <template>
   <div>
     <div style="margin-bottom: 16px">
-      <a-button type="primary" :disabled="!hasSelected" :loading="state.loading" @click="start">
+      <a-button type="primary" :disabled="!hasSelected" :loading="loading" @click="start">
         Reload
       </a-button>
       <span style="margin-left: 8px">
         <template v-if="hasSelected">
-          {{ `Selected ${state.selectedRowKeys.length} items` }}
+          {{ `Selected ${selectedRowKeys.length} items` }}
         </template>
       </span>
     </div>
     <a-table
-      :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
+      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
       :columns="columns"
       :data-source="data"
     />
   </div>
 </template>
-<script lang="ts" setup>
-import { computed, reactive } from 'vue';
+<script lang="ts">
+import { computed, defineComponent, reactive, toRefs } from 'vue';
 
 type Key = string | number;
 
@@ -72,25 +72,40 @@ for (let i = 0; i < 46; i++) {
   });
 }
 
-const state = reactive<{
-  selectedRowKeys: Key[];
-  loading: boolean;
-}>({
-  selectedRowKeys: [], // Check here to configure the default column
-  loading: false,
-});
-const hasSelected = computed(() => state.selectedRowKeys.length > 0);
+export default defineComponent({
+  setup() {
+    const state = reactive<{
+      selectedRowKeys: Key[];
+      loading: boolean;
+    }>({
+      selectedRowKeys: [], // Check here to configure the default column
+      loading: false,
+    });
+    const hasSelected = computed(() => state.selectedRowKeys.length > 0);
 
-const start = () => {
-  state.loading = true;
-  // ajax request after empty completing
-  setTimeout(() => {
-    state.loading = false;
-    state.selectedRowKeys = [];
-  }, 1000);
-};
-const onSelectChange = (selectedRowKeys: Key[]) => {
-  console.log('selectedRowKeys changed: ', selectedRowKeys);
-  state.selectedRowKeys = selectedRowKeys;
-};
+    const start = () => {
+      state.loading = true;
+      // ajax request after empty completing
+      setTimeout(() => {
+        state.loading = false;
+        state.selectedRowKeys = [];
+      }, 1000);
+    };
+    const onSelectChange = (selectedRowKeys: Key[]) => {
+      console.log('selectedRowKeys changed: ', selectedRowKeys);
+      state.selectedRowKeys = selectedRowKeys;
+    };
+
+    return {
+      data,
+      columns,
+      hasSelected,
+      ...toRefs(state),
+
+      // func
+      start,
+      onSelectChange,
+    };
+  },
+});
 </script>

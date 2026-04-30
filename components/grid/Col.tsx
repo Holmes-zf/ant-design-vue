@@ -1,9 +1,8 @@
 import type { CSSProperties, ExtractPropTypes, PropType } from 'vue';
 import { defineComponent, computed } from 'vue';
 import classNames from '../_util/classNames';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import { useInjectRow } from './context';
-import { useColStyle } from './style';
 
 type ColSpanType = number | string;
 
@@ -59,29 +58,28 @@ export const colProps = () => ({
     type: [String, Number, Object] as PropType<string | number | ColSize>,
     default: undefined as string | number | ColSize,
   },
+  xxxl: {
+    type: [String, Number, Object] as PropType<string | number | ColSize>,
+    default: undefined as string | number | ColSize,
+  },
   prefixCls: String,
   flex: [String, Number],
 });
 
 export type ColProps = Partial<ExtractPropTypes<ReturnType<typeof colProps>>>;
 
-const sizes = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'ACol',
-  inheritAttrs: false,
   props: colProps(),
-  setup(props, { slots, attrs }) {
+  setup(props, { slots }) {
     const { gutter, supportFlexGap, wrap } = useInjectRow();
     const { prefixCls, direction } = useConfigInject('col', props);
-
-    const [wrapSSR, hashId] = useColStyle(prefixCls);
-
     const classes = computed(() => {
       const { span, order, offset, push, pull } = props;
       const pre = prefixCls.value;
       let sizeClassObj = {};
-      sizes.forEach(size => {
+      ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'].forEach(size => {
         let sizeProps: ColSize = {};
         const propSize = props[size];
         if (typeof propSize === 'number') {
@@ -110,8 +108,6 @@ export default defineComponent({
           [`${pre}-pull-${pull}`]: pull,
         },
         sizeClassObj,
-        attrs.class,
-        hashId.value,
       );
     });
 
@@ -144,16 +140,12 @@ export default defineComponent({
       }
       return style;
     });
-
-    return () =>
-      wrapSSR(
-        <div
-          {...attrs}
-          class={classes.value}
-          style={[mergedStyle.value, attrs.style as CSSProperties]}
-        >
+    return () => {
+      return (
+        <div class={classes.value} style={mergedStyle.value}>
           {slots.default?.()}
-        </div>,
+        </div>
       );
+    };
   },
 });

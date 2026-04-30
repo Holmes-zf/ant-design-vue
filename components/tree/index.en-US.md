@@ -2,8 +2,7 @@
 category: Components
 type: Data Display
 title: Tree
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*Ag9_Q6ArswEAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*1GeUQJPTGUYAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 ---
 
 A hierarchical list structure component.
@@ -18,7 +17,6 @@ Almost anything can be represented in a tree structure. Examples include directo
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| allowDrop | Whether to allow dropping on the node | ({ dropNode, dropPosition }) => boolean | - |  |
 | autoExpandParent | Whether to automatically expand a parent treeNode | boolean | false |  |
 | blockNode | Whether treeNode fill remaining horizontal space | boolean | false |  |
 | checkable | Adds a `Checkbox` before the treeNodes | boolean | false |  |
@@ -30,7 +28,6 @@ Almost anything can be represented in a tree structure. Examples include directo
 | expandedKeys(v-model) | (Controlled) Specifies the keys of the expanded treeNodes | string\[] \| number\[] | \[] |  |
 | fieldNames | Replace the title,key and children fields in treeNode with the corresponding fields in treeData | object | { children:'children', title:'title', key:'key' } | 3.0.0 |
 | filterTreeNode | Defines a function to filter (highlight) treeNodes. When the function returns `true`, the corresponding treeNode will be highlighted | function(node) | - |  |
-| height | Config virtual scroll height. Will not support horizontal scroll when enable this | number | - |  |
 | loadData | Load data asynchronously | function(node) | - |  |
 | loadedKeys | (Controlled) Set loaded tree nodes. Need work with `loadData` | string\[] \| number\[] | \[] |  |
 | multiple | Allows selecting multiple treeNodes | boolean | false |  |
@@ -40,7 +37,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | showLine | Shows a connecting line | boolean \| {showLeafIcon: boolean}(3.0+) | false |  |
 | switcherIcon | customize collapse/expand icon of tree node | v-slot:switcherIcon="{active, checked, expanded, loading, selected, halfChecked, title, key, children, dataRef, data, defaultIcon, switcherCls}" | - |  |
 | title | custom title | slot |  | 2.0.0 |
-| treeData | treeNode of tree, please use `treeNodes` before v1.1.4 | [TreeNode\[\]](#treenode) | - |  |
+| treeData | treeNode of tree, please use `treeNodes` before v1.1.4 | [TreeNode\[\]](#TreeNode) | - |  |
 | virtual | Disable virtual scroll when set to false | boolean | true | 3.0 |
 
 ### Events
@@ -74,7 +71,7 @@ Almost anything can be represented in a tree structure. Examples include directo
 | disableCheckbox | Disables the checkbox of the treeNode | boolean | false |  |
 | disabled | Disables the treeNode | boolean | false |  |
 | icon | customize icon. When you pass component, whose render will receive full TreeNode props as component props | slot\|slot-scope | - |  |
-| isLeaf | Determines if this is a leaf node(effective when `loadData` is specified) | boolean | - |  |
+| isLeaf | Determines if this is a leaf node(effective when `loadData` is specified) | boolean | false |  |
 | key | Used with (default)ExpandedKeys / (default)CheckedKeys / (default)SelectedKeys. P.S.: It must be unique in all of treeNodes of the tree! | string \| number | internal calculated position of treeNode |  |
 | selectable | Set whether the treeNode can be selected | boolean | true |  |
 | style | style | string\|object | - |  |

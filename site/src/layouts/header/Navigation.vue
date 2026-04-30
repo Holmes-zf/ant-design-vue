@@ -25,12 +25,23 @@
       </template>
       <a-menu-item key="surely-table">
         <a
-          href="https://www.surelyvue.com"
+          href="https://www.surely.cool"
           target="_blank"
           rel="noopener noreferrer"
           style="position: relative"
         >
           Surely Table
+        </a>
+      </a-menu-item>
+      <a-menu-item key="surely-form">
+        <a
+          href="https://form.antdv.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="position: relative"
+        >
+          Surely Form
+          <a-badge color="red" style="position: absolute; top: -18px; right: -15px" />
         </a>
       </a-menu-item>
     </a-sub-menu>
@@ -73,7 +84,7 @@
   </a-menu>
 </template>
 <script lang="ts">
-import type { GlobalConfig } from '../../type';
+import type { GlobalConfig } from '../../App.vue';
 import { GLOBAL_CONFIG } from '../../SymbolKey';
 import { getLocalizedPathname } from '../../utils/util';
 import { computed, defineComponent, inject, ref, watch } from 'vue';
@@ -114,9 +125,13 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
+@import '../../theme/static/theme.less';
+@import './index.less';
+
 #nav {
   height: 100%;
   font-size: 14px;
+  font-family: Avenir, @font-family, sans-serif;
   border: 0;
 
   &.ant-menu-horizontal {
@@ -125,17 +140,17 @@ export default defineComponent({
     & > .ant-menu-item,
     & > .ant-menu-submenu {
       min-width: (40px + 12px * 2);
-      height: var(--header-height);
+      height: @header-height;
       padding-right: 12px;
       padding-left: 12px;
-      line-height: var(--header-height);
+      line-height: @header-height;
 
       &::after {
         top: 0;
         right: 12px;
         bottom: auto;
         left: 12px;
-        border-width: var(--menu-item-border);
+        border-width: @menu-item-border;
       }
     }
 
@@ -145,7 +160,7 @@ export default defineComponent({
 
     & > .ant-menu-item-selected {
       a {
-        color: var(--primary-color);
+        color: @primary-color;
       }
     }
   }
@@ -157,11 +172,11 @@ export default defineComponent({
 }
 
 .header-link {
-  color: var(--site-text-color);
+  color: @site-text-color;
 }
 
 .ant-menu-item-active .header-link {
-  color: var(--primary-color);
+  color: @primary-color;
 }
 
 // Popover menu is only used for mobile

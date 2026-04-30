@@ -3,8 +3,7 @@ category: Components
 type: 反馈
 title: Skeleton
 subtitle: 骨架屏
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*uae3QbkNCm8AAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*VcjGQLSrYdcAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/KpcciCJgv/Skeleton.svg
 ---
 
 在需要等待加载内容的位置提供一个占位图形组合。
@@ -23,10 +22,10 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*VcjGQLSrYdcAAA
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | active | 是否展示动画效果 | boolean | false |
-| avatar | 是否显示头像占位图 | boolean \| [SkeletonAvatarProps](#skeletonavatarprops) | false |
+| avatar | 是否显示头像占位图 | boolean \| [SkeletonAvatarProps](#SkeletonAvatarProps) | false |
 | loading | 为 `true` 时，显示占位图。反之则直接展示子组件 | boolean | - |
-| paragraph | 是否显示段落占位图 | boolean \| [SkeletonParagraphProps](#skeletonparagraphprops) | true |
-| title | 是否显示标题占位图 | boolean \| [SkeletonTitleProps](#skeletontitleprops) | true |
+| paragraph | 是否显示段落占位图 | boolean \| [SkeletonParagraphProps](#SkeletonParagraphProps) | true |
+| title | 是否显示标题占位图 | boolean \| [SkeletonTitleProps](#SkeletonTitleProps) | true |
 
 ### SkeletonAvatarProps
 

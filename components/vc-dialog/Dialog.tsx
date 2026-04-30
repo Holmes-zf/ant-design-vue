@@ -1,5 +1,5 @@
 import type { PropType } from 'vue';
-import { defineComponent, onBeforeUnmount, shallowRef, watch, watchEffect } from 'vue';
+import { defineComponent, onBeforeUnmount, ref, watch, watchEffect } from 'vue';
 import contains from '../vc-util/Dom/contains';
 import type ScrollLocker from '../vc-util/Dom/scrollLocker';
 import classNames from '../_util/classNames';
@@ -16,7 +16,7 @@ import { getMotionName, getUUID } from './util';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
-  name: 'VcDialog',
+  name: 'Dialog',
   inheritAttrs: false,
   props: initDefaultProps(
     {
@@ -37,11 +37,11 @@ export default defineComponent({
     },
   ),
   setup(props, { attrs, slots }) {
-    const lastOutSideActiveElementRef = shallowRef<HTMLElement>();
-    const wrapperRef = shallowRef<HTMLDivElement>();
-    const contentRef = shallowRef<ContentRef>();
-    const animatedVisible = shallowRef(props.visible);
-    const ariaIdRef = shallowRef<string>(`vcDialogTitle${getUUID()}`);
+    const lastOutSideActiveElementRef = ref<HTMLElement>();
+    const wrapperRef = ref<HTMLDivElement>();
+    const contentRef = ref<ContentRef>();
+    const animatedVisible = ref(props.visible);
+    const ariaIdRef = ref<string>(`vcDialogTitle${getUUID()}`);
 
     // ========================= Events =========================
     const onDialogVisibleChanged = (newVisible: boolean) => {
@@ -76,8 +76,8 @@ export default defineComponent({
     };
 
     // >>> Content
-    const contentClickRef = shallowRef(false);
-    const contentTimeoutRef = shallowRef<any>();
+    const contentClickRef = ref(false);
+    const contentTimeoutRef = ref<any>();
 
     // We need record content click incase content popup out of dialog
     const onContentMouseDown: MouseEventHandler = () => {

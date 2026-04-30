@@ -1,9 +1,7 @@
 import { getTransitionGroupProps } from '../_util/transition';
-import type { Key, VueNode } from '../_util/type';
+import type { Key } from '../_util/type';
 import type { CSSProperties } from 'vue';
 import {
-  toRaw,
-  shallowRef,
   createVNode,
   computed,
   defineComponent,
@@ -15,7 +13,6 @@ import {
 import type { NoticeProps } from './Notice';
 import Notice from './Notice';
 import ConfigProvider, { globalConfigForApi } from '../config-provider';
-import classNames from '../_util/classNames';
 
 let seed = 0;
 const now = Date.now();
@@ -30,18 +27,10 @@ export interface NoticeContent extends Omit<NoticeProps, 'prefixCls' | 'noticeKe
   prefixCls?: string;
   key?: Key;
   updateMark?: string;
-  content?: string | ((arg: { prefixCls: string }) => VueNode) | VueNode;
+  content?: any;
   onClose?: () => void;
   style?: CSSProperties;
   class?: String;
-}
-export type Placement = 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight';
-
-export interface OpenConfig extends NoticeProps {
-  key: Key;
-  placement?: Placement;
-  content?: string | (() => VueNode) | VueNode;
-  duration?: number | null;
 }
 
 export type NoticeFunc = (noticeProps: NoticeContent) => void;
@@ -63,7 +52,6 @@ export interface NotificationProps {
   animation?: string | object;
   maxCount?: number;
   closeIcon?: any;
-  hashId?: string;
 }
 
 type NotificationState = {
@@ -73,10 +61,10 @@ type NotificationState = {
   holderCallback?: HolderReadyCallback;
 }[];
 
-const Notification = defineComponent({
+const Notification = defineComponent<NotificationProps>({
   name: 'Notification',
   inheritAttrs: false,
-  props: ['prefixCls', 'transitionName', 'animation', 'maxCount', 'closeIcon', 'hashId'],
+  props: ['prefixCls', 'transitionName', 'animation', 'maxCount', 'closeIcon'] as any,
   setup(props, { attrs, expose, slots }) {
     const hookRefs = new Map<Key, HTMLDivElement>();
     const notices = ref<NotificationState>([]);
@@ -126,7 +114,7 @@ const Notification = defineComponent({
     };
 
     const remove = (removeKey: Key) => {
-      notices.value = toRaw(notices.value as any).filter(({ notice: { key, userPassKey } }) => {
+      notices.value = notices.value.filter(({ notice: { key, userPassKey } }) => {
         const mergedKey = userPassKey || key;
         return mergedKey !== removeKey;
       });
@@ -178,7 +166,7 @@ const Notification = defineComponent({
           );
         }
         return (
-          <Notice {...noticeProps} class={classNames(noticeProps.class, props.hashId)}>
+          <Notice {...noticeProps}>
             {typeof content === 'function' ? content({ prefixCls }) : content}
           </Notice>
         );
@@ -186,7 +174,6 @@ const Notification = defineComponent({
       const className = {
         [prefixCls]: 1,
         [attrs.class as string]: !!attrs.class,
-        [props.hashId]: true,
       };
       return (
         <div
@@ -216,7 +203,6 @@ Notification.newInstance = function newNotificationInstance(properties, callback
     rootPrefixCls: customRootPrefixCls,
     transitionName: customTransitionName,
     hasTransitionName,
-    useStyle,
     ...props
   } = properties || {};
   const div = document.createElement('div');
@@ -230,9 +216,7 @@ Notification.newInstance = function newNotificationInstance(properties, callback
     compatConfig: { MODE: 3 },
     name: 'NotificationWrapper',
     setup(_props, { attrs }) {
-      const notiRef = shallowRef();
-      const prefixCls = computed(() => globalConfigForApi.getPrefixCls(name, customizePrefixCls));
-      const [, hashId] = useStyle(prefixCls);
+      const notiRef = ref();
       onMounted(() => {
         callback({
           notice(noticeProps: NoticeContent) {
@@ -252,18 +236,18 @@ Notification.newInstance = function newNotificationInstance(properties, callback
       });
       return () => {
         const global = globalConfigForApi;
-        const rootPrefixCls = global.getRootPrefixCls(customRootPrefixCls, prefixCls.value);
+        const prefixCls = global.getPrefixCls(name, customizePrefixCls);
+        const rootPrefixCls = global.getRootPrefixCls(customRootPrefixCls, prefixCls);
         const transitionName = hasTransitionName
           ? customTransitionName
-          : `${prefixCls.value}-${customTransitionName}`;
+          : `${rootPrefixCls}-${customTransitionName}`;
         return (
-          <ConfigProvider {...global} prefixCls={rootPrefixCls}>
+          <ConfigProvider {...global} notUpdateGlobalConfig={true} prefixCls={rootPrefixCls}>
             <Notification
               ref={notiRef}
               {...attrs}
-              prefixCls={prefixCls.value}
+              prefixCls={prefixCls}
               transitionName={transitionName}
-              hashId={hashId.value}
             />
           </ConfigProvider>
         );

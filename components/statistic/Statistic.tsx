@@ -1,30 +1,28 @@
 import type { CSSProperties, ExtractPropTypes, PropType } from 'vue';
 import { defineComponent } from 'vue';
+import PropTypes from '../_util/vue-types';
 import initDefaultProps from '../_util/props-util/initDefaultProps';
 import StatisticNumber from './Number';
-import type { valueType, Formatter } from './utils';
+import type { valueType } from './utils';
 import Skeleton from '../skeleton/Skeleton';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
-
-// CSSINJS
-import useStyle from './style';
-import { anyType, booleanType, functionType, someType, vNodeType } from '../_util/type';
-import type { CustomSlotsType, VueNode } from '../_util/type';
+import useConfigInject from '../_util/hooks/useConfigInject';
 
 export const statisticProps = () => ({
   prefixCls: String,
   decimalSeparator: String,
   groupSeparator: String,
   format: String,
-  value: someType<valueType>([Number, String, Object]),
+  value: {
+    type: [String, Number, Object] as PropType<valueType>,
+  },
   valueStyle: { type: Object as PropType<CSSProperties>, default: undefined as CSSProperties },
-  valueRender: functionType<(node: VueNode) => VueNode>(),
-  formatter: anyType<Formatter>(),
+  valueRender: PropTypes.any,
+  formatter: PropTypes.any,
   precision: Number,
-  prefix: vNodeType(),
-  suffix: vNodeType(),
-  title: vNodeType(),
-  loading: booleanType(),
+  prefix: PropTypes.any,
+  suffix: PropTypes.any,
+  title: PropTypes.any,
+  loading: { type: Boolean, default: undefined },
 });
 
 export type StatisticProps = Partial<ExtractPropTypes<ReturnType<typeof statisticProps>>>;
@@ -32,35 +30,24 @@ export type StatisticProps = Partial<ExtractPropTypes<ReturnType<typeof statisti
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'AStatistic',
-  inheritAttrs: false,
   props: initDefaultProps(statisticProps(), {
     decimalSeparator: '.',
     groupSeparator: ',',
     loading: false,
   }),
-  slots: Object as CustomSlotsType<{
-    title?: any;
-    prefix?: any;
-    suffix?: any;
-    formatter?: any;
-    default?: any;
-  }>,
-  setup(props, { slots, attrs }) {
+  slots: ['title', 'prefix', 'suffix', 'formatter'],
+  setup(props, { slots }) {
     const { prefixCls, direction } = useConfigInject('statistic', props);
-
-    // Style
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
     return () => {
       const { value = 0, valueStyle, valueRender } = props;
       const pre = prefixCls.value;
       const title = props.title ?? slots.title?.();
       const prefix = props.prefix ?? slots.prefix?.();
       const suffix = props.suffix ?? slots.suffix?.();
-      const formatter = props.formatter ?? (slots.formatter as unknown as Formatter);
+      const formatter = props.formatter ?? slots.formatter;
       // data-for-update just for update component
       // https://github.com/vueComponent/ant-design-vue/pull/3170
-      let valueNode: VueNode = (
+      let valueNode = (
         <StatisticNumber
           data-for-update={Date.now()}
           {...{ ...props, prefixCls: pre, value, formatter }}
@@ -69,11 +56,8 @@ export default defineComponent({
       if (valueRender) {
         valueNode = valueRender(valueNode);
       }
-      return wrapSSR(
-        <div
-          {...attrs}
-          class={[pre, { [`${pre}-rtl`]: direction.value === 'rtl' }, attrs.class, hashId.value]}
-        >
+      return (
+        <div class={[pre, { [`${pre}-rtl`]: direction.value === 'rtl' }]}>
           {title && <div class={`${pre}-title`}>{title}</div>}
           <Skeleton paragraph={false} loading={props.loading}>
             <div style={valueStyle} class={`${pre}-content`}>
@@ -82,7 +66,7 @@ export default defineComponent({
               {suffix && <span class={`${pre}-content-suffix`}>{suffix}</span>}
             </div>
           </Skeleton>
-        </div>,
+        </div>
       );
     };
   },

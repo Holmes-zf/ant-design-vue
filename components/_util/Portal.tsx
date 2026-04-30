@@ -3,7 +3,7 @@ import {
   defineComponent,
   nextTick,
   onBeforeMount,
-  onMounted,
+  onBeforeUnmount,
   onUpdated,
   Teleport,
   watch,
@@ -23,24 +23,12 @@ export default defineComponent({
     // getContainer 不会改变，不用响应式
     let container: HTMLElement;
     const { shouldRender } = useInjectPortal();
-
-    function setContainer() {
+    onBeforeMount(() => {
+      isSSR = false;
       if (shouldRender.value) {
         container = props.getContainer();
       }
-    }
-
-    onBeforeMount(() => {
-      isSSR = false;
-      // drawer
-      setContainer();
     });
-    onMounted(() => {
-      if (container) return;
-      // https://github.com/vueComponent/ant-design-vue/issues/6937
-      setContainer();
-    });
-
     const stopWatch = watch(shouldRender, () => {
       if (shouldRender.value && !container) {
         container = props.getContainer();
@@ -56,11 +44,11 @@ export default defineComponent({
         }
       });
     });
-    // onBeforeUnmount(() => {
-    //   if (container && container.parentNode) {
-    //     container.parentNode.removeChild(container);
-    //   }
-    // });
+    onBeforeUnmount(() => {
+      if (container && container.parentNode) {
+        container.parentNode.removeChild(container);
+      }
+    });
     return () => {
       if (!shouldRender.value) return null;
       if (isSSR) {

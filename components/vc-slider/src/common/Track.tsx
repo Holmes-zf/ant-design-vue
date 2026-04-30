@@ -7,7 +7,7 @@ const Track = (_, { attrs }) => {
     length = Math.abs(length);
     offset = 100 - offset;
   }
-  const positionStyle = vertical
+  const positonStyle = vertical
     ? {
         [reverse ? 'top' : 'bottom']: `${offset}%`,
         [reverse ? 'bottom' : 'top']: 'auto',
@@ -21,7 +21,7 @@ const Track = (_, { attrs }) => {
 
   const elStyle = {
     ...style,
-    ...positionStyle,
+    ...positonStyle,
   };
   return included ? <div class={className} style={elStyle} /> : null;
 };

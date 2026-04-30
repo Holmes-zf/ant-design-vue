@@ -12,25 +12,17 @@
       </p>
     </section>
     <a-divider></a-divider>
-    <a-affix :offset-top="32" @change="handleAffixChange">
-      <div
-        class="components-overview-affix"
-        :class="{ 'components-overview-affixed': searchBarAffixed }"
-      >
-        <a-input
-          ref="inputRef"
-          v-model:value="search"
-          :placeholder="$t('app.components.overview.search')"
-          class="components-overview-search"
-          auto-focus
-          :style="{ fontSize: searchBarAffixed ? '18px' : '' }"
-        >
-          <template #suffix>
-            <SearchOutlined />
-          </template>
-        </a-input>
-      </div>
-    </a-affix>
+    <a-input
+      ref="inputRef"
+      v-model:value="search"
+      :placeholder="$t('app.components.overview.search')"
+      class="components-overview-search"
+      auto-focus
+    >
+      <template #suffix>
+        <SearchOutlined />
+      </template>
+    </a-input>
     <a-divider></a-divider>
     <template v-for="group in menuItems" :key="group.title">
       <div class="components-overview">
@@ -59,10 +51,7 @@
                     </div>
                   </template>
                   <div class="components-overview-img">
-                    <img
-                      :src="isDark && component.coverDark ? component.coverDark : component.cover"
-                      :alt="component.title"
-                    />
+                    <img :src="component.cover" :alt="component.title" />
                   </div>
                 </a-card>
               </component>
@@ -74,7 +63,7 @@
   </section>
 </template>
 <script lang="ts">
-import type { GlobalConfig } from '../type';
+import type { GlobalConfig } from '../App.vue';
 import { computed, defineComponent, inject, onMounted, ref } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import { GLOBAL_CONFIG } from '../SymbolKey';
@@ -87,17 +76,9 @@ export default defineComponent({
   },
   setup() {
     const globalConfig = inject<GlobalConfig>(GLOBAL_CONFIG);
-    const themeMode = inject('themeMode');
-    const isDark = computed<boolean>(() => (themeMode as any).theme.value === 'dark');
     const search = ref('');
     const inputRef = ref();
     const { dataSource } = useMenus();
-
-    const searchBarAffixed = ref(false);
-    function handleAffixChange(affixed?: boolean) {
-      searchBarAffixed.value = affixed;
-    }
-
     const menuItems = computed(() => {
       return [
         {
@@ -106,10 +87,19 @@ export default defineComponent({
               category: 'Components',
               cols: 1,
               cover: 'https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg',
-              coverDark: 'https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg',
-              path: 'https://surelyvue.com/',
+              path: 'https://surely.cool/',
               subtitle: '更强大的表格',
               title: 'Surely Table',
+              type: 'Advanced And Powerful',
+              target: '_blank',
+            },
+            {
+              category: 'Components',
+              cols: 1,
+              cover: 'https://aliyuncdn.antdv.com/form/static/assets/landing-config.4f9d5425.png',
+              path: 'https://form.antdv.com/',
+              subtitle: '在线表单',
+              title: 'Surely Form',
               type: 'Advanced And Powerful',
               target: '_blank',
             },
@@ -145,9 +135,6 @@ export default defineComponent({
       getLocalizedPathname,
       inputRef,
       isZhCN: globalConfig?.isZhCN,
-      isDark,
-      searchBarAffixed,
-      handleAffixChange,
     };
   },
 });

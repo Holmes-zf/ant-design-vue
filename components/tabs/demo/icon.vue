@@ -38,8 +38,18 @@ The Tab with Icon.
     </a-tab-pane>
   </a-tabs>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { AppleOutlined, AndroidOutlined } from '@ant-design/icons-vue';
-import { ref } from 'vue';
-const activeKey = ref('1');
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    AppleOutlined,
+    AndroidOutlined,
+  },
+  setup() {
+    return {
+      activeKey: ref('1'),
+    };
+  },
+});
 </script>

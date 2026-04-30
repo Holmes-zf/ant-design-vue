@@ -51,15 +51,6 @@ export default {
     };
   },
   watch: {
-    autoplay(newValue, oldValue) {
-      if (!oldValue && newValue) {
-        this.handleAutoPlay('playing');
-      } else if (newValue) {
-        this.handleAutoPlay('update');
-      } else {
-        this.pause('paused');
-      }
-    },
     __propsSymbol__() {
       const nextProps = this.$props;
       const spec = {
@@ -310,7 +301,7 @@ export default {
       };
     },
     checkImagesLoad() {
-      const images =
+      let images =
         (this.list &&
           this.list.querySelectorAll &&
           this.list.querySelectorAll('.slick-slide img')) ||
@@ -372,7 +363,7 @@ export default {
       }
     },
     slideHandler(index, dontAnimate = false) {
-      const { asNavFor, beforeChange, speed, afterChange } = this.$props;
+      const { asNavFor, currentSlide, beforeChange, speed, afterChange } = this.$props;
       const { state, nextState } = slideHandler({
         index,
         ...this.$props,
@@ -381,7 +372,7 @@ export default {
         useCSS: this.useCSS && !dontAnimate,
       });
       if (!state) return;
-      beforeChange && beforeChange(this.currentSlide, state.currentSlide);
+      beforeChange && beforeChange(currentSlide, state.currentSlide);
       const slidesToLoad = state.lazyLoadedList.filter(
         value => this.lazyLoadedList.indexOf(value) < 0,
       );
@@ -390,7 +381,7 @@ export default {
       }
       if (!this.$props.waitForAnimate && this.animationEndCallback) {
         clearTimeout(this.animationEndCallback);
-        afterChange && afterChange(this.currentSlide);
+        afterChange && afterChange(currentSlide);
         delete this.animationEndCallback;
       }
       this.setState(state, () => {

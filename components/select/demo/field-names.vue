@@ -31,41 +31,51 @@ Only options passing is supported, a-select-option construction node is not supp
     @change="handleChange"
   ></a-select>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import type { SelectProps } from 'ant-design-vue';
-import { ref } from 'vue';
-const value = ref('lucy');
-const options = ref<SelectProps['options']>([
-  {
-    id: 'jack',
-    name: 'Jack',
-    children: [
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const options = ref<SelectProps['options']>([
       {
-        id: 'small jack',
-        name: 'samll Jack',
+        id: 'jack',
+        name: 'Jack',
+        children: [
+          {
+            id: 'small jack',
+            name: 'samll Jack',
+          },
+        ],
       },
-    ],
-  },
-  {
-    id: 'lucy',
-    name: 'Lucy',
-  },
-  {
-    id: 'disabled',
-    name: 'Disabled',
-    disabled: true,
-  },
-  {
-    id: 'yiminghe',
-    name: 'Yiminghe',
-  },
-]);
+      {
+        id: 'lucy',
+        name: 'Lucy',
+      },
+      {
+        id: 'disabled',
+        name: 'Disabled',
+        disabled: true,
+      },
+      {
+        id: 'yiminghe',
+        name: 'Yiminghe',
+      },
+    ]);
 
-const focus = () => {
-  console.log('focus');
-};
+    const focus = () => {
+      console.log('focus');
+    };
 
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
+    const handleChange = (value: string) => {
+      console.log(`selected ${value}`);
+    };
+
+    return {
+      focus,
+      handleChange,
+      value: ref('lucy'),
+      options,
+    };
+  },
+});
 </script>

@@ -28,6 +28,13 @@ The icon should be placed in front of the text.
     <a-breadcrumb-item>Application</a-breadcrumb-item>
   </a-breadcrumb>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { HomeOutlined, UserOutlined } from '@ant-design/icons-vue';
+export default defineComponent({
+  components: {
+    HomeOutlined,
+    UserOutlined,
+  },
+});
 </script>

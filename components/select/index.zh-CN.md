@@ -3,8 +3,7 @@ category: Components
 subtitle: 选择器
 type: 数据录入
 title: Select
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*zo76T7KQx2UAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5oPiTqPxGAUAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 ---
 
 下拉选择器。
@@ -34,7 +33,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5oPiTqPxGAUAAA
 | defaultActiveFirstOption | 是否默认高亮第一个选项。 | boolean | true |  |
 | defaultOpen | 是否默认展开下拉菜单 | boolean | - |  |
 | disabled | 是否禁用 | boolean | false |  |
-| popupClassName | 下拉菜单的 className 属性 | string | - | 4.0 |
+| dropdownClassName | 下拉菜单的 className 属性 | string | - |  |
 | dropdownMatchSelectWidth | 下拉菜单和选择器同宽。默认将设置 `min-width`，当值小于选择框宽度时会被忽略。false 时会关闭虚拟滚动 | boolean \| number | true |  |
 | dropdownMenuStyle | dropdown 菜单自定义样式 | object | - |  |
 | dropdownRender | 自定义下拉框内容 | ({menuNode: VNode, props}) => VNode \| v-slot | - |  |
@@ -42,7 +41,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5oPiTqPxGAUAAA
 | fieldNames | 自定义节点 label、value、options 的字段 | object | { label: `label`, value: `value`, options: `options` } | 3.0 |
 | filterOption | 是否根据输入项进行筛选。当其为一个函数时，会接收 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`。 | `boolean` \| `function(inputValue, option)` | true |  |
 | filterSort | 搜索时对筛选结果项的排序函数, 类似[Array.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)里的 compareFunction | (optionA: Option, optionB: Option) => number | - | 3.0 |
-| firstActiveValue | 默认高亮的选项 | string \| string\[] | - |  |
+| firstActiveValue | 默认高亮的选项 | string\|string\[] | - |  |
 | getPopupContainer | 菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。 | function(triggerNode) | () => document.body |  |
 | labelInValue | 是否把每个选项的 label 包装到 value 中，会把 Select 的 value 类型从 `string` 变为 `{key: string, label: vNodes, originLabel: any}` 的格式, originLabel（3.1） 保持原始类型，如果通过 a-select-option children 构造的节点，该值是是个函数（即 a-select-option 的默认插槽） | boolean | false |  |
 | listHeight | 设置弹窗滚动高度 | number | 256 |  |
@@ -56,18 +55,16 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5oPiTqPxGAUAAA
 | option | 通过 option 插槽，自定义节点 | v-slot:option="{value, label, [disabled, key, title]}" | - | 2.2.5 |
 | optionFilterProp | 搜索时过滤对应的 option 属性，不支持 children | string | value |  |
 | optionLabelProp | 回填到选择框的 Option 的属性值，默认是 Option 的子元素。比如在子元素需要高亮效果时，此值可以设为 `value`。 | string | `children` \| `label`(设置 options 时) |  |
-| options | options 数据，如果设置则不需要手动构造 selectOption 节点 | Array&lt;{value, label, [disabled, key, title]}> | \[] |  |
+| options | options 数据，如果设置则不需要手动构造 selectOption 节点 | array&lt;{value, label, [disabled, key, title]}> | \[] |  |
 | placeholder | 选择框默认文字 | string\|slot | - |  |
-| placement | 选择框弹出的位置 | `bottomLeft` `bottomRight` `topLeft` `topRight` | bottomLeft | 3.3.0 |
 | removeIcon | 自定义的多选框清除图标 | VNode \| slot | - |  |
 | searchValue | 控制搜索文本 | string | - |  |
-| showArrow | 是否显示下拉小箭头 | boolean | 单选为 true,多选为 false |  |
-| showSearch | 配置是否可搜索 | boolean | 单选为 false,多选为 true |  |
-| size | 选择框大小，可选 `middle` `large` `small` | string | middle |  |
-| status | 设置校验状态 | 'error' \| 'warning' | - | 3.3.0 |
+| showArrow | 是否显示下拉小箭头 | boolean | 单选为true,多选为false |  |
+| showSearch | 配置是否可搜索 | boolean | 单选为false,多选为true |  |
+| size | 选择框大小，可选 `large` `small` | string | default |  |
 | suffixIcon | 自定义的选择框后缀图标 | VNode \| slot | - |  |
 | tagRender | 自定义 tag 内容 render，仅在 `mode` 为 `multiple` 或 `tags` 时生效 | slot \| (props) => any | - | 3.0 |
-| tokenSeparators | 自动分词的分隔符，仅在 `mode="tags"` 时生效 | string\[] | - |  |
+| tokenSeparators | 在 tags 和 multiple 模式下自动分词的分隔符 | string\[] |  |  |
 | value(v-model) | 指定当前选中的条目 | string\|string\[]\|number\|number\[] | - |  |
 | virtual | 设置 false 时关闭虚拟滚动 | boolean | true | 3.0 |
 
@@ -78,7 +75,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5oPiTqPxGAUAAA
 | 事件名称 | 说明 | 回调参数 |
 | --- | --- | --- |
 | blur | 失去焦点的时回调 | function |
-| change | 选中 option，或 input 的 value 变化（combobox 模式下）时，调用此函数 | function(value, option:Option \| Array&lt;Option>) |
+| change | 选中 option，或 input 的 value 变化（combobox 模式下）时，调用此函数 | function(value, option:Option/Array&lt;Option>) |
 | deselect | 取消选中时调用，参数为选中项的 value (或 key) 值，仅在 multiple 或 tags 模式下生效 | function(value，option:Option) |
 | dropdownVisibleChange | 展开下拉菜单的回调 | function(open) |
 | focus | 获得焦点时回调 | function |
@@ -111,13 +108,13 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5oPiTqPxGAUAAA
 | 参数  | 说明 | 类型                      | 默认值 |
 | ----- | ---- | ------------------------- | ------ |
 | key   |      | string                    | -      |
-| label | 组名 | string\|function(h)\|slot | -      |
+| label | 组名 | string\|function(h)\|slot | 无     |
 
 ## FAQ
 
 ### 点击 `dropdownRender` 里的内容浮层关闭怎么办？
 
-自定义内容点击时会关闭浮层，如果不喜欢关闭，可以通过取消点击事件的默认行为进行阻止。 看下 [dropdownRender 例子](#components-select-demo-custom-dropdown-menu) 里的说明。
+看下 [dropdownRender 例子](/components/select-cn/#components-select-demo-custom-dropdown) 里的说明。
 
 ### 为什么 `placeholder` 不显示 ？
 

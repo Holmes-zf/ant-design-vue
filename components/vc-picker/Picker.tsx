@@ -18,18 +18,16 @@ import type {
 } from './PickerPanel';
 import PickerPanel from './PickerPanel';
 import PickerTrigger from './PickerTrigger';
-import PresetPanel from './PresetPanel';
 import { formatValue, isEqual, parseValue } from './utils/dateUtil';
 import getDataOrAriaProps, { toArray } from './utils/miscUtil';
 import type { ContextOperationRefProps } from './PanelContext';
 import { useProvidePanel } from './PanelContext';
-import type { CustomFormat, PanelMode, PickerMode, PresetDate, RangeValue } from './interface';
+import type { CustomFormat, PickerMode } from './interface';
 import { getDefaultFormat, getInputSize, elementsContains } from './utils/uiUtil';
 import usePickerInput from './hooks/usePickerInput';
 import useTextValueMapping from './hooks/useTextValueMapping';
 import useValueTexts from './hooks/useValueTexts';
 import useHoverValue from './hooks/useHoverValue';
-import usePresets from './hooks/usePresets';
 import type { CSSProperties, HTMLAttributes, Ref } from 'vue';
 import { computed, defineComponent, ref, toRef, watch } from 'vue';
 import type { ChangeEvent, FocusEventHandler, MouseEventHandler } from '../_util/EventInterface';
@@ -39,6 +37,7 @@ import useMergedState from '../_util/hooks/useMergedState';
 import { warning } from '../vc-util/warning';
 import classNames from '../_util/classNames';
 import type { SharedTimeProps } from './panels/TimePanel';
+import { useProviderTrigger } from '../vc-trigger/context';
 import { legacyPropsWarning } from './utils/warnUtil';
 
 export type PickerRefConfig = {
@@ -62,8 +61,6 @@ export type PickerSharedProps<DateType> = {
   inputReadOnly?: boolean;
   id?: string;
 
-  presets?: PresetDate<DateType>[];
-
   // Value
   format?: string | CustomFormat<DateType> | (string | CustomFormat<DateType>)[];
 
@@ -81,7 +78,6 @@ export type PickerSharedProps<DateType> = {
   // Events
   onChange?: (value: DateType | null, dateString: string) => void;
   onOpenChange?: (open: boolean) => void;
-  onPanelChange?: (values: RangeValue<DateType>, modes: [PanelMode, PanelMode]) => void;
   onFocus?: FocusEventHandler;
   onBlur?: FocusEventHandler;
   onMousedown?: MouseEventHandler;
@@ -167,7 +163,6 @@ function Picker<DateType>() {
       'defaultOpen',
       'defaultOpenValue',
       'suffixIcon',
-      'presets',
       'clearIcon',
       'disabled',
       'disabledDate',
@@ -177,7 +172,6 @@ function Picker<DateType>() {
       'inputRender',
       'onChange',
       'onOpenChange',
-      'onPanelChange',
       'onFocus',
       'onBlur',
       'onMousedown',
@@ -198,10 +192,17 @@ function Picker<DateType>() {
       'secondStep',
       'hideDisabledOptions',
     ] as any,
+    // slots: [
+    //   'suffixIcon',
+    //   'clearIcon',
+    //   'prevIcon',
+    //   'nextIcon',
+    //   'superPrevIcon',
+    //   'superNextIcon',
+    //   'panelRender',
+    // ],
     setup(props, { attrs, expose }) {
       const inputRef = ref(null);
-      const presets = computed(() => props.presets);
-      const presetList = usePresets(presets);
       const picker = computed(() => props.picker ?? 'date');
       const needConfirmButton = computed(
         () => (picker.value === 'date' && !!props.showTime) || picker.value === 'time',
@@ -407,6 +408,7 @@ function Picker<DateType>() {
       useProvidePanel({
         operationRef,
         hideHeader: computed(() => picker.value === 'time'),
+        panelRef: panelDivRef,
         onSelect: onContextSelect,
         open: mergedOpen,
         defaultOpenValue: toRef(props, 'defaultOpenValue'),
@@ -426,6 +428,8 @@ function Picker<DateType>() {
           }
         },
       });
+
+      const getPortal = useProviderTrigger();
 
       return () => {
         const {
@@ -458,6 +462,7 @@ function Picker<DateType>() {
           direction,
           autocomplete = 'off',
         } = props;
+
         // ============================= Panel =============================
         const panelProps = {
           // Remove `picker` & `format` here since TimePicker is little different with other panel
@@ -473,33 +478,23 @@ function Picker<DateType>() {
         };
 
         let panelNode: VueNode = (
-          <div class={`${prefixCls}-panel-layout`}>
-            <PresetPanel
-              prefixCls={prefixCls}
-              presets={presetList.value}
-              onClick={nextValue => {
-                triggerChange(nextValue);
-                triggerOpen(false);
-              }}
-            />
-            <PickerPanel
-              {...panelProps}
-              generateConfig={generateConfig}
-              value={selectedValue.value}
-              locale={locale}
-              tabindex={-1}
-              onSelect={date => {
-                onSelect?.(date);
-                setSelectedValue(date);
-              }}
-              direction={direction}
-              onPanelChange={(viewDate, mode) => {
-                const { onPanelChange } = props;
-                onLeave(true);
-                onPanelChange?.(viewDate, mode);
-              }}
-            />
-          </div>
+          <PickerPanel
+            {...panelProps}
+            generateConfig={generateConfig}
+            value={selectedValue.value}
+            locale={locale}
+            tabindex={-1}
+            onSelect={date => {
+              onSelect?.(date);
+              setSelectedValue(date);
+            }}
+            direction={direction}
+            onPanelChange={(viewDate, mode) => {
+              const { onPanelChange } = props;
+              onLeave(true);
+              onPanelChange?.(viewDate, mode);
+            }}
+          />
         );
 
         if (panelRender) {
@@ -509,7 +504,6 @@ function Picker<DateType>() {
         const panel = (
           <div
             class={`${prefixCls}-panel-container`}
-            ref={panelDivRef}
             onMousedown={e => {
               e.preventDefault();
             }}
@@ -582,57 +576,48 @@ function Picker<DateType>() {
 
         const popupPlacement = direction === 'rtl' ? 'bottomRight' : 'bottomLeft';
         return (
-          <div
-            ref={containerRef}
-            class={classNames(prefixCls, attrs.class, {
-              [`${prefixCls}-disabled`]: disabled,
-              [`${prefixCls}-focused`]: focused.value,
-              [`${prefixCls}-rtl`]: direction === 'rtl',
-            })}
-            style={attrs.style as CSSProperties}
-            onMousedown={onMousedown}
-            onMouseup={onInternalMouseup}
-            onMouseenter={onMouseenter}
-            onMouseleave={onMouseleave}
-            onContextmenu={onContextmenu}
-            onClick={onClick}
+          <PickerTrigger
+            visible={mergedOpen.value}
+            popupStyle={popupStyle}
+            prefixCls={prefixCls}
+            dropdownClassName={dropdownClassName}
+            dropdownAlign={dropdownAlign}
+            getPopupContainer={getPopupContainer}
+            transitionName={transitionName}
+            popupPlacement={popupPlacement}
+            direction={direction}
+            v-slots={{
+              popupElement: () => panel,
+            }}
           >
             <div
-              class={classNames(`${prefixCls}-input`, {
-                [`${prefixCls}-input-placeholder`]: !!hoverValue.value,
+              ref={containerRef}
+              class={classNames(prefixCls, attrs.class, {
+                [`${prefixCls}-disabled`]: disabled,
+                [`${prefixCls}-focused`]: focused.value,
+                [`${prefixCls}-rtl`]: direction === 'rtl',
               })}
-              ref={inputDivRef}
-            >
-              {inputNode}
-              {suffixNode}
-              {clearNode}
-            </div>
-            <PickerTrigger
-              visible={mergedOpen.value}
-              popupStyle={popupStyle}
-              prefixCls={prefixCls}
-              dropdownClassName={dropdownClassName}
-              dropdownAlign={dropdownAlign}
-              getPopupContainer={getPopupContainer}
-              transitionName={transitionName}
-              popupPlacement={popupPlacement}
-              direction={direction}
-              v-slots={{
-                popupElement: () => panel,
-              }}
+              style={attrs.style as CSSProperties}
+              onMousedown={onMousedown}
+              onMouseup={onInternalMouseup}
+              onMouseenter={onMouseenter}
+              onMouseleave={onMouseleave}
+              onContextmenu={onContextmenu}
+              onClick={onClick}
             >
               <div
-                style={{
-                  pointerEvents: 'none',
-                  position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                }}
-              ></div>
-            </PickerTrigger>
-          </div>
+                class={classNames(`${prefixCls}-input`, {
+                  [`${prefixCls}-input-placeholder`]: !!hoverValue.value,
+                })}
+                ref={inputDivRef}
+              >
+                {inputNode}
+                {suffixNode}
+                {clearNode}
+              </div>
+              {getPortal()}
+            </div>
+          </PickerTrigger>
         );
       };
     },

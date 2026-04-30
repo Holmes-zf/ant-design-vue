@@ -32,12 +32,22 @@ In order to fit in more tabs, they can slide left and right (or up and down).
     </a-tabs>
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import type { TabsProps } from 'ant-design-vue';
-const mode = ref<TabsProps['tabPosition']>('top');
-const activeKey = ref(1);
-const callback: TabsProps['onTabScroll'] = val => {
-  console.log(val);
-};
+
+export default defineComponent({
+  setup() {
+    const mode = ref<TabsProps['tabPosition']>('top');
+    const activeKey = ref(1);
+    const callback: TabsProps['onTabScroll'] = val => {
+      console.log(val);
+    };
+    return {
+      mode,
+      callback,
+      activeKey,
+    };
+  },
+});
 </script>

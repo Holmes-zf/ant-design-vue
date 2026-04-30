@@ -1,10 +1,9 @@
 import { computed, defineComponent } from 'vue';
 import classNames from '../_util/classNames';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import omit from '../_util/omit';
 import type { SkeletonElementProps } from './Element';
 import { skeletonElementProps } from './Element';
-import useStyle from './style';
 
 export type SkeletonImageProps = Omit<SkeletonElementProps, 'size' | 'shape' | 'active'>;
 
@@ -17,12 +16,9 @@ const SkeletonImage = defineComponent({
   props: omit(skeletonElementProps(), ['size', 'shape', 'active']),
   setup(props) {
     const { prefixCls } = useConfigInject('skeleton', props);
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-    const cls = computed(() =>
-      classNames(prefixCls.value, `${prefixCls.value}-element`, hashId.value),
-    );
+    const cls = computed(() => classNames(prefixCls.value, `${prefixCls.value}-element`));
     return () => {
-      return wrapSSR(
+      return (
         <div class={cls.value}>
           <div class={`${prefixCls.value}-image`}>
             <svg
@@ -33,7 +29,7 @@ const SkeletonImage = defineComponent({
               <path d={path} class={`${prefixCls.value}-image-path`} />
             </svg>
           </div>
-        </div>,
+        </div>
       );
     };
   },

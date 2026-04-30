@@ -2,15 +2,7 @@ import type { AlignType } from '../interface';
 import useVisibleStatus from './useVisibleStatus';
 import useStretchStyle from './useStretchStyle';
 import type { CSSProperties } from 'vue';
-import {
-  computed,
-  defineComponent,
-  shallowRef,
-  toRef,
-  Transition,
-  watch,
-  withModifiers,
-} from 'vue';
+import { computed, defineComponent, ref, toRef, Transition, watch, withModifiers } from 'vue';
 import type { RefAlign } from '../../vc-align/Align';
 import Align from '../../vc-align/Align';
 import { getMotion } from '../utils/motionUtil';
@@ -28,9 +20,9 @@ export default defineComponent({
   props: innerProps,
   emits: ['mouseenter', 'mouseleave', 'mousedown', 'touchstart', 'align'],
   setup(props, { expose, attrs, slots }) {
-    const alignRef = shallowRef<RefAlign>();
-    const elementRef = shallowRef<HTMLDivElement>();
-    const alignedClassName = shallowRef<string>();
+    const alignRef = ref<RefAlign>();
+    const elementRef = ref<HTMLDivElement>();
+    const alignedClassName = ref<string>();
     // ======================= Measure ========================
     const [stretchStyle, measureStretchStyle] = useStretchStyle(toRef(props, 'stretch'));
 
@@ -39,7 +31,7 @@ export default defineComponent({
         measureStretchStyle(props.getRootDomNode());
       }
     };
-    const visible = shallowRef(false);
+    const visible = ref(false);
     let timeoutId: any;
     watch(
       () => props.visible,
@@ -60,7 +52,7 @@ export default defineComponent({
     const [status, goNextStatus] = useVisibleStatus(visible, doMeasure);
 
     // ======================== Aligns ========================
-    const prepareResolveRef = shallowRef<(value?: unknown) => void>();
+    const prepareResolveRef = ref<(value?: unknown) => void>();
 
     // `target` on `rc-align` can accept as a function to get the bind element or a point.
     // ref: https://www.npmjs.com/package/rc-align
@@ -171,13 +163,7 @@ export default defineComponent({
       if (childNode.length > 1) {
         childNode = <div class={`${prefixCls}-content`}>{childNode}</div>;
       }
-
-      const mergedClassName = classNames(
-        prefixCls,
-        attrs.class,
-        alignedClassName.value,
-        !props.arrow && `${prefixCls}-arrow-hidden`,
-      );
+      const mergedClassName = classNames(prefixCls, attrs.class, alignedClassName.value);
       const hasAnimate = visible.value || !props.visible;
       const transitionProps = hasAnimate ? getTransitionProps(motion.value.name, motion.value) : {};
 
@@ -196,7 +182,7 @@ export default defineComponent({
                   ref={alignRef}
                   monitorWindowResize
                   disabled={alignDisabled.value}
-                  align={align as any}
+                  align={align}
                   onAlign={onInternalAlign}
                   v-slots={{
                     default: () => (
@@ -204,11 +190,11 @@ export default defineComponent({
                         class={mergedClassName}
                         onMouseenter={onMouseenter}
                         onMouseleave={onMouseleave}
-                        onMousedown={withModifiers(onMousedown, ['capture'] as any)}
+                        onMousedown={withModifiers(onMousedown, ['capture'])}
                         {...{
                           [supportsPassive ? 'onTouchstartPassive' : 'onTouchstart']: withModifiers(
                             onTouchstart,
-                            ['capture'] as any,
+                            ['capture'],
                           ),
                         }}
                         style={mergedStyle}

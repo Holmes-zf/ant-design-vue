@@ -2,8 +2,7 @@
 category: Components
 type: Data Display
 title: Empty
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*ZdiZSLzEV0wAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*obM7S5lIxeMAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/MNbKfLBVb/Empty.svg
 ---
 
 Empty state placeholder.

@@ -19,13 +19,20 @@ Use custom loading indicator.
 <template>
   <a-spin :indicator="indicator" />
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { LoadingOutlined } from '@ant-design/icons-vue';
-import { h } from 'vue';
-const indicator = h(LoadingOutlined, {
-  style: {
-    fontSize: '24px',
+import { defineComponent, h } from 'vue';
+export default defineComponent({
+  setup() {
+    const indicator = h(LoadingOutlined, {
+      style: {
+        fontSize: '24px',
+      },
+      spin: true,
+    });
+    return {
+      indicator,
+    };
   },
-  spin: true,
 });
 </script>

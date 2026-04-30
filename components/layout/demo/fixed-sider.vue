@@ -164,8 +164,7 @@ When dealing with long content, a fixed sider can provide a better user experien
     </a-layout>
   </a-layout>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import {
   UserOutlined,
   VideoCameraOutlined,
@@ -176,10 +175,27 @@ import {
   TeamOutlined,
   ShopOutlined,
 } from '@ant-design/icons-vue';
-const selectedKeys = ref<string[]>(['4']);
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    UserOutlined,
+    VideoCameraOutlined,
+    UploadOutlined,
+    BarChartOutlined,
+    CloudOutlined,
+    AppstoreOutlined,
+    TeamOutlined,
+    ShopOutlined,
+  },
+  setup() {
+    return {
+      selectedKeys: ref<string[]>(['4']),
+    };
+  },
+});
 </script>
 
-<style scoped>
+<style>
 #components-layout-demo-fixed-sider .logo {
   height: 32px;
   background: rgba(255, 255, 255, 0.2);

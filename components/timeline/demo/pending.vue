@@ -27,11 +27,21 @@ When the timeline is incomplete and ongoing, put a ghost node at last. Set `pend
     <a-button type="primary" style="margin-top: 16px" @click="handleClick">Toggle Reverse</a-button>
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const reverse = ref<boolean>(false);
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 
-const handleClick = () => {
-  reverse.value = !reverse.value;
-};
+export default defineComponent({
+  setup() {
+    const reverse = ref<boolean>(false);
+
+    const handleClick = () => {
+      reverse.value = !reverse.value;
+    };
+
+    return {
+      reverse,
+      handleClick,
+    };
+  },
+});
 </script>

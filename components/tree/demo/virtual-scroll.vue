@@ -22,7 +22,7 @@ Use virtual list through `height` prop.
     default-expand-all
     checkable
     :height="233"
-    :tree-data="dig()"
+    :tree-data="treeData"
   >
     <template #title="{ title, key }">
       <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ title }}</span>
@@ -30,9 +30,9 @@ Use virtual list through `height` prop.
     </template>
   </a-tree>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import type { TreeProps } from 'ant-design-vue';
-import { ref, watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
 function dig(path = '0', level = 3) {
   const list: TreeProps['treeData'] = [];
@@ -52,12 +52,22 @@ function dig(path = '0', level = 3) {
   return list;
 }
 
-const selectedKeys = ref<string[]>(['0-0-0', '0-0-1']);
-const checkedKeys = ref<string[]>(['0-0-0', '0-0-1']);
-watch(selectedKeys, () => {
-  console.log('selectedKeys', selectedKeys);
-});
-watch(checkedKeys, () => {
-  console.log('checkedKeys', checkedKeys);
+export default defineComponent({
+  setup() {
+    const selectedKeys = ref<string[]>(['0-0-0', '0-0-1']);
+    const checkedKeys = ref<string[]>(['0-0-0', '0-0-1']);
+    watch(selectedKeys, () => {
+      console.log('selectedKeys', selectedKeys);
+    });
+    watch(checkedKeys, () => {
+      console.log('checkedKeys', checkedKeys);
+    });
+
+    return {
+      treeData: dig(),
+      selectedKeys,
+      checkedKeys,
+    };
+  },
 });
 </script>

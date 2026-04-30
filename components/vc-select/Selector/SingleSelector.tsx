@@ -1,7 +1,7 @@
 import pickAttrs from '../../_util/pickAttrs';
 import Input from './Input';
 import type { InnerSelectorProps } from './interface';
-import { Fragment, computed, defineComponent, shallowRef, watch } from 'vue';
+import { Fragment, computed, defineComponent, ref, watch } from 'vue';
 import PropTypes from '../../_util/vue-types';
 import type { VueNode } from '../../_util/type';
 import useInjectLegacySelectContext from '../../vc-tree-select/LegacyContext';
@@ -10,7 +10,6 @@ interface SelectorProps extends InnerSelectorProps {
   inputElement: VueNode;
   activeValue: string;
   optionLabelRender: Function;
-  compositionStatus: boolean;
 }
 const props = {
   inputElement: PropTypes.any,
@@ -21,7 +20,6 @@ const props = {
   searchValue: String,
   inputRef: PropTypes.any,
   placeholder: PropTypes.any,
-  compositionStatus: { type: Boolean, default: undefined },
   disabled: { type: Boolean, default: undefined },
   mode: String,
   showSearch: { type: Boolean, default: undefined },
@@ -42,7 +40,7 @@ const props = {
 const SingleSelector = defineComponent<SelectorProps>({
   name: 'SingleSelector',
   setup(props) {
-    const inputChanged = shallowRef(false);
+    const inputChanged = ref(false);
 
     const combobox = computed(() => props.mode === 'combobox');
     const inputEditable = computed(() => combobox.value || props.showSearch);
@@ -67,9 +65,7 @@ const SingleSelector = defineComponent<SelectorProps>({
 
     // Not show text when closed expect combobox mode
     const hasTextInput = computed(() =>
-      props.mode !== 'combobox' && !props.open && !props.showSearch
-        ? false
-        : !!inputValue.value || props.compositionStatus,
+      props.mode !== 'combobox' && !props.open && !props.showSearch ? false : !!inputValue.value,
     );
 
     const title = computed(() => {
@@ -90,13 +86,6 @@ const SingleSelector = defineComponent<SelectorProps>({
         </span>
       );
     };
-    const handleInput = (e: Event) => {
-      const composing = (e.target as any).composing;
-      if (!composing) {
-        inputChanged.value = true;
-        props.onInputChange(e);
-      }
-    };
 
     return () => {
       const {
@@ -114,6 +103,7 @@ const SingleSelector = defineComponent<SelectorProps>({
         optionLabelRender,
         onInputKeyDown,
         onInputMouseDown,
+        onInputChange,
         onInputPaste,
         onInputCompositionStart,
         onInputCompositionEnd,
@@ -157,7 +147,10 @@ const SingleSelector = defineComponent<SelectorProps>({
               value={inputValue.value}
               onKeydown={onInputKeyDown}
               onMousedown={onInputMouseDown}
-              onChange={handleInput}
+              onChange={e => {
+                inputChanged.value = true;
+                onInputChange(e as any);
+              }}
               onPaste={onInputPaste}
               onCompositionstart={onInputCompositionStart}
               onCompositionend={onInputCompositionEnd}

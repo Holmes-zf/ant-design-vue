@@ -3,8 +3,7 @@ category: Components
 type: 数据展示
 title: Popover
 subtitle: 气泡卡片
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*XhL3QpRw92kAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*RMP_TrdZ3nsAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/1PNL1p_cO/Popover.svg
 ---
 
 点击/鼠标移入元素，弹出气泡式的卡片浮层。
@@ -22,7 +21,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*RMP_TrdZ3nsAAA
 | content | 卡片内容 | string\|slot\|VNode | -      |      |
 | title   | 卡片标题 | string\|slot\|VNode | -      |      |
 
-更多属性请参考 [Tooltip](/components/tooltip-cn/#api)。
+更多属性请参考 [Tooltip](/components/tooltip-cn/#API)。
 
 ## 注意
 

@@ -65,7 +65,8 @@ We preset five different colors, you can set color property such as `success`,`p
     </a-tag>
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import {
   CheckCircleOutlined,
   SyncOutlined,
@@ -74,4 +75,15 @@ import {
   ClockCircleOutlined,
   MinusCircleOutlined,
 } from '@ant-design/icons-vue';
+
+export default defineComponent({
+  components: {
+    CheckCircleOutlined,
+    SyncOutlined,
+    CloseCircleOutlined,
+    ExclamationCircleOutlined,
+    ClockCircleOutlined,
+    MinusCircleOutlined,
+  },
+});
 </script>

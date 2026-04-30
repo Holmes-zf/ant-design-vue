@@ -6,10 +6,10 @@ html {
 
 body {
   overflow-x: hidden;
-  color: var(--site-text-color);
-  font-size: var(--font-size-base);
-  font-family: var(--font-family);
-  background: var(--body-background);
+  color: @site-text-color;
+  font-size: @font-size-base;
+  font-family: @font-family;
+  background: @body-background;
   transition: background 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -19,15 +19,15 @@ a {
 
 .main-wrapper {
   position: relative;
-  padding: 0;
-  background: var(--component-background);
+  padding: 40px 0 0;
+  background: @component-background;
 }
 
 .main-container {
   position: relative;
   min-height: 500px;
-  padding: 40px 170px 32px 64px;
-  background: var(--component-background);
+  padding: 0 170px 32px 64px;
+  background: @component-background;
 
   .ant-row-rtl & {
     padding: 0 64px 144px 170px;
@@ -46,11 +46,17 @@ a {
   &:hover &-inner {
     overflow-y: auto;
   }
+
+  > div,
+  > div > div {
+    height: 100%;
+  }
 }
 
 .aside-container {
   min-height: 100%;
   padding-bottom: 48px;
+  font-family: Avenir, @font-family, sans-serif;
 
   &.ant-menu-inline {
     .ant-menu-submenu-title h4,
@@ -72,7 +78,7 @@ a {
         display: block;
         width: calc(100% - 20px);
         height: 1px;
-        background: var(--site-border-color-split);
+        background: @border-color-split;
         content: '';
       }
     }
@@ -87,11 +93,6 @@ a {
       .ant-row-rtl & {
         padding-right: 40px !important;
         padding-left: 16px !important;
-      }
-
-      .ant-menu-title-content {
-        display: flex;
-        align-items: center;
       }
     }
 
@@ -133,7 +134,7 @@ a {
       position: absolute;
       top: 16px;
       right: -10px;
-      color: var(--primary-color);
+      color: @primary-color;
       font-size: 12px;
       opacity: 0;
       transition: all 0.3s;
@@ -169,24 +170,24 @@ a {
 // reset menu text color
 .menu-site {
   .ant-menu-item > a {
-    color: var(--site-text-color);
+    color: @site-text-color;
   }
 
   .ant-menu-item-selected > a,
   .ant-menu-item > a:hover {
-    color: var(--primary-color);
+    color: @primary-color;
   }
 }
 
 #app {
   height: 100%;
-  transition: transform 0.3s var(--ease-in-out-circ);
+  transition: transform 0.3s @ease-in-out-circ;
 }
 
 .drawer-content {
   padding: 40px 0;
   &-wrapper {
-    background-color: var(--component-background);
+    background-color: @component-background;
   }
 }
 
@@ -196,7 +197,7 @@ a {
 
 #_hj_feedback_container {
   [class$='icon_emotion_path1']::before {
-    color: var(--primary-color) !important;
+    color: @primary-color !important;
   }
 }
 
@@ -217,15 +218,15 @@ a {
     display: block;
   }
   &-active {
-    color: var(--primary-color);
+    color: @primary-color;
   }
   & &-avatar {
     color: #000;
     background-color: #fff;
-    box-shadow: var(--shadow-2);
+    box-shadow: @shadow-2;
     transition: color 0.3s;
     &:hover {
-      color: var(--primary-color);
+      color: @primary-color;
     }
   }
 }
@@ -253,7 +254,7 @@ a {
   > .ant-menu-item-group-title::after,
 .main-wrapper .main-container,
 #demo-toc.toc {
-  transition: all 0.3s var(--ease-in-out-circ);
+  transition: all 0.3s @ease-in-out-circ;
 }
 
 // remove margin-bottom from dark theme (why need margin-bottom in dark theme?)

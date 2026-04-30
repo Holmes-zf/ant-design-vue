@@ -32,14 +32,24 @@ Adjust popup placement automatically when popup is invisible.
     </a-tooltip>
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 const wrapStyles: Record<string, string> = {
   overflow: 'hidden',
   position: 'relative',
   padding: '24px',
   border: '1px solid #e9e9e9',
 };
-const getPopupContainer = (trigger: HTMLElement) => {
-  return trigger.parentElement;
-};
+export default defineComponent({
+  setup() {
+    const getPopupContainer = (trigger: HTMLElement) => {
+      return trigger.parentElement;
+    };
+
+    return {
+      wrapStyles,
+      getPopupContainer,
+    };
+  },
+});
 </script>

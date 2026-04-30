@@ -34,8 +34,8 @@ large count of items with pagination.
     />
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 interface MockData {
   key: string;
   title: string;
@@ -51,14 +51,24 @@ for (let i = 0; i < 200; i++) {
 }
 
 const oriTargetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => item.key);
+export default defineComponent({
+  data() {
+    const disabled = ref<boolean>(false);
 
-const disabled = ref<boolean>(false);
+    const targetKeys = ref<string[]>(oriTargetKeys);
 
-const targetKeys = ref<string[]>(oriTargetKeys);
+    const handleChange = (nextTargetKeys: string[], direction: string, moveKeys: string[]) => {
+      console.log('targetKeys: ', nextTargetKeys);
+      console.log('direction: ', direction);
+      console.log('moveKeys: ', moveKeys);
+    };
 
-const handleChange = (nextTargetKeys: string[], direction: string, moveKeys: string[]) => {
-  console.log('targetKeys: ', nextTargetKeys);
-  console.log('direction: ', direction);
-  console.log('moveKeys: ', moveKeys);
-};
+    return {
+      mockData,
+      targetKeys,
+      disabled,
+      handleChange,
+    };
+  },
+});
 </script>

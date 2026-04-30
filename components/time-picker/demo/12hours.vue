@@ -23,8 +23,14 @@ TimePicker of 12 hours format, with default format `h:mm:ss a`.
     <a-time-picker v-model:value="value" use12-hours format="h:mm a" />
   </a-space>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import { Dayjs } from 'dayjs';
-const value = ref<Dayjs>();
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    return {
+      value: ref<Dayjs>(),
+    };
+  },
+});
 </script>

@@ -1,5 +1,3 @@
-/* eslint-disable prefer-spread */
-/* eslint-disable prefer-rest-params */
 import closest from './closest';
 
 /**
@@ -13,7 +11,7 @@ import closest from './closest';
  * @return {Object}
  */
 function _delegate(element, selector, type, callback, useCapture) {
-  const listenerFn = listener.apply(this, arguments);
+  let listenerFn = listener.apply(this, arguments);
 
   element.addEventListener(type, listenerFn, useCapture);
 

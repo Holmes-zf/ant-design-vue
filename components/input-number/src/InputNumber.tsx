@@ -5,13 +5,11 @@ import StepHandler from './StepHandler';
 import { getNumberPrecision, num2str, validateNumber } from './utils/numberUtil';
 import useCursor from './hooks/useCursor';
 import useFrame from './hooks/useFrame';
-import type { HTMLAttributes } from 'vue';
-import { watch, computed, shallowRef, defineComponent } from 'vue';
+import type { HTMLAttributes, PropType } from 'vue';
+import { watch, computed, ref, defineComponent } from 'vue';
 import type { ChangeEvent, KeyboardEventHandler } from '../../_util/EventInterface';
 import KeyCode from '../../_util/KeyCode';
 import classNames from '../../_util/classNames';
-import { booleanType, stringType, someType, functionType } from '../../_util/type';
-import type { CustomSlotsType } from '../../_util/type';
 
 /**
  * We support `stringMode` which need handle correct type when user call in onChange
@@ -38,42 +36,46 @@ const getDecimalIfValidate = (value: ValueType) => {
 
 export const inputNumberProps = () => ({
   /** value will show as string */
-  stringMode: booleanType(),
+  stringMode: { type: Boolean as PropType<boolean> },
 
-  defaultValue: someType<ValueType>([String, Number]),
-  value: someType<ValueType>([String, Number]),
+  defaultValue: { type: [String, Number] as PropType<ValueType> },
+  value: { type: [String, Number] as PropType<ValueType> },
 
-  prefixCls: stringType<string>(),
-  min: someType<ValueType>([String, Number]),
-  max: someType<ValueType>([String, Number]),
-  step: someType<ValueType>([String, Number], 1),
-  tabindex: Number,
-  controls: booleanType(true),
-  readonly: booleanType(),
-  disabled: booleanType(),
-  autofocus: booleanType(),
-  keyboard: booleanType(true),
+  prefixCls: { type: String as PropType<string> },
+  min: { type: [String, Number] as PropType<ValueType> },
+  max: { type: [String, Number] as PropType<ValueType> },
+  step: { type: [String, Number] as PropType<ValueType>, default: 1 },
+  tabindex: { type: Number as PropType<number> },
+  controls: { type: Boolean as PropType<boolean>, default: true },
+  readonly: { type: Boolean as PropType<boolean> },
+  disabled: { type: Boolean as PropType<boolean> },
+  autofocus: { type: Boolean as PropType<boolean> },
+  keyboard: { type: Boolean as PropType<boolean>, default: true },
 
   /** Parse display value to validate number */
-  parser: functionType<(displayValue: string | undefined) => ValueType>(),
+  parser: { type: Function as PropType<(displayValue: string | undefined) => ValueType> },
   /** Transform `value` to display value show in input */
-  formatter:
-    functionType<
+  formatter: {
+    type: Function as PropType<
       (value: ValueType | undefined, info: { userTyping: boolean; input: string }) => string
-    >(),
+    >,
+  },
   /** Syntactic sugar of `formatter`. Config precision of display. */
-  precision: Number,
+  precision: { type: Number as PropType<number> },
   /** Syntactic sugar of `formatter`. Config decimal separator of display. */
-  decimalSeparator: String,
+  decimalSeparator: { type: String as PropType<string> },
 
-  onInput: functionType<(text: string) => void>(),
-  onChange: functionType<(value: ValueType) => void>(),
-  onPressEnter: functionType<KeyboardEventHandler>(),
+  onInput: { type: Function as PropType<(text: string) => void> },
+  onChange: { type: Function as PropType<(value: ValueType) => void> },
+  onPressEnter: { type: Function as PropType<KeyboardEventHandler> },
 
-  onStep:
-    functionType<(value: ValueType, info: { offset: ValueType; type: 'up' | 'down' }) => void>(),
-  onBlur: functionType<(e: FocusEvent) => void>(),
-  onFocus: functionType<(e: FocusEvent) => void>(),
+  onStep: {
+    type: Function as PropType<
+      (value: ValueType, info: { offset: ValueType; type: 'up' | 'down' }) => void
+    >,
+  },
+  onBlur: { type: Function as PropType<(e: FocusEvent) => void> },
+  onFocus: { type: Function as PropType<(e: FocusEvent) => void> },
 });
 
 export default defineComponent({
@@ -84,17 +86,13 @@ export default defineComponent({
     ...inputNumberProps(),
     lazy: Boolean,
   },
-  slots: Object as CustomSlotsType<{
-    upHandler: any;
-    downHandler: any;
-    default: any;
-  }>,
+  slots: ['upHandler', 'downHandler'],
   setup(props, { attrs, slots, emit, expose }) {
-    const inputRef = shallowRef<HTMLInputElement>();
-    const focus = shallowRef(false);
-    const userTypingRef = shallowRef(false);
-    const compositionRef = shallowRef(false);
-    const decimalValue = shallowRef(getMiniDecimal(props.value));
+    const inputRef = ref<HTMLInputElement>();
+    const focus = ref(false);
+    const userTypingRef = ref(false);
+    const compositionRef = ref(false);
+    const decimalValue = ref(getMiniDecimal(props.value));
 
     function setUncontrolledDecimalValue(newDecimal: DecimalClass) {
       if (props.value === undefined) {
@@ -144,7 +142,7 @@ export default defineComponent({
     };
 
     // >>> Formatter
-    const inputValue = shallowRef<string | number>('');
+    const inputValue = ref<string | number>('');
 
     const mergedFormatter = (number: string, userTyping: boolean) => {
       if (props.formatter) {
@@ -395,11 +393,6 @@ export default defineComponent({
       }
     };
 
-    // Solve the issue of the event triggering sequence when entering numbers in chinese input (Safari)
-    const onBeforeInput = () => {
-      userTypingRef.value = true;
-    };
-
     const onKeyDown: KeyboardEventHandler = event => {
       const { which } = event;
       userTypingRef.value = true;
@@ -582,7 +575,6 @@ export default defineComponent({
               onBlur={onBlur}
               onCompositionstart={onCompositionStart}
               onCompositionend={onCompositionEnd}
-              onBeforeinput={onBeforeInput}
             />
           </div>
         </div>

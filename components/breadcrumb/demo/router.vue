@@ -32,8 +32,8 @@ Used together with `vue-router`
     {{ $route.path }}
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 interface Route {
   path: string;
   breadcrumbName: string;
@@ -42,33 +42,40 @@ interface Route {
     breadcrumbName: string;
   }>;
 }
-const basePath = '/components/breadcrumb';
-const routes = ref<Route[]>([
-  {
-    path: 'index',
-    breadcrumbName: 'home',
-  },
-  {
-    path: 'first',
-    breadcrumbName: 'first',
-    children: [
+export default defineComponent({
+  setup() {
+    const routes = ref<Route[]>([
       {
-        path: '/general',
-        breadcrumbName: 'General',
+        path: 'index',
+        breadcrumbName: 'home',
       },
       {
-        path: '/layout',
-        breadcrumbName: 'Layout',
+        path: 'first',
+        breadcrumbName: 'first',
+        children: [
+          {
+            path: '/general',
+            breadcrumbName: 'General',
+          },
+          {
+            path: '/layout',
+            breadcrumbName: 'Layout',
+          },
+          {
+            path: '/navigation',
+            breadcrumbName: 'Navigation',
+          },
+        ],
       },
       {
-        path: '/navigation',
-        breadcrumbName: 'Navigation',
+        path: 'second',
+        breadcrumbName: 'second',
       },
-    ],
+    ]);
+    return {
+      basePath: '/components/breadcrumb',
+      routes,
+    };
   },
-  {
-    path: 'second',
-    breadcrumbName: 'second',
-  },
-]);
+});
 </script>

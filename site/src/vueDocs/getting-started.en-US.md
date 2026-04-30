@@ -12,42 +12,32 @@ The following CodeSandbox demo is the simplest use case, and it's also a good ha
 
 ## Import ant-design-vue
 
-### 1. Create a New Project
+### 1. Installation
 
-If you need to create a new project, you can use [Vite](https://github.com/vitejs/vite), [Rsbuild](https://github.com/web-infra-dev/rsbuild), or [Vue CLI](https://github.com/vuejs/vue-cli).
-
-Please initialize the project using the command line:
-
-- Vite:
-
-```bash
-$ npm create vite@latest
-```
-
-- Rsbuild:
-
-```bash
-$ npm create rsbuild@latest
-```
-
-- Vue CLI:
+[vue-cli](https://github.com/vuejs/vue-cli)
 
 ```bash
 $ npm install -g @vue/cli
 # OR
 $ yarn global add @vue/cli
+```
 
+### 2. Create a New Project
+
+A new project can be created using CLI tools.
+
+```bash
 $ vue create antd-demo
 ```
 
-> Vue CLI is no longer maintained, so it is not recommended to use.
+And, setup your vue project configuration.
 
-### 2. Use antd's Components
+### 3. Use antd's Components
 
 #### Install
 
 ```bash
-$ npm i --save ant-design-vue@4.x
+$ npm i --save ant-design-vue
 ```
 
 #### Component Registration
@@ -60,7 +50,7 @@ If you use Vue's default template syntax, you need to register components before
 import { createApp } from 'vue';
 import Antd from 'ant-design-vue';
 import App from './App';
-import 'ant-design-vue/dist/reset.css';
+import 'ant-design-vue/dist/antd.css';
 
 const app = createApp(App);
 
@@ -105,13 +95,39 @@ In this way, component sub-components, such as Button and ButtonGroup, need to b
 </script>
 ```
 
-### 3. Component list
+### 4. Component list
 
 [Component list](https://github.com/vueComponent/ant-design-vue/blob/main/components/components.ts)
 
+## Compatibility
+
+Ant Design Vue 2.x supports all the modern browsers. If you want to use IE9+, you can use Ant Design Vue 1.x & Vue 2.x.
+
 ## Import on Demand
 
-`ant-design-vue` supports tree shaking of ES modules, so using `import { Button } from 'ant-design-vue';` would drop js code you didn't use.
+we can import individual components on demand:
+
+```jsx
+import Button from 'ant-design-vue/lib/button';
+import 'ant-design-vue/lib/button/style'; // or ant-design-vue/lib/button/style/css for css format file
+```
+
+We strongly recommend using [babel-plugin-import](https://github.com/ant-design/babel-plugin-import), which can convert the following code to the 'ant-design-vue/lib/xxx' way:
+
+```jsx
+import { Button } from 'ant-design-vue';
+```
+
+And this plugin can load styles too, read [usage](https://github.com/ant-design/babel-plugin-import#usage) for more details.
+
+> FYI, babel-plugin-import's `style` option will importing some global reset styles, don't use it if you don't need those styles. You can import styles manually via `import 'ant-design-vue/dist/antd.css'` and override the global reset styles.
+
+If you use Vite, you can use [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) to load on demand. However, this plugin can only deal with components. Others such as message should be loaded manually:
+
+```ts
+import { message } from 'ant-design-vue';
+import 'ant-design-vue/es/message/style/css'; //use ant-design-vue/es instead of ant-design-vue/lib
+```
 
 ## Customization
 

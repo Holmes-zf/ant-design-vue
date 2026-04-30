@@ -1,13 +1,12 @@
 <template>
   <demo-sort :cols="1">
     <Basic />
-    <LabelWidth />
+    <LableWidth />
     <HorizontalLogin />
     <Layout />
-    <Disabled />
     <inlineLoginVue />
     <normalLoginVue />
-    <validationVue />
+    <!-- <Validation /> -->
     <CustomValidation />
     <DynamicFormItem />
     <NestedForm />
@@ -20,7 +19,6 @@
     <formInModalVue />
     <timeRelatedControlsVue />
     <validateOtherVue />
-    <validateStaticVue />
     <UseFormBasic />
     <UseFormNested />
     <UseFormTrigger />
@@ -31,9 +29,7 @@
 import { defineComponent } from 'vue';
 import advancedSearchVue from './advanced-search.vue';
 import Basic from './basic.vue';
-import validationVue from './validation.vue';
 import CustomValidation from './custom-validation.vue';
-import Disabled from './disabled.vue';
 import DynamicFormItem from './dynamic-form-item.vue';
 import dynamicFormItemsComplexVue from './dynamic-form-items-complex.vue';
 import dynamicFormItemsVue from './dynamic-form-items.vue';
@@ -42,7 +38,7 @@ import formContextVue from './form-context.vue';
 import formInModalVue from './form-in-modal.vue';
 import HorizontalLogin from './horizontal-login.vue';
 import inlineLoginVue from './inline-login.vue';
-import LabelWidth from './label-width.vue';
+import LableWidth from './lable-width.vue';
 import Layout from './layout.vue';
 import NestedForm from './nest-messages.vue';
 import normalLoginVue from './normal-login.vue';
@@ -54,7 +50,6 @@ import UseFormMerge from './useForm-merge.vue';
 import CustomizedFormControls from './customized-form-controls.vue';
 import timeRelatedControlsVue from './time-related-controls.vue';
 import validateOtherVue from './validate-other.vue';
-import validateStaticVue from './validate-static.vue';
 import CN from '../index.zh-CN.md';
 import US from '../index.en-US.md';
 
@@ -62,22 +57,20 @@ export default defineComponent({
   US,
   CN,
   components: {
-    validateStaticVue,
     timeRelatedControlsVue,
     validateOtherVue,
     Basic,
     CustomValidation,
-    Disabled,
     DynamicFormItem,
     HorizontalLogin,
     NestedForm,
     Layout,
-    validationVue,
+    // Validation,
     UseFormBasic,
     UseFormNested,
     UseFormTrigger,
     UseFormMerge,
-    LabelWidth,
+    LableWidth,
     CustomizedFormControls,
     advancedSearchVue,
     dynamicFormItemsComplexVue,
@@ -94,7 +87,6 @@ export default defineComponent({
 .code-box-demo .ant-form:not(.ant-form-inline):not(.ant-form-vertical) {
   max-width: 600px;
 }
-
 .markdown.api-container table td:nth-of-type(4) {
   white-space: nowrap;
   word-wrap: break-word;

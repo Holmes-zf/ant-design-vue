@@ -55,7 +55,10 @@ export type INTERNAL_SELECTION_ITEM =
   | typeof SELECTION_INVERT
   | typeof SELECTION_NONE;
 
-function flattenData<RecordType>(childrenColumnName: string, data: RecordType[]): RecordType[] {
+function flattenData<RecordType>(
+  data: RecordType[] | undefined,
+  childrenColumnName: string,
+): RecordType[] {
   let list: RecordType[] = [];
   (data || []).forEach(record => {
     list.push(record);
@@ -63,7 +66,7 @@ function flattenData<RecordType>(childrenColumnName: string, data: RecordType[])
     if (record && typeof record === 'object' && childrenColumnName in record) {
       list = [
         ...list,
-        ...flattenData<RecordType>(childrenColumnName, (record as any)[childrenColumnName]),
+        ...flattenData<RecordType>((record as any)[childrenColumnName], childrenColumnName),
       ];
     }
   });
@@ -127,7 +130,7 @@ export default function useSelection<RecordType>(
 
   // Get flatten data
   const flattedData = computed(() =>
-    flattenData(configRef.childrenColumnName.value, configRef.pageData.value),
+    flattenData(configRef.pageData.value, configRef.childrenColumnName.value),
   );
 
   // Get all checkbox props
@@ -445,7 +448,6 @@ export default function useSelection<RecordType>(
             }
             onChange={onSelectAllChange}
             disabled={flattedDataLength.value === 0 || allDisabled}
-            aria-label={customizeSelections ? 'Custom selection' : 'Select all'}
             skipGroup
           />
           {customizeSelections}

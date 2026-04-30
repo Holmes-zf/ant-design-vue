@@ -48,10 +48,21 @@ Countdown component slots.
     </a-col>
   </a-row>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { QuestionCircleTwoTone } from '@ant-design/icons-vue';
-const onFinish = () => {
-  console.log('finished!');
-};
-const deadline = Date.now() + 1000 * 60 * 60 * 20 * 2;
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    QuestionCircleTwoTone,
+  },
+  setup() {
+    const onFinish = () => {
+      console.log('finished!');
+    };
+    return {
+      deadline: Date.now() + 1000 * 60 * 60 * 20 * 2,
+      onFinish,
+    };
+  },
+});
 </script>

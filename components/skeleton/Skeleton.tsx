@@ -7,9 +7,8 @@ import type { SkeletonTitleProps } from './Title';
 import Title from './Title';
 import type { SkeletonParagraphProps } from './Paragraph';
 import Paragraph from './Paragraph';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import Element from './Element';
-import useStyle from './style';
 
 /* This only for skeleton internal. */
 type SkeletonAvatarProps = Omit<AvatarProps, 'active'>;
@@ -90,15 +89,13 @@ const Skeleton = defineComponent({
   }),
   setup(props, { slots }) {
     const { prefixCls, direction } = useConfigInject('skeleton', props);
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
     return () => {
       const { loading, avatar, title, paragraph, active, round } = props;
       const pre = prefixCls.value;
       if (loading || props.loading === undefined) {
-        const hasAvatar = !!avatar || (avatar as string) === '';
-        const hasTitle = !!title || (title as string) === '';
-        const hasParagraph = !!paragraph || (paragraph as string) === '';
+        const hasAvatar = !!avatar || avatar === '';
+        const hasTitle = !!title || title === '';
+        const hasParagraph = !!paragraph || paragraph === '';
 
         // Avatar
         let avatarNode;
@@ -155,14 +152,13 @@ const Skeleton = defineComponent({
           [`${pre}-active`]: active,
           [`${pre}-rtl`]: direction.value === 'rtl',
           [`${pre}-round`]: round,
-          [hashId.value]: true,
         });
 
-        return wrapSSR(
+        return (
           <div class={cls}>
             {avatarNode}
             {contentNode}
-          </div>,
+          </div>
         );
       }
       return slots.default?.();

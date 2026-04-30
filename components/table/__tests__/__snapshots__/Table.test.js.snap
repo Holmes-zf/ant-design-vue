@@ -5,7 +5,6 @@ exports[`Table align column should not override cell style 1`] = `
   <div class="ant-spin-nested-loading">
     <!---->
     <div class="ant-spin-container">
-      <!---->
       <div class="ant-table">
         <!---->
         <div class="ant-table-container">
@@ -74,7 +73,6 @@ exports[`Table renders JSX correctly 1`] = `
   <div class="ant-spin-nested-loading">
     <!---->
     <div class="ant-spin-container">
-      <!---->
       <div class="ant-table">
         <!---->
         <div class="ant-table-container">
@@ -142,7 +140,6 @@ exports[`Table renders JSX correctly 1`] = `
         </div>
         <!---->
       </div>
-      <!---->
     </div>
   </div>
 </div>

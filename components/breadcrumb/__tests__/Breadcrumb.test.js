@@ -25,7 +25,7 @@ describe('Breadcrumb', () => {
     });
     expect(errorSpy.mock.calls).toHaveLength(1);
     expect(errorSpy.mock.calls[0][0]).toMatch(
-      "Warning: [ant-design-vue: Breadcrumb] Only accepts Breadcrumb.Item and Breadcrumb.Separator as it's children",
+      "Warning: [antdv: Breadcrumb] Only accepts Breadcrumb.Item and Breadcrumb.Separator as it's children",
     );
   });
 

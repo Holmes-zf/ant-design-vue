@@ -5,7 +5,7 @@ import { getColumnsKey } from '../utils/valueUtil';
 import MeasureCell from './MeasureCell';
 import BodyRow from './BodyRow';
 import useFlattenRecords from '../hooks/useFlattenRecords';
-import { defineComponent, shallowRef, toRef } from 'vue';
+import { defineComponent, ref, toRef } from 'vue';
 import { useInjectResize } from '../context/ResizeContext';
 import { useInjectTable } from '../context/TableContext';
 import { useInjectBody } from '../context/BodyContext';
@@ -22,7 +22,7 @@ export interface BodyProps<RecordType> {
 }
 
 export default defineComponent<BodyProps<any>>({
-  name: 'TableBody',
+  name: 'Body',
   props: [
     'data',
     'getRowKey',
@@ -32,6 +32,7 @@ export default defineComponent<BodyProps<any>>({
     'rowExpandable',
     'childrenColumnName',
   ] as any,
+  slots: ['emptyNode'],
   setup(props, { slots }) {
     const resizeContext = useInjectResize();
     const tableContext = useInjectTable();
@@ -43,8 +44,8 @@ export default defineComponent<BodyProps<any>>({
       toRef(props, 'expandedKeys'),
       toRef(props, 'getRowKey'),
     );
-    const startRow = shallowRef(-1);
-    const endRow = shallowRef(-1);
+    const startRow = ref(-1);
+    const endRow = ref(-1);
     let timeoutId: any;
     useProvideHover({
       startRow,

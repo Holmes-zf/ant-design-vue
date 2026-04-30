@@ -2,10 +2,11 @@ import Cell from '../Cell';
 import { getColumnsKey } from '../utils/valueUtil';
 import type { CustomizeComponent, GetComponentProps, Key, GetRowKey } from '../interface';
 import ExpandedRow from './ExpandedRow';
-import { computed, defineComponent, shallowRef, watchEffect } from 'vue';
+import { computed, defineComponent, ref, watchEffect } from 'vue';
 import { useInjectTable } from '../context/TableContext';
 import { useInjectBody } from '../context/BodyContext';
 import classNames from '../../_util/classNames';
+import { parseStyleText } from '../../_util/props-util';
 import type { MouseEventHandler } from '../../_util/EventInterface';
 
 export interface BodyRowProps<RecordType> {
@@ -45,7 +46,7 @@ export default defineComponent<BodyRowProps<unknown>>({
   setup(props, { attrs }) {
     const tableContext = useInjectTable();
     const bodyContext = useInjectBody();
-    const expandRended = shallowRef(false);
+    const expandRended = ref(false);
 
     const expanded = computed(() => props.expandedKeys && props.expandedKeys.has(props.recordKey));
 
@@ -127,7 +128,10 @@ export default defineComponent<BodyRowProps<unknown>>({
             computeRowClassName.value,
             additionalProps.value.class,
           )}
-          style={[style, additionalProps.value.style]}
+          style={{
+            ...style,
+            ...parseStyleText(additionalProps.value.style),
+          }}
           onClick={onClick}
         >
           {flattenColumns.map((column, colIndex) => {

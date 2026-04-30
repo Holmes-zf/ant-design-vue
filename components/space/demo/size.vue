@@ -36,7 +36,13 @@ Set the size to `large` and `middle` by setting size to large and middle respect
     </a-space>
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const size = ref('small' as const);
+<script>
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    return {
+      size: ref('small'),
+    };
+  },
+});
 </script>

@@ -2,8 +2,7 @@
 category: Components
 type: General
 title: Icon
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*PdAYS7anRpoAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*xEDOTJx2DEkAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 ---
 
 Semantic vector graphics. Before use icons, you need to install `@ant-design/icons-vue` package:
@@ -122,8 +121,6 @@ See [iconfont.cn documents](http://iconfont.cn/help/detail?spm=a313x.7781069.199
 
 ### Custom SVG Icon
 
-#### vue cli 3
-
 You can import SVG icon as an vue component by using `vue cli 3` and [`vue-svg-loader`](https://www.npmjs.com/package/vue-svg-loader). `vue-svg-loader`'s `options` [reference](https://github.com/visualfanatic/vue-svg-loader).
 
 ```js
@@ -147,84 +144,6 @@ import MessageSvg from 'path/to/message.svg'; // path to your '*.svg' file.
 export default defineComponent({
   setup() {
     return () => <Icon type={MessageSvg} />;
-  },
-});
-```
-
-#### Rsbuild
-
-Rsbuild is a new generation of build tool, official website https://rsbuild.dev/  
-Create your own `vue-svg-loader.js` file, which allows you to customize and beautify SVG, and then configure it in `rsbuild.config.ts`
-
-```js
-// vue-svg-loader.js
-/* eslint-disable */
-const { optimize } = require('svgo');
-const { version } = require('vue');
-const semverMajor = require('semver/functions/major');
-
-module.exports = async function (svg) {
-  const callback = this.async();
-
-  try {
-    ({ data: svg } = await optimize(svg, {
-      path: this.resourcePath,
-      js2svg: {
-        indent: 2,
-        pretty: true,
-      },
-      plugins: [
-        'convertStyleToAttrs',
-        'removeDoctype',
-        'removeXMLProcInst',
-        'removeComments',
-        'removeMetadata',
-        'removeTitle',
-        'removeDesc',
-        'removeStyleElement',
-        'removeXMLNS',
-        'removeXMLProcInst',
-      ],
-    }));
-  } catch (error) {
-    callback(error);
-    return;
-  }
-
-  if (semverMajor(version) === 2) {
-    svg = svg.replace('<svg', '<svg v-on="$listeners"');
-  }
-
-  callback(null, `<template>${svg}</template>`);
-};
-```
-
-```js
-// rsbuild.config.ts
-/* eslint-disable */
-import { defineConfig } from '@rsbuild/core';
-import { pluginVue } from '@rsbuild/plugin-vue';
-
-export default defineConfig({
-  tools: {
-    bundlerChain(chain, { CHAIN_ID }) {
-      chain.module.rule(CHAIN_ID.RULE.SVG).exclude.add(/\.svg$/);
-    },
-    rspack: {
-      module: {
-        rules: [
-          {
-            test: /\.svg$/,
-            use: ['vue-loader', 'vue-svg-loader'],
-          },
-        ],
-      },
-      resolveLoader: {
-        alias: {
-          'vue-svg-loader': require('path').join(__dirname, './vue-svg-loader.js'),
-        },
-      },
-    },
   },
 });
 ```

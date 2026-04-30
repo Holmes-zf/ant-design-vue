@@ -33,7 +33,8 @@ We preset a series of colorful Tooltip styles for use in different situations.
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 const colors = [
   'pink',
   'red',
@@ -50,10 +51,18 @@ const colors = [
   'lime',
 ];
 const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9'];
+export default defineComponent({
+  setup() {
+    return {
+      colors,
+      customColors,
+    };
+  },
+});
 </script>
 
 <style scoped>
-:deep(#components-a-tooltip-demo-color) .ant-btn {
+#components-a-tooltip-demo-color .ant-btn {
   margin-right: 8px;
   margin-bottom: 8px;
 }

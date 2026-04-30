@@ -1,4 +1,4 @@
-const { resolve, isThereHaveBrowserslistConfig } = require('./utils/projectHelper');
+const { resolve } = require('./utils/projectHelper');
 
 module.exports = function (modules) {
   const plugins = [
@@ -20,8 +20,7 @@ module.exports = function (modules) {
       resolve('@babel/plugin-transform-runtime'),
       {
         useESModules: modules === false,
-        version:
-          require(`${process.cwd()}/package.json`).dependencies['@babel/runtime'] || '^7.10.4',
+        version: '^7.10.4',
       },
     ],
     // resolve('babel-plugin-inline-import-data-uri'),
@@ -39,11 +38,9 @@ module.exports = function (modules) {
         resolve('@babel/preset-env'),
         {
           modules,
-          targets: isThereHaveBrowserslistConfig()
-            ? undefined
-            : {
-                browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'ie >= 11'],
-              },
+          targets: {
+            browsers: ['last 2 versions', 'Firefox ESR', '> 1%', 'not ie 11'],
+          },
         },
       ],
     ],

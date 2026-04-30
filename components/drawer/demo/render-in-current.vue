@@ -27,6 +27,7 @@ Render in current dom. custom container, check `getContainer`.
       padding: '48px',
       textAlign: 'center',
       background: '#fafafa',
+      width: '100%',
     }"
   >
     Render in this
@@ -37,7 +38,7 @@ Render in current dom. custom container, check `getContainer`.
       title="Basic Drawer"
       placement="right"
       :closable="false"
-      :open="open"
+      :visible="visible"
       :get-container="false"
       :style="{ position: 'absolute' }"
       @close="onClose"
@@ -46,15 +47,30 @@ Render in current dom. custom container, check `getContainer`.
     </a-drawer>
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const open = ref(false);
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const visible = ref(false);
 
-const showDrawer = () => {
-  open.value = true;
-};
+    const afterVisibleChange = (bool: boolean) => {
+      console.log('visible', bool);
+    };
 
-const onClose = () => {
-  open.value = false;
-};
+    const showDrawer = () => {
+      visible.value = true;
+    };
+
+    const onClose = () => {
+      visible.value = false;
+    };
+
+    return {
+      visible,
+      afterVisibleChange,
+      showDrawer,
+      onClose,
+    };
+  },
+});
 </script>

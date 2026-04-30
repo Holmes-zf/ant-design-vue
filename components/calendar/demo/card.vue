@@ -20,12 +20,21 @@ Nested inside a container element for rendering in limited space.
     <a-calendar v-model:value="value" :fullscreen="false" @panelChange="onPanelChange" />
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { Dayjs } from 'dayjs';
 
-const value = ref<Dayjs>();
-const onPanelChange = (value: Dayjs, mode: string) => {
-  console.log(value, mode);
-};
+export default defineComponent({
+  setup() {
+    const value = ref<Dayjs>();
+    const onPanelChange = (value: Dayjs, mode: string) => {
+      console.log(value, mode);
+    };
+
+    return {
+      value,
+      onPanelChange,
+    };
+  },
+});
 </script>

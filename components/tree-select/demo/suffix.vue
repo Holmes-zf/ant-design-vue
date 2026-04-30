@@ -27,12 +27,6 @@ The most basic usage.
       allow-clear
       tree-default-expand-all
       :tree-data="treeData"
-      :field-names="{
-        children: 'children',
-        value: 'value',
-        label: 'title',
-      }"
-      tree-node-filter-prop="title"
     >
       <template #suffixIcon><SmileOutlined /></template>
     </a-tree-select>
@@ -48,50 +42,58 @@ The most basic usage.
       show-arrow
       tree-default-expand-all
       :tree-data="treeData"
-      :field-names="{
-        children: 'children',
-        value: 'value',
-        label: 'title',
-      }"
-      tree-node-filter-prop="title"
     >
       <template #suffixIcon><SmileOutlined /></template>
     </a-tree-select>
   </a-space>
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
+<script lang="ts">
 import { SmileOutlined } from '@ant-design/icons-vue';
 import type { TreeSelectProps } from 'ant-design-vue';
-const value = ref<string>();
-const value1 = ref<string[]>([]);
-const treeData = ref<TreeSelectProps['treeData']>([
-  {
-    title: 'parent 1',
-    value: 'parent 1',
-    children: [
+import { defineComponent, ref, watch } from 'vue';
+
+export default defineComponent({
+  components: {
+    SmileOutlined,
+  },
+  setup() {
+    const value = ref<string>();
+    const value1 = ref<string[]>([]);
+    const treeData = ref<TreeSelectProps['treeData']>([
       {
-        title: 'parent 1-0',
-        value: 'parent 1-0',
+        title: 'parent 1',
+        value: 'parent 1',
         children: [
           {
-            title: 'my leaf',
-            value: 'leaf1',
+            title: 'parent 1-0',
+            value: 'parent 1-0',
+            children: [
+              {
+                title: 'my leaf',
+                value: 'leaf1',
+              },
+              {
+                title: 'your leaf',
+                value: 'leaf2',
+              },
+            ],
           },
           {
-            title: 'your leaf',
-            value: 'leaf2',
+            title: 'parent 1-1',
+            value: 'parent 1-1',
           },
         ],
       },
-      {
-        title: 'parent 1-1',
-        value: 'parent 1-1',
-      },
-    ],
+    ]);
+    watch(value, () => {
+      console.log('select', value.value);
+    });
+
+    return {
+      value,
+      value1,
+      treeData,
+    };
   },
-]);
-watch(value, () => {
-  console.log('select', value.value);
 });
 </script>

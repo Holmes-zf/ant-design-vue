@@ -214,13 +214,11 @@ function useForm(
         const errorList = results.filter(
           (result: { errors: string | any[] }) => result && result.errors.length,
         );
-        return errorList.length
-          ? Promise.reject({
-              values,
-              errorFields: errorList,
-              outOfDate: lastValidatePromise !== summaryPromise,
-            })
-          : Promise.resolve(values);
+        return Promise.reject({
+          values,
+          errorFields: errorList,
+          outOfDate: lastValidatePromise !== summaryPromise,
+        });
       });
 
     // Do not throw in console

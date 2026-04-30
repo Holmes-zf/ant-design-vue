@@ -37,6 +37,7 @@ const OptionList = defineComponent({
   compatConfig: { MODE: 3 },
   name: 'OptionList',
   inheritAttrs: false,
+  slots: ['option'],
   setup(_, { expose, slots }) {
     const baseProps = useBaseProps();
     const props = useSelectProps();

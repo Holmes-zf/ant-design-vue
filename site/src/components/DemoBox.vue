@@ -37,8 +37,8 @@
         <a-tooltip
           v-if="!blocked"
           :title="$t(`app.demo.${copied ? 'copied' : 'copy'}`)"
-          :open="copyTooltipVisible"
-          @openChange="onCopyTooltipVisibleChange"
+          :visible="copyTooltipVisible"
+          @visibleChange="onCopyTooltipVisibleChange"
         >
           <component
             :is="copied && copyTooltipVisible ? 'CheckOutlined' : 'SnippetsOutlined'"
@@ -82,28 +82,12 @@
         <slot v-if="type === 'TS'" name="htmlCode" />
         <slot v-else name="jsVersionHtml" />
       </div>
-      <div class="code-box-actions code-box-actions-bottom">
-        <a-tooltip :title="$t(`app.demo.code.hide`)">
-          <span class="code-expand-icon code-box-code-action">
-            <img
-              alt="expand code"
-              :src="
-                theme === 'dark'
-                  ? 'https://gw.alipayobjects.com/zos/antfincdn/CjZPwcKUG3/OpROPHYqWmrMDBFMZtKF.svg'
-                  : 'https://gw.alipayobjects.com/zos/antfincdn/4zAaozCvUH/unexpand.svg'
-              "
-              :class="'code-expand-icon-show'"
-              @click="handleCodeExpand($event, sectionId)"
-            />
-          </span>
-        </a-tooltip>
-      </div>
     </section>
   </section>
 </template>
 
 <script lang="ts">
-import type { GlobalConfig } from '../type';
+import type { GlobalConfig } from '../App.vue';
 import { GLOBAL_CONFIG } from '../SymbolKey';
 import { computed, defineComponent, inject, onMounted, ref } from 'vue';
 import { CheckOutlined, SnippetsOutlined, CodeSandboxOutlined } from '@ant-design/icons-vue';
@@ -129,7 +113,7 @@ export default defineComponent({
     const codeRef = ref<HTMLDivElement>();
     const sectionId = computed(() => {
       const relativePath = props.jsfiddle?.relativePath || '';
-      return `${relativePath.split('/').join('-').replace('.vue', '')}`.toLocaleLowerCase();
+      return `${relativePath.split('/').join('-').replace('.vue', '')}`;
     });
     const inIframe = inject('inIframe', false);
     const iframeHeight = computed(() => props.jsfiddle?.iframe);
@@ -170,26 +154,20 @@ export default defineComponent({
       props.jsfiddle && props.jsfiddle.docHtml
         ? (
             props.jsfiddle.docHtml.replace(
-              `<h2 id="zh-cn">zh-CN <a class="header-anchor" href="#zh-cn">
+              `<h2 id="zh-CN">zh-CN <a class="header-anchor" href="#zh-CN">
           <span aria-hidden="true" class="anchor">#</span>
         </a></h2>`,
               '',
-            ).split(`<h2 id="en-us">en-US <a class="header-anchor" href="#en-us">
+            ).split(`<h2 id="en-US">en-US <a class="header-anchor" href="#en-US">
           <span aria-hidden="true" class="anchor">#</span>
         </a></h2>`)[globalConfig.isZhCN.value ? 0 : 1] || ''
           ).trim()
         : '',
     );
-    const handleCodeExpand = (_, sectionId?) => {
+    const handleCodeExpand = () => {
       if (globalConfig.blocked.value) {
         warning();
         return;
-      }
-      if (sectionId) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView();
-        }
       }
       codeExpand.value = !codeExpand.value;
     };
@@ -204,7 +182,7 @@ export default defineComponent({
       type.value = type.value === 'TS' ? 'JS' : 'TS';
     };
     const handleCodeSandbox = () => {
-      const code = codeRef.value.innerText;
+      const code = codeRef.value!.innerText;
       const params = getCodeSandboxParams(code, {
         title: `${title.value} - ant-design-vue@${packageInfo.version}`,
       });
@@ -231,7 +209,7 @@ export default defineComponent({
         title,
       });
     });
-    const theme = computed(() => inject('themeMode', { theme: ref('light') }).theme.value);
+    const theme = computed(() => inject('themeMode', { theme: ref('default') }).theme.value);
     return {
       docHtml,
       iframeDemo,

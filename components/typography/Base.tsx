@@ -26,12 +26,11 @@ import {
   computed,
   toRaw,
 } from 'vue';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import type { EventHandler } from '../_util/EventInterface';
 import omit from '../_util/omit';
 import type { AutoSizeType } from '../input/inputProps';
 import useMergedState from '../_util/hooks/useMergedState';
-import { findDOMNode } from '../_util/props-util';
 
 export type BaseType = 'secondary' | 'success' | 'warning' | 'danger';
 
@@ -40,7 +39,7 @@ const isTextOverflowSupport = isStyleSupport('textOverflow');
 
 export interface CopyConfig {
   text?: string;
-  onCopy?: (event?: MouseEvent) => void;
+  onCopy?: () => void;
   tooltip?: boolean;
 }
 
@@ -125,7 +124,7 @@ export const baseProps = () => ({
 
 const Base = defineComponent({
   compatConfig: { MODE: 3 },
-  name: 'TypographyBase',
+  name: 'Base',
   inheritAttrs: false,
   props: baseProps(),
   // emits: ['update:content'],
@@ -166,7 +165,6 @@ const Base = defineComponent({
     });
     onMounted(() => {
       state.clientRendered = true;
-      syncEllipsis();
     });
 
     onBeforeUnmount(() => {
@@ -181,7 +179,7 @@ const Base = defineComponent({
           resizeOnNextFrame();
         });
       },
-      { flush: 'post', deep: true },
+      { flush: 'post', deep: true, immediate: true },
     );
 
     watchEffect(() => {
@@ -200,9 +198,7 @@ const Base = defineComponent({
     });
 
     function getChildrenText(): string {
-      return props.ellipsis || props.editable
-        ? props.content
-        : findDOMNode(contentRef.value)?.innerText;
+      return props.ellipsis || props.editable ? props.content : contentRef.value?.$el?.innerText;
     }
 
     // =============== Expand ===============
@@ -254,7 +250,7 @@ const Base = defineComponent({
       state.copied = true;
       nextTick(() => {
         if (copyConfig.onCopy) {
-          copyConfig.onCopy(e);
+          copyConfig.onCopy();
         }
 
         state.copyId = setTimeout(() => {
@@ -297,12 +293,7 @@ const Base = defineComponent({
     );
 
     // ============== Ellipsis ==============
-    function resizeOnNextFrame(sizeInfo?: { width: number; height: number }) {
-      if (sizeInfo) {
-        const { width, height } = sizeInfo;
-        if (!width || !height) return;
-      }
-
+    function resizeOnNextFrame() {
       raf.cancel(state.rafId);
       state.rafId = raf(() => {
         // Do not bind `syncEllipsis`. It need for test usage on prototype
@@ -333,7 +324,7 @@ const Base = defineComponent({
       if (
         !rows ||
         rows < 0 ||
-        !findDOMNode(contentRef.value) ||
+        !contentRef.value?.$el ||
         state.expanded ||
         props.content === undefined
       )
@@ -347,7 +338,7 @@ const Base = defineComponent({
         text,
         ellipsis: ell,
       } = measure(
-        findDOMNode(contentRef.value),
+        contentRef.value?.$el,
         { rows, suffix },
         props.content,
         renderOperations(true),
@@ -478,7 +469,6 @@ const Base = defineComponent({
           onCancel={onEditCancel}
           onEnd={onEnd}
           direction={direction.value}
-          component={props.component}
           v-slots={{ enterIcon: slots.editableEnterIcon }}
         />
       );
@@ -539,6 +529,7 @@ const Base = defineComponent({
               'keyboard',
               'onUpdate:content',
             ]);
+
             const cssEllipsis = canUseCSSEllipsis.value;
             const cssTextOverflow = rows === 1 && cssEllipsis;
             const cssLineClamp = rows && rows > 1 && cssEllipsis;

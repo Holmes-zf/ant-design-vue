@@ -7,18 +7,15 @@ import Menu from '../menu';
 import Dropdown from '../dropdown';
 import Search from './search';
 import ListBody from './ListBody';
-import type { VNode, VNodeTypes, ExtractPropTypes, CSSProperties } from 'vue';
+import type { VNode, VNodeTypes, ExtractPropTypes, PropType, CSSProperties } from 'vue';
 import { watchEffect, computed, defineComponent, ref } from 'vue';
 import type { RadioChangeEvent } from '../radio/interface';
 import type { TransferDirection, TransferItem } from './index';
-import { stringType, arrayType, booleanType } from '../_util/type';
-import { groupKeysMap } from '../_util/transKeys';
-import type { CustomSlotsType } from '../_util/type';
 
 const defaultRender = () => null;
 
 function isRenderResultPlainObject(result: VNode) {
-  return !!(
+  return (
     result &&
     !isValidElement(result) &&
     Object.prototype.toString.call(result) === '[object Object]'
@@ -31,22 +28,22 @@ function getEnabledItemKeys<RecordType extends TransferItem>(items: RecordType[]
 
 export const transferListProps = {
   prefixCls: String,
-  dataSource: arrayType<TransferItem[]>([]),
+  dataSource: { type: Array as PropType<TransferItem[]>, default: [] },
   filter: String,
   filterOption: Function,
   checkedKeys: PropTypes.arrayOf(PropTypes.string),
   handleFilter: Function,
   handleClear: Function,
   renderItem: Function,
-  showSearch: booleanType(false),
+  showSearch: { type: Boolean, default: false },
   searchPlaceholder: String,
   notFoundContent: PropTypes.any,
   itemUnit: String,
   itemsUnit: String,
   renderList: PropTypes.any,
-  disabled: booleanType(),
-  direction: stringType<TransferDirection>(),
-  showSelectAll: booleanType(),
+  disabled: { type: Boolean, default: undefined },
+  direction: String as PropType<TransferDirection>,
+  showSelectAll: { type: Boolean, default: undefined },
   remove: String,
   selectAll: String,
   selectCurrent: String,
@@ -54,7 +51,7 @@ export const transferListProps = {
   removeAll: String,
   removeCurrent: String,
   selectAllLabel: PropTypes.any,
-  showRemove: booleanType(),
+  showRemove: { type: Boolean, default: undefined },
   pagination: PropTypes.any,
   onItemSelect: Function,
   onItemSelectAll: Function,
@@ -70,11 +67,7 @@ export default defineComponent({
   inheritAttrs: false,
   props: transferListProps,
   // emits: ['scroll', 'itemSelectAll', 'itemRemove', 'itemSelect'],
-  slots: Object as CustomSlotsType<{
-    footer?: any;
-    titleText?: any;
-    default?: any;
-  }>,
+  slots: ['footer', 'titleText'],
   setup(props, { attrs, slots }) {
     const filterValue = ref('');
     const transferNode = ref();
@@ -131,8 +124,9 @@ export default defineComponent({
       if (checkedKeys.length === 0) {
         return 'none';
       }
-      const checkedKeysMap = groupKeysMap(checkedKeys);
-      if (filteredItems.value.every(item => checkedKeysMap.has(item.key) || !!item.disabled)) {
+      if (
+        filteredItems.value.every(item => checkedKeys.indexOf(item.key) >= 0 || !!item.disabled)
+      ) {
         return 'all';
       }
       return 'part';
@@ -152,7 +146,7 @@ export default defineComponent({
       const checkedAll = checkStatus.value === 'all';
       const checkAllCheckbox = (
         <Checkbox
-          disabled={props.dataSource?.length === 0 || disabled}
+          disabled={disabled}
           checked={checkedAll}
           indeterminate={checkStatus.value === 'part'}
           class={`${prefixCls}-checkbox`}
@@ -186,7 +180,7 @@ export default defineComponent({
       if (filterOption) {
         return filterOption(filterValue.value, item);
       }
-      return text.includes(filterValue.value);
+      return text.indexOf(filterValue.value) >= 0;
     };
 
     const getSelectAllLabel = (selectedCount: number, totalCount: number) => {
@@ -204,11 +198,6 @@ export default defineComponent({
       );
     };
 
-    const notFoundContentEle = computed(() =>
-      Array.isArray(props.notFoundContent)
-        ? props.notFoundContent[props.direction === 'left' ? 0 : 1]
-        : props.notFoundContent,
-    );
     const getListBody = (
       prefixCls: string,
       searchPlaceholder: string,
@@ -247,7 +236,7 @@ export default defineComponent({
         bodyNode = filteredItems.value.length ? (
           bodyContent
         ) : (
-          <div class={`${prefixCls}-body-not-found`}>{notFoundContentEle.value}</div>
+          <div class={`${prefixCls}-body-not-found`}>{props.notFoundContent}</div>
         );
       }
 

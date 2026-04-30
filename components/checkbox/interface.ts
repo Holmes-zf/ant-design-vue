@@ -1,8 +1,7 @@
-import type { ExtractPropTypes, InjectionKey, Ref } from 'vue';
+import type { ExtractPropTypes, InjectionKey, PropType, Ref } from 'vue';
 import type { MouseEventHandler } from '../_util/EventInterface';
 import type { VueNode } from '../_util/type';
 import PropTypes from '../_util/vue-types';
-import { booleanType, functionType, stringType, arrayType } from '../_util/type';
 
 export type CheckboxValueType = string | number | boolean;
 export interface CheckboxOptionType {
@@ -28,9 +27,10 @@ export const abstractCheckboxGroupProps = () => {
   return {
     name: String,
     prefixCls: String,
-    options: arrayType<Array<CheckboxOptionType | string | number>>(
-      [] as Array<CheckboxOptionType | string | number>,
-    ),
+    options: {
+      type: Array as PropType<Array<CheckboxOptionType | string | number>>,
+      default: () => [] as Array<CheckboxOptionType | string | number>,
+    },
     disabled: Boolean,
     id: String,
   };
@@ -39,10 +39,12 @@ export const abstractCheckboxGroupProps = () => {
 export const checkboxGroupProps = () => {
   return {
     ...abstractCheckboxGroupProps(),
-    defaultValue: arrayType<Array<CheckboxValueType>>(),
-    value: arrayType<Array<CheckboxValueType>>(),
-    onChange: functionType<(checkedValue: Array<CheckboxValueType>) => void>(),
-    'onUpdate:value': functionType<(checkedValue: Array<CheckboxValueType>) => void>(),
+    defaultValue: { type: Array as PropType<Array<CheckboxValueType>> },
+    value: { type: Array as PropType<Array<CheckboxValueType>> },
+    onChange: { type: Function as PropType<(checkedValue: Array<CheckboxValueType>) => void> },
+    'onUpdate:value': {
+      type: Function as PropType<(checkedValue: Array<CheckboxValueType>) => void>,
+    },
   };
 };
 
@@ -51,27 +53,27 @@ export type CheckboxGroupProps = Partial<ExtractPropTypes<ReturnType<typeof chec
 export const abstractCheckboxProps = () => {
   return {
     prefixCls: String,
-    defaultChecked: booleanType(),
-    checked: booleanType(),
-    disabled: booleanType(),
-    isGroup: booleanType(),
+    defaultChecked: { type: Boolean, default: undefined },
+    checked: { type: Boolean, default: undefined },
+    disabled: { type: Boolean, default: undefined },
+    isGroup: { type: Boolean, default: undefined },
     value: PropTypes.any,
     name: String,
     id: String,
-    indeterminate: booleanType(),
-    type: stringType('checkbox'),
-    autofocus: booleanType(),
-    onChange: functionType<(e: CheckboxChangeEvent) => void>(),
-    'onUpdate:checked': functionType<(checked: boolean) => void>(),
-    onClick: functionType<MouseEventHandler>(),
-    skipGroup: booleanType(false),
+    indeterminate: { type: Boolean, default: undefined },
+    type: { type: String, default: 'checkbox' },
+    autofocus: { type: Boolean, default: undefined },
+    onChange: Function as PropType<(e: CheckboxChangeEvent) => void>,
+    'onUpdate:checked': Function as PropType<(checked: boolean) => void>,
+    onClick: Function as PropType<MouseEventHandler>,
+    skipGroup: { type: Boolean, default: false },
   };
 };
 
 export const checkboxProps = () => {
   return {
     ...abstractCheckboxProps(),
-    indeterminate: booleanType(false),
+    indeterminate: { type: Boolean, default: false },
   };
 };
 

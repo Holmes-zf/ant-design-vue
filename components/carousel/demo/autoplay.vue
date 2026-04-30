@@ -24,17 +24,17 @@ Timing of scrolling to the next card/picture.
     <div><h3>4</h3></div>
   </a-carousel>
 </template>
-
 <style scoped>
 /* For demo */
-:deep(.slick-slide) {
+.ant-carousel :deep(.slick-slide) {
   text-align: center;
   height: 160px;
   line-height: 160px;
   background: #364d79;
   overflow: hidden;
 }
-:deep(.slick-slide h3) {
+
+.ant-carousel :deep(.slick-slide h3) {
   color: #fff;
 }
 </style>

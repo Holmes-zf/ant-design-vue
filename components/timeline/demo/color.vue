@@ -48,6 +48,12 @@ Set the color of circles. `green` means completed or success status, `red` means
     </a-timeline-item>
   </a-timeline>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { SmileOutlined } from '@ant-design/icons-vue';
+export default defineComponent({
+  components: {
+    SmileOutlined,
+  },
+});
 </script>

@@ -2,8 +2,7 @@
 category: Components
 type: Navigation
 title: Breadcrumb
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*I5a2Tpqs3y0AAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*Tr90QKrE_LcAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/9Ltop8JwH/Breadcrumb.svg
 ---
 
 A breadcrumb displays the current location within a hierarchy. It allows going back to states higher up in the hierarchy.

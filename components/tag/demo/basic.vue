@@ -23,8 +23,17 @@ Usage of basic Tag, and it could be closable by set `closable` property. Closabl
     <a-tag closable @close.prevent>Prevent Default</a-tag>
   </div>
 </template>
-<script lang="ts" setup>
-const log = (e: MouseEvent) => {
-  console.log(e);
-};
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
+  setup() {
+    const log = (e: MouseEvent) => {
+      console.log(e);
+    };
+
+    return {
+      log,
+    };
+  },
+});
 </script>

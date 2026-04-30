@@ -63,31 +63,45 @@ Normal login form which can contain more elements.
     </a-form-item>
   </a-form>
 </template>
-<script lang="ts" setup>
-import { reactive, computed } from 'vue';
+<script lang="ts">
+import { defineComponent, reactive, computed } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 interface FormState {
   username: string;
   password: string;
   remember: boolean;
 }
-const formState = reactive<FormState>({
-  username: '',
-  password: '',
-  remember: true,
-});
-const onFinish = (values: any) => {
-  console.log('Success:', values);
-};
+export default defineComponent({
+  components: {
+    UserOutlined,
+    LockOutlined,
+  },
+  setup() {
+    const formState = reactive<FormState>({
+      username: '',
+      password: '',
+      remember: true,
+    });
+    const onFinish = (values: any) => {
+      console.log('Success:', values);
+    };
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
-};
-const disabled = computed(() => {
-  return !(formState.username && formState.password);
+    const onFinishFailed = (errorInfo: any) => {
+      console.log('Failed:', errorInfo);
+    };
+    const disabled = computed(() => {
+      return !(formState.username && formState.password);
+    });
+    return {
+      formState,
+      onFinish,
+      onFinishFailed,
+      disabled,
+    };
+  },
 });
 </script>
-<style scoped>
+<style>
 #components-form-demo-normal-login .login-form {
   max-width: 300px;
 }

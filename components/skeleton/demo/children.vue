@@ -17,7 +17,7 @@ Skeleton contains sub component.
 </docs>
 
 <template>
-  <a-space direction="vertical" style="width: 100%" :size="16">
+  <div class="article">
     <a-skeleton :loading="loading">
       <div>
         <h4>Ant Design Vue, a design language</h4>
@@ -29,17 +29,32 @@ Skeleton contains sub component.
       </div>
     </a-skeleton>
     <a-button :disabled="loading" @click="showSkeleton">Show Skeleton</a-button>
-  </a-space>
+  </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const loading = ref<boolean>(false);
 
-const loading = ref<boolean>(false);
-
-const showSkeleton = () => {
-  loading.value = true;
-  setTimeout(() => {
-    loading.value = false;
-  }, 3000);
-};
+    const showSkeleton = () => {
+      loading.value = true;
+      setTimeout(() => {
+        loading.value = false;
+      }, 3000);
+    };
+    return {
+      loading,
+      showSkeleton,
+    };
+  },
+});
 </script>
+<style scoped>
+.article h4 {
+  margin-bottom: 16px;
+}
+.article button {
+  margin-top: 16px;
+}
+</style>

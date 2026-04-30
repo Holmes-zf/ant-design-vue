@@ -9,7 +9,6 @@
     <banner />
     <custom-icon />
     <smooth-closed />
-    <action />
   </demo-sort>
 </template>
 <script lang="ts">
@@ -19,7 +18,6 @@ import Closable from './closable.vue';
 import CloseText from './close-text.vue';
 import Description from './description.vue';
 import Icon from './icon.vue';
-import Action from './action.vue';
 import Style from './style.vue';
 import SmoothClosed from './smooth-closed.vue';
 import CustomIcon from './custom-icon.vue';
@@ -39,14 +37,13 @@ export default defineComponent({
     FourStyle: Style, //style 标签报错
     SmoothClosed,
     CustomIcon,
-    Action,
   },
   setup() {
     return {};
   },
 });
 </script>
-<style scoped>
+<style>
 [id^='components-alert-demo'] .ant-alert {
   margin-bottom: 16px;
 }

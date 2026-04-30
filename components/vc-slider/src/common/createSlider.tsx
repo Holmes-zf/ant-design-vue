@@ -43,6 +43,7 @@ export default function createSlider(Component) {
     name: 'CreateSlider',
     mixins: [BaseMixin, Component],
     inheritAttrs: false,
+    slots: ['mark'],
     props: initDefaultProps(propTypes, {
       prefixCls: 'rc-slider',
       min: 0,
@@ -210,7 +211,7 @@ export default function createSlider(Component) {
         if (vertical) {
           return reverse ? rect.bottom : rect.top;
         }
-        return window.scrollX + (reverse ? rect.right : rect.left);
+        return window.pageXOffset + (reverse ? rect.right : rect.left);
       },
       getSliderLength() {
         const slider = this.sliderRef;
@@ -303,7 +304,6 @@ export default function createSlider(Component) {
         [`${prefixCls}-with-marks`]: Object.keys(marks).length,
         [`${prefixCls}-disabled`]: disabled,
         [`${prefixCls}-vertical`]: vertical,
-        [`${prefixCls}-horizontal`]: !vertical,
       });
       const markProps = {
         vertical,

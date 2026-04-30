@@ -1,8 +1,9 @@
 import type { VueNode } from '../../_util/type';
-import type { Components, Locale } from '../interface';
+import type { Components, RangeList, Locale } from '../interface';
 
 export type RangesProps = {
   prefixCls: string;
+  rangeList?: RangeList;
   components?: Components;
   needConfirmButton: boolean;
   onNow?: null | (() => void) | false;
@@ -14,6 +15,7 @@ export type RangesProps = {
 
 export default function getRanges({
   prefixCls,
+  rangeList = [],
   components = {},
   needConfirmButton,
   onNow,
@@ -25,10 +27,26 @@ export default function getRanges({
   let presetNode: VueNode;
   let okNode: VueNode;
 
+  if (rangeList.length) {
+    const Item = (components.rangeItem || 'span') as any;
+
+    presetNode = (
+      <>
+        {rangeList.map(({ label, onClick, onMouseenter, onMouseleave }) => (
+          <li key={label} class={`${prefixCls}-preset`}>
+            <Item onClick={onClick} onMouseenter={onMouseenter} onMouseleave={onMouseleave}>
+              {label}
+            </Item>
+          </li>
+        ))}
+      </>
+    );
+  }
+
   if (needConfirmButton) {
     const Button = (components.button || 'button') as any;
 
-    if (onNow && showNow !== false) {
+    if (onNow && !presetNode && showNow !== false) {
       presetNode = (
         <li class={`${prefixCls}-now`}>
           <a class={`${prefixCls}-now-btn`} onClick={onNow}>
@@ -40,13 +58,7 @@ export default function getRanges({
 
     okNode = needConfirmButton && (
       <li class={`${prefixCls}-ok`}>
-        <Button
-          disabled={okDisabled}
-          onClick={e => {
-            e.stopPropagation();
-            onOk && onOk();
-          }}
-        >
+        <Button disabled={okDisabled} onClick={onOk}>
           {locale.ok}
         </Button>
       </li>

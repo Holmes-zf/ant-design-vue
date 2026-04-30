@@ -24,51 +24,59 @@ Multiple and checkable.
     allow-clear
     :show-checked-strategy="SHOW_PARENT"
     placeholder="Please select"
-    tree-node-filter-prop="label"
   />
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
+<script lang="ts">
 import type { TreeSelectProps } from 'ant-design-vue';
+import { defineComponent, ref, watch } from 'vue';
 import { TreeSelect } from 'ant-design-vue';
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
 const treeData: TreeSelectProps['treeData'] = [
   {
-    label: 'Node1',
+    title: 'Node1',
     value: '0-0',
     children: [
       {
-        label: 'Child Node1',
+        title: 'Child Node1',
         value: '0-0-0',
       },
     ],
   },
   {
-    label: 'Node2',
+    title: 'Node2',
     value: '0-1',
 
     children: [
       {
-        label: 'Child Node3',
+        title: 'Child Node3',
         value: '0-1-0',
         disabled: true,
       },
       {
-        label: 'Child Node4',
+        title: 'Child Node4',
         value: '0-1-1',
       },
       {
-        label: 'Child Node5',
+        title: 'Child Node5',
         value: '0-1-2',
       },
     ],
   },
 ];
+export default defineComponent({
+  setup() {
+    const value = ref<string[]>(['0-0-0']);
 
-const value = ref<string[]>(['0-0-0']);
+    watch(value, () => {
+      console.log(value.value);
+    });
 
-watch(value, () => {
-  console.log(value.value);
+    return {
+      value,
+      treeData,
+      SHOW_PARENT,
+    };
+  },
 });
 </script>

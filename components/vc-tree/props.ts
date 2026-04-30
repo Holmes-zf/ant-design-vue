@@ -1,4 +1,4 @@
-import type { CSSProperties, ExtractPropTypes, PropType } from 'vue';
+import type { ExtractPropTypes, PropType } from 'vue';
 import type { BasicDataNode } from '.';
 import type { EventHandler } from '../_util/EventInterface';
 import PropTypes from '../_util/vue-types';
@@ -110,7 +110,6 @@ export type AllowDrop<TreeDataType extends BasicDataNode = DataNode> = (
 ) => boolean;
 
 export type DraggableFn = (node: DataNode) => boolean;
-export type ExpandAction = false | 'click' | 'doubleclick' | 'dblclick';
 export const treeProps = () => ({
   prefixCls: String,
   focusable: { type: Boolean, default: undefined },
@@ -126,7 +125,6 @@ export const treeProps = () => ({
   showIcon: { type: Boolean, default: undefined },
   icon: PropTypes.any,
   selectable: { type: Boolean, default: undefined },
-  expandAction: [String, Boolean] as PropType<ExpandAction>,
   disabled: { type: Boolean, default: undefined },
   multiple: { type: Boolean, default: undefined },
   checkable: { type: Boolean, default: undefined },
@@ -205,7 +203,7 @@ export const treeProps = () => ({
       ) => void
     >,
   },
-  loadData: { type: Function as PropType<(treeNode: EventDataNode) => Promise<any>> },
+  loadData: { type: Function as PropType<(treeNode: EventDataNode) => Promise<void>> },
   loadedKeys: { type: Array as PropType<Key[]> },
   onMouseenter: { type: Function as PropType<(info: NodeMouseEventParams) => void> },
   onMouseleave: { type: Function as PropType<(info: NodeMouseEventParams) => void> },
@@ -247,9 +245,6 @@ export const treeProps = () => ({
 
   // direction for drag logic
   direction: { type: String as PropType<Direction> },
-
-  rootClassName: String,
-  rootStyle: Object as PropType<CSSProperties>,
 });
 
 export type TreeProps = Partial<ExtractPropTypes<ReturnType<typeof treeProps>>>;

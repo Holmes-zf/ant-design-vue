@@ -6,7 +6,7 @@ function select(element) {
 
     selectedText = element.value;
   } else if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
-    const isReadOnly = element.hasAttribute('readonly');
+    let isReadOnly = element.hasAttribute('readonly');
 
     if (!isReadOnly) {
       element.setAttribute('readonly', '');
@@ -25,8 +25,8 @@ function select(element) {
       element.focus();
     }
 
-    const selection = window.getSelection();
-    const range = document.createRange();
+    let selection = window.getSelection();
+    let range = document.createRange();
 
     range.selectNodeContents(element);
     selection.removeAllRanges();

@@ -23,10 +23,17 @@ The input box comes in three sizes. large is used in the form, while the medium 
     <a-time-picker v-model:value="value3" size="small" />
   </a-space>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import dayjs from 'dayjs';
-import { ref } from 'vue';
-const value1 = ref(dayjs('12:08:23', 'HH:mm'));
-const value2 = ref(dayjs('12:08:23', 'HH:mm'));
-const value3 = ref(dayjs('12:08:23', 'HH:mm'));
+import { defineComponent, ref } from 'vue';
+
+export default defineComponent({
+  setup() {
+    return {
+      value1: ref(dayjs('12:08:23', 'HH:mm')),
+      value2: ref(dayjs('12:08:23', 'HH:mm')),
+      value3: ref(dayjs('12:08:23', 'HH:mm')),
+    };
+  },
+});
 </script>

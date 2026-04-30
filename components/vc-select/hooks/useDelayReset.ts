@@ -1,5 +1,5 @@
 import type { Ref } from 'vue';
-import { onMounted, shallowRef } from 'vue';
+import { onMounted, ref } from 'vue';
 
 /**
  * Similar with `useLock`, but this hook will always execute last value.
@@ -8,7 +8,7 @@ import { onMounted, shallowRef } from 'vue';
 export default function useDelayReset(
   timeout = 10,
 ): [Ref<Boolean>, (val: boolean, callback?: () => void) => void, () => void] {
-  const bool = shallowRef(false);
+  const bool = ref(false);
   let delay: any;
 
   const cancelLatest = () => {

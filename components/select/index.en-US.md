@@ -2,8 +2,7 @@
 category: Components
 type: Data Entry
 title: Select
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*zo76T7KQx2UAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5oPiTqPxGAUAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 ---
 
 Select component to select value from options.
@@ -33,7 +32,7 @@ Select component to select value from options.
 | defaultActiveFirstOption | Whether active first option by default | boolean | true |  |
 | defaultOpen | Initial open state of dropdown | boolean | - |  |
 | disabled | Whether disabled select | boolean | false |  |
-| popupClassName | className of dropdown menu | string | - | 4.0 |
+| dropdownClassName | className of dropdown menu | string | - |  |
 | dropdownMatchSelectWidth | Determine whether the dropdown menu and the select input are the same width. Default set `min-width` same as input. Will ignore when value less than select width. `false` will disable virtual scroll | boolean \| number | true |  |
 | dropdownMenuStyle | additional style applied to dropdown menu | object | - |  |
 | dropdownRender | Customize dropdown content | ({menuNode: VNode, props}) => VNode \| v-slot | - |  |
@@ -41,13 +40,13 @@ Select component to select value from options.
 | fieldNames | Customize node label, value, options field name | object | { label: `label`, value: `value`, options: `options` } | 3.0 |
 | filterOption | If true, filter options by input, if function, filter options against it. The function will receive two arguments, `inputValue` and `option`, if the function returns `true`, the option will be included in the filtered set; Otherwise, it will be excluded. | `boolean` \| `function(inputValue, option)` | true |  |
 | filterSort | Sort function for search options sorting, see [Array.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)'s compareFunction | (optionA: Option, optionB: Option) => number | - | 3.0 |
-| firstActiveValue | Value of action option by default | string \| string\[] | - |  |
+| firstActiveValue | Value of action option by default | string\|string\[] | - |  |
 | getPopupContainer | Parent Node which the selector should be rendered to. Default to `body`. When position issues happen, try to modify it into scrollable content and position it relative. | function(triggerNode) | () => document.body |  |
 | labelInValue | whether to embed label in value, turn the format of value from `string` to `{key: string, label: vNodes, originLabel: any}`, originLabel (3.1) maintains the original type. If the node is constructed through a-select-option children, the value is a function (the default slot of a-select-option) | boolean | false |  |
 | listHeight | Config popup height | number | 256 |  |
-| loading | indicate loading state | boolean | false |  |
+| loading | indicate loading state | Boolean | false |  |
 | maxTagCount | Max tag count to show | number | - |  |
-| maxTagPlaceholder | Placeholder for not showing tags | slot \| function(omittedValues) | - |  |
+| maxTagPlaceholder | Placeholder for not showing tags | slot/function(omittedValues) | - |  |
 | maxTagTextLength | Max text length to show | number | - |  |
 | menuItemSelectedIcon | The custom menuItemSelected icon | VNode \| slot | - |  |
 | mode | Set mode of Select | 'multiple' \| 'tags' | - |  |
@@ -56,18 +55,16 @@ Select component to select value from options.
 | option | custom render option by slot | v-slot:option="{value, label, [disabled, key, title]}" | - | 2.2.5 |
 | optionFilterProp | Which prop value of option will be used for filter if filterOption is true | string | value |  |
 | optionLabelProp | Which prop value of option will render as content of select. | string | `children` \| `label`(when use options) |  |
-| options | Data of the selectOption, manual construction work is no longer needed if this property has been set | Array&lt;{value, label, [disabled, key, title]}> | \[] |  |
+| options | Data of the selectOption, manual construction work is no longer needed if this property has been set | array&lt;{value, label, [disabled, key, title]}> | \[] |  |
 | placeholder | Placeholder of select | string\|slot | - |  |
-| placement | The position where the selection box pops up | `bottomLeft` `bottomRight` `topLeft` `topRight` | bottomLeft | 3.3.0 |
 | removeIcon | The custom remove icon | VNode \| slot | - |  |
 | searchValue | The current input "search" text | string | - |  |
 | showArrow | Whether to show the drop-down arrow | boolean | single:true, multiple:false |  |
 | showSearch | Whether select is searchable | boolean | single:false, multiple:true |  |
-| size | Size of Select input. `middle` `large` `small` | string | middle |  |
-| status | Set validation status | 'error' \| 'warning' | - | 3.3.0 |
+| size | Size of Select input. `default` `large` `small` | string | default |  |
 | suffixIcon | The custom suffix icon | VNode \| slot | - |  |
 | tagRender | Customize tag render, only applies when `mode` is set to `multiple` or `tags` | slot \| (props) => any | - |  |
-| tokenSeparators | Separator used to tokenize, only applies when `mode="tags"` | string\[] | - |  |
+| tokenSeparators | Separator used to tokenize on tag/multiple mode | string\[] |  |  |
 | value(v-model) | Current selected option. | string\|number\|string\[]\|number\[] | - |  |
 | virtual | Disable virtual scroll when set to false | boolean | true | 3.0 |
 
@@ -78,7 +75,7 @@ Select component to select value from options.
 | Events Name | Description | Arguments |
 | --- | --- | --- |
 | blur | Called when blur | function |
-| change | Called when select an option or input value change, or value of input is changed in combobox mode | function(value, option:Option \| Array&lt;Option>) |
+| change | Called when select an option or input value change, or value of input is changed in combobox mode | function(value, option:Option/Array&lt;Option>) |
 | deselect | Called when a option is deselected, the params are option's value (or key) . only called for multiple or tags, effective in multiple or tags mode only. | function(value, option:Option) |
 | dropdownVisibleChange | Call when dropdown open | function(open) |
 | focus | Called when focus | function |
@@ -117,7 +114,7 @@ Select component to select value from options.
 
 ### The dropdown is closed when click `dropdownRender` area?
 
-Dropdown menu will be closed if click `dropdownRender` area, you can prevent the default behavior of a click event, See the [dropdownRender example](#components-select-demo-custom-dropdown-menu).
+See the [dropdownRender example](/components/select/#components-select-demo-custom-dropdown).
 
 ### Why is `placeholder` not displayed?
 

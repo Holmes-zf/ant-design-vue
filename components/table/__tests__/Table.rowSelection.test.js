@@ -525,7 +525,7 @@ describe('Table.rowSelection', () => {
             value: 'Lucy',
           },
         ],
-        filterDropdownOpen: true,
+        filterDropdownVisible: true,
         onFilter: (value, record) => record.name.indexOf(value) === 0,
       },
     ];

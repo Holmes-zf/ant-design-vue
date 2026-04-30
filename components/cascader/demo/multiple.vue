@@ -16,32 +16,18 @@ title:
 Select multiple options
 </docs>
 <template>
-  <a-space direction="vertical" style="width: 100%">
-    <h4>Cascader.SHOW_PARENT</h4>
-    <a-cascader
-      v-model:value="value"
-      style="width: 100%"
-      multiple
-      max-tag-count="responsive"
-      :options="options"
-      placeholder="Please select"
-    ></a-cascader>
-    <h4>Cascader.SHOW_CHILD</h4>
-    <a-cascader
-      v-model:value="value"
-      style="width: 100%"
-      multiple
-      max-tag-count="responsive"
-      :options="options"
-      placeholder="Please select"
-      :show-checked-strategy="Cascader.SHOW_CHILD"
-    ></a-cascader>
-  </a-space>
+  <a-cascader
+    v-model:value="value"
+    style="width: 100%"
+    multiple
+    max-tag-count="responsive"
+    :options="options"
+    placeholder="Please select"
+  ></a-cascader>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import type { CascaderProps } from 'ant-design-vue';
-import { Cascader } from 'ant-design-vue';
 const options: CascaderProps['options'] = [
   {
     label: 'Light',
@@ -75,6 +61,12 @@ const options: CascaderProps['options'] = [
     ],
   },
 ];
-
-const value = ref<string[]>([]);
+export default defineComponent({
+  setup() {
+    return {
+      value: ref<string[]>([]),
+      options,
+    };
+  },
+});
 </script>

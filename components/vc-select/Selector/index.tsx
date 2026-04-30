@@ -15,7 +15,7 @@ import type { CustomTagProps, DisplayValueType, Mode, RenderNode } from '../Base
 import { isValidateOpenKey } from '../utils/keyUtil';
 import useLock from '../hooks/useLock';
 import type { PropType } from 'vue';
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import createRef from '../../_util/createRef';
 import PropTypes from '../../_util/vue-types';
 import type { VueNode } from '../../_util/type';
@@ -124,7 +124,7 @@ const Selector = defineComponent<SelectorProps>({
   } as any,
   setup(props, { expose }) {
     const inputRef = createRef();
-    const compositionStatus = ref(false);
+    let compositionStatus = false;
 
     // ====================== Input ======================
     const [getInputMouseDown, setInputMouseDown] = useLock(0);
@@ -140,12 +140,7 @@ const Selector = defineComponent<SelectorProps>({
         props.onInputKeyDown(event);
       }
 
-      if (
-        which === KeyCode.ENTER &&
-        props.mode === 'tags' &&
-        !compositionStatus.value &&
-        !props.open
-      ) {
+      if (which === KeyCode.ENTER && props.mode === 'tags' && !compositionStatus && !props.open) {
         // When menu isn't open, OptionList won't trigger a value change
         // So when enter is pressed, the tag's input value should be emitted here to let selector know
         props.onSearchSubmit((event.target as HTMLInputElement).value);
@@ -168,17 +163,17 @@ const Selector = defineComponent<SelectorProps>({
     let pastedText = null;
 
     const triggerOnSearch = (value: string) => {
-      if (props.onSearch(value, true, compositionStatus.value) !== false) {
+      if (props.onSearch(value, true, compositionStatus) !== false) {
         props.onToggleOpen(true);
       }
     };
 
     const onInputCompositionStart = () => {
-      compositionStatus.value = true;
+      compositionStatus = true;
     };
 
     const onInputCompositionEnd = (e: InputEvent) => {
-      compositionStatus.value = false;
+      compositionStatus = false;
       // Trigger search again to support `tokenSeparators` with typewriting
       if (props.mode !== 'combobox') {
         triggerOnSearch((e.target as HTMLInputElement).value);
@@ -256,7 +251,6 @@ const Selector = defineComponent<SelectorProps>({
         onInputMouseDown: onInternalInputMouseDown,
         onInputChange,
         onInputPaste,
-        compositionStatus: compositionStatus.value,
         onInputCompositionStart,
         onInputCompositionEnd,
       };

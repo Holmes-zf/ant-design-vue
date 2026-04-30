@@ -24,16 +24,24 @@ Basic usage.
     <div><h3>4</h3></div>
   </a-carousel>
 </template>
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-<script lang="ts" setup>
-const onChange = (current: number) => {
-  console.log(current);
-};
+export default defineComponent({
+  setup() {
+    const onChange = (current: number) => {
+      console.log(current);
+    };
+
+    return {
+      onChange,
+    };
+  },
+});
 </script>
-
 <style scoped>
 /* For demo */
-:deep(.slick-slide) {
+.ant-carousel :deep(.slick-slide) {
   text-align: center;
   height: 160px;
   line-height: 160px;
@@ -41,7 +49,7 @@ const onChange = (current: number) => {
   overflow: hidden;
 }
 
-:deep(.slick-slide h3) {
+.ant-carousel :deep(.slick-slide h3) {
   color: #fff;
 }
 </style>

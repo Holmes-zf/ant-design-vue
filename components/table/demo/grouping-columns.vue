@@ -25,8 +25,9 @@ Group table head with `columns[n].children`.
     :scroll="{ x: 'calc(700px + 50%)', y: 240 }"
   />
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import type { TableColumnsType } from 'ant-design-vue';
+import { defineComponent } from 'vue';
 type TableDataType = {
   key: number;
   name: string;
@@ -132,4 +133,12 @@ const data = [...Array(100)].map((_, i) => ({
   companyName: 'SoftLake Co',
   gender: 'M',
 }));
+export default defineComponent({
+  setup() {
+    return {
+      data,
+      columns,
+    };
+  },
+});
 </script>

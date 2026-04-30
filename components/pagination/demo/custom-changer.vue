@@ -18,7 +18,7 @@ Customize dropdown options such as adding all options
 <template>
   <a-pagination
     v-model:current="current"
-    v-model:page-size="pageSizeRef"
+    v-model:page-size="pageSize"
     :page-size-options="pageSizeOptions"
     :total="total"
     show-size-changer
@@ -30,15 +30,27 @@ Customize dropdown options such as adding all options
     </template>
   </a-pagination>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 
-const pageSizeOptions = ref<string[]>(['10', '20', '30', '40', '50']);
-const current = ref(1);
-const pageSizeRef = ref(10);
-const total = ref(50);
-const onShowSizeChange = (current: number, pageSize: number) => {
-  console.log(current, pageSize);
-  pageSizeRef.value = pageSize;
-};
+export default defineComponent({
+  setup() {
+    const pageSizeOptions = ref<string[]>(['10', '20', '30', '40', '50']);
+    const current = ref(1);
+    const pageSizeRef = ref(10);
+    const total = ref(50);
+    const onShowSizeChange = (current: number, pageSize: number) => {
+      console.log(current, pageSize);
+      pageSizeRef.value = pageSize;
+    };
+
+    return {
+      pageSizeOptions,
+      current,
+      pageSize: pageSizeRef,
+      total,
+      onShowSizeChange,
+    };
+  },
+});
 </script>

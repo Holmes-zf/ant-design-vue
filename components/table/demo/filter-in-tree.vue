@@ -24,103 +24,115 @@ You can use `filterMode` to change default filter interface, options: `menu`(def
 <template>
   <a-table :columns="columns" :data-source="data" @change="onChange"></a-table>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import type { TableProps } from 'ant-design-vue';
-const columns: TableProps['columns'] = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    filters: [
+
+export default defineComponent({
+  setup() {
+    const columns: TableProps['columns'] = [
       {
-        text: 'Joe',
-        value: 'Joe',
-      },
-      {
-        text: 'Category 1',
-        value: 'Category 1',
-        children: [
+        title: 'Name',
+        dataIndex: 'name',
+        filters: [
           {
-            text: 'Yellow',
-            value: 'Yellow',
+            text: 'Joe',
+            value: 'Joe',
           },
           {
-            text: 'Pink',
-            value: 'Pink',
+            text: 'Category 1',
+            value: 'Category 1',
+            children: [
+              {
+                text: 'Yellow',
+                value: 'Yellow',
+              },
+              {
+                text: 'Pink',
+                value: 'Pink',
+              },
+            ],
+          },
+          {
+            text: 'Category 2',
+            value: 'Category 2',
+            children: [
+              {
+                text: 'Green',
+                value: 'Green',
+              },
+              {
+                text: 'Black',
+                value: 'Black',
+              },
+            ],
           },
         ],
+        filterMode: 'tree',
+        filterSearch: true,
+        onFilter: (value, record) => record.name.includes(value),
+        width: '30%',
       },
       {
-        text: 'Category 2',
-        value: 'Category 2',
-        children: [
+        title: 'Age',
+        dataIndex: 'age',
+        sorter: (a, b) => a.age - b.age,
+      },
+      {
+        title: 'Address',
+        dataIndex: 'address',
+        filters: [
           {
-            text: 'Green',
-            value: 'Green',
+            text: 'London',
+            value: 'London',
           },
           {
-            text: 'Black',
-            value: 'Black',
+            text: 'New York',
+            value: 'New York',
           },
         ],
+        onFilter: (value, record) => record.address.startsWith(value),
+        filterSearch: true,
+        width: '40%',
       },
-    ],
-    filterMode: 'tree',
-    filterSearch: true,
-    onFilter: (value, record) => record.name.includes(value),
-    width: '30%',
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    sorter: (a, b) => a.age - b.age,
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    filters: [
+    ];
+
+    const data = [
       {
-        text: 'London',
-        value: 'London',
+        key: '1',
+        name: 'John Brown',
+        age: 32,
+        address: 'New York No. 1 Lake Park',
       },
       {
-        text: 'New York',
-        value: 'New York',
+        key: '2',
+        name: 'Jim Green',
+        age: 42,
+        address: 'London No. 1 Lake Park',
       },
-    ],
-    onFilter: (value, record) => record.address.startsWith(value),
-    filterSearch: true,
-    width: '40%',
-  },
-];
+      {
+        key: '3',
+        name: 'Joe Black',
+        age: 32,
+        address: 'Sidney No. 1 Lake Park',
+      },
+      {
+        key: '4',
+        name: 'Jim Red',
+        age: 32,
+        address: 'London No. 2 Lake Park',
+      },
+    ];
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
+    function onChange(pagination, filters, sorter, extra) {
+      console.log('params', pagination, filters, sorter, extra);
+    }
 
-function onChange(pagination, filters, sorter, extra) {
-  console.log('params', pagination, filters, sorter, extra);
-}
+    return {
+      data,
+      columns,
+      onChange,
+    };
+  },
+});
 </script>

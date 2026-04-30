@@ -46,9 +46,9 @@ Table with editable rows.
     </template>
   </a-table>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { cloneDeep } from 'lodash-es';
-import { reactive, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import type { UnwrapRef } from 'vue';
 
 const columns = [
@@ -87,20 +87,32 @@ for (let i = 0; i < 100; i++) {
     address: `London Park no. ${i}`,
   });
 }
+export default defineComponent({
+  setup() {
+    const dataSource = ref(data);
+    const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
 
-const dataSource = ref(data);
-const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
-
-const edit = (key: string) => {
-  editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
-};
-const save = (key: string) => {
-  Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
-  delete editableData[key];
-};
-const cancel = (key: string) => {
-  delete editableData[key];
-};
+    const edit = (key: string) => {
+      editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
+    };
+    const save = (key: string) => {
+      Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
+      delete editableData[key];
+    };
+    const cancel = (key: string) => {
+      delete editableData[key];
+    };
+    return {
+      dataSource,
+      columns,
+      editingKey: '',
+      editableData,
+      edit,
+      save,
+      cancel,
+    };
+  },
+});
 </script>
 <style scoped>
 .editable-row-operations a {

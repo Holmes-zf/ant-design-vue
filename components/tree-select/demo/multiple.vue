@@ -27,56 +27,54 @@ Multiple selection usage.
     multiple
     tree-default-expand-all
     :tree-data="treeData"
-    tree-node-filter-prop="label"
   >
-    <template #title="{ value: val, label }">
+    <template #title="{ value: val, title }">
       <b v-if="val === 'parent 1-1'" style="color: #08c">{{ val }}</b>
-      <template v-else>{{ label }}</template>
+      <template v-else>{{ title }}</template>
     </template>
   </a-tree-select>
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
+<script lang="ts">
 import type { TreeSelectProps } from 'ant-design-vue';
+import { defineComponent, ref, watch } from 'vue';
 
-const value = ref<string[]>([]);
-const treeData = ref<TreeSelectProps['treeData']>([
-  {
-    label: 'parent 1',
-    value: 'parent 1',
-    children: [
+export default defineComponent({
+  setup() {
+    const value = ref<string[]>([]);
+    const treeData = ref<TreeSelectProps['treeData']>([
       {
-        label: 'parent 1-0',
-        value: 'parent 1-0',
+        title: 'parent 1',
+        value: 'parent 1',
         children: [
           {
-            label: 'parent 1-0-0',
-            value: 'parent 1-0-0',
+            title: 'parent 1-0',
+            value: 'parent 1-0',
             children: [
               {
-                label: 'my leaf',
+                title: 'my leaf',
                 value: 'leaf1',
               },
               {
-                label: 'your leaf',
+                title: 'your leaf',
                 value: 'leaf2',
               },
             ],
           },
           {
-            label: 'parent 1-0-1',
-            value: 'parent 1-0-1',
+            title: 'parent 1-1',
+            value: 'parent 1-1',
           },
         ],
       },
-      {
-        label: 'parent 1-1',
-        value: 'parent 1-1',
-      },
-    ],
+    ]);
+    watch(value, () => {
+      console.log('select', value.value);
+    });
+
+    return {
+      value,
+      treeData,
+    };
   },
-]);
-watch(value, () => {
-  console.log('select', value.value);
 });
 </script>

@@ -21,9 +21,20 @@ Click `TimePicker`, and then we could select or input a time in panel.
     <template #suffixIcon><smile-outlined /></template>
   </a-time-picker>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import dayjs, { Dayjs } from 'dayjs';
 import { SmileOutlined } from '@ant-design/icons-vue';
-import { ref } from 'vue';
-const value = ref<Dayjs>();
+import { defineComponent, ref } from 'vue';
+
+export default defineComponent({
+  components: {
+    SmileOutlined,
+  },
+  setup() {
+    return {
+      dayjs,
+      value: ref<Dayjs>(),
+    };
+  },
+});
 </script>

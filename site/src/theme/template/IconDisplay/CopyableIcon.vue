@@ -22,8 +22,8 @@ const allIcons = AntdIcons;
 const kebabCase = function kebabCase(str) {
   return str
     .split(/(?=[A-Z])/)
-    .map(s => s.replace(s[0], s[0].toUpperCase()))
-    .join('');
+    .join('-')
+    .toLowerCase();
 };
 
 export default defineComponent({

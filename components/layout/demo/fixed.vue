@@ -44,11 +44,17 @@ Fixed Header is generally used to fix the top navigation to facilitate page swit
     </a-layout-footer>
   </a-layout>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const selectedKeys = ref<string[]>(['2']);
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    return {
+      selectedKeys: ref<string[]>(['2']),
+    };
+  },
+});
 </script>
-<style scoped>
+<style>
 #components-layout-demo-fixed .logo {
   width: 120px;
   height: 31px;

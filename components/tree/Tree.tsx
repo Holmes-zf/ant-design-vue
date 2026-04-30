@@ -1,4 +1,4 @@
-import type { ExtractPropTypes } from 'vue';
+import type { PropType, ExtractPropTypes } from 'vue';
 import { watchEffect, ref, defineComponent, computed } from 'vue';
 import classNames from '../_util/classNames';
 import VcTree from '../vc-tree';
@@ -8,18 +8,13 @@ import initDefaultProps from '../_util/props-util/initDefaultProps';
 import type { DataNode, EventDataNode, FieldNames, Key, ScrollTo } from '../vc-tree/interface';
 import type { TreeNodeProps } from '../vc-tree/props';
 import { treeProps as vcTreeProps } from '../vc-tree/props';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import type { SwitcherIconProps } from './utils/iconUtil';
 import renderSwitcherIcon from './utils/iconUtil';
 import dropIndicatorRender from './utils/dropIndicator';
 import devWarning from '../vc-util/devWarning';
 import { warning } from '../vc-util/warning';
 import omit from '../_util/omit';
-import { booleanType, someType, arrayType, functionType, objectType } from '../_util/type';
-
-// CSSINJS
-import useStyle from './style';
-import type { CustomSlotsType } from '../_util/type';
 
 export interface AntdTreeNodeAttribute {
   eventKey: string;
@@ -89,39 +84,44 @@ export const treeProps = () => {
   const baseTreeProps = vcTreeProps();
   return {
     ...baseTreeProps,
-    showLine: someType<boolean | { showLeafIcon: boolean }>([Boolean, Object]),
+    showLine: {
+      type: [Boolean, Object] as PropType<boolean | { showLeafIcon: boolean }>,
+      default: undefined,
+    },
     /** 是否支持多选 */
-    multiple: booleanType(),
+    multiple: { type: Boolean, default: undefined },
     /** 是否自动展开父节点 */
-    autoExpandParent: booleanType(),
+    autoExpandParent: { type: Boolean, default: undefined },
     /** checkable状态下节点选择完全受控（父子节点选中状态不再关联）*/
-    checkStrictly: booleanType(),
+    checkStrictly: { type: Boolean, default: undefined },
     /** 是否支持选中 */
-    checkable: booleanType(),
+    checkable: { type: Boolean, default: undefined },
     /** 是否禁用树 */
-    disabled: booleanType(),
+    disabled: { type: Boolean, default: undefined },
     /** 默认展开所有树节点 */
-    defaultExpandAll: booleanType(),
+    defaultExpandAll: { type: Boolean, default: undefined },
     /** 默认展开对应树节点 */
-    defaultExpandParent: booleanType(),
+    defaultExpandParent: { type: Boolean, default: undefined },
     /** 默认展开指定的树节点 */
-    defaultExpandedKeys: arrayType<Key[]>(),
+    defaultExpandedKeys: { type: Array as PropType<Key[]> },
     /** （受控）展开指定的树节点 */
-    expandedKeys: arrayType<Key[]>(),
+    expandedKeys: { type: Array as PropType<Key[]> },
     /** （受控）选中复选框的树节点 */
-    checkedKeys: someType<Key[] | { checked: Key[]; halfChecked: Key[] }>([Array, Object]),
+    checkedKeys: {
+      type: [Array, Object] as PropType<Key[] | { checked: Key[]; halfChecked: Key[] }>,
+    },
     /** 默认选中复选框的树节点 */
-    defaultCheckedKeys: arrayType<Key[]>(),
+    defaultCheckedKeys: { type: Array as PropType<Key[]> },
     /** （受控）设置选中的树节点 */
-    selectedKeys: arrayType<Key[]>(),
+    selectedKeys: { type: Array as PropType<Key[]> },
     /** 默认选中的树节点 */
-    defaultSelectedKeys: arrayType<Key[]>(),
-    selectable: booleanType(),
+    defaultSelectedKeys: { type: Array as PropType<Key[]> },
+    selectable: { type: Boolean, default: undefined },
 
-    loadedKeys: arrayType<Key[]>(),
-    draggable: booleanType(),
-    showIcon: booleanType(),
-    icon: functionType<(nodeProps: AntdTreeNodeAttribute) => any>(),
+    loadedKeys: { type: Array as PropType<Key[]> },
+    draggable: { type: Boolean, default: undefined },
+    showIcon: { type: Boolean, default: undefined },
+    icon: { type: Function as PropType<(nodeProps: AntdTreeNodeAttribute) => any> },
     switcherIcon: PropTypes.any,
     prefixCls: String,
     /**
@@ -129,13 +129,13 @@ export const treeProps = () => {
      * deprecated, please use `fieldNames` instead
      * 替换treeNode中 title,key,children字段为treeData中对应的字段
      */
-    replaceFields: objectType<FieldNames>(),
-    blockNode: booleanType(),
+    replaceFields: { type: Object as PropType<FieldNames> },
+    blockNode: { type: Boolean, default: undefined },
     openAnimation: PropTypes.any,
     onDoubleclick: baseTreeProps.onDblclick,
-    'onUpdate:selectedKeys': functionType<(keys: Key[]) => void>(),
-    'onUpdate:checkedKeys': functionType<(keys: Key[]) => void>(),
-    'onUpdate:expandedKeys': functionType<(keys: Key[]) => void>(),
+    'onUpdate:selectedKeys': Function as PropType<(keys: Key[]) => void>,
+    'onUpdate:checkedKeys': Function as PropType<(keys: Key[]) => void>,
+    'onUpdate:expandedKeys': Function as PropType<(keys: Key[]) => void>,
   };
 };
 
@@ -151,25 +151,23 @@ export default defineComponent({
     showIcon: false,
     blockNode: false,
   }),
-
-  slots: Object as CustomSlotsType<{
-    icon?: any;
-    title?: any;
-    switcherIcon?: any;
-    titleRender?: any;
-    default?: any;
-    leafIcon?: any;
-  }>,
+  slots: ['icon', 'title', 'switcherIcon', 'titleRender'],
+  // emits: [
+  //   'update:selectedKeys',
+  //   'update:checkedKeys',
+  //   'update:expandedKeys',
+  //   'expand',
+  //   'select',
+  //   'check',
+  //   'doubleclick',
+  //   'dblclick',
+  // ],
   setup(props, { attrs, expose, emit, slots }) {
     warning(
       !(props.treeData === undefined && slots.default),
       '`children` of Tree is deprecated. Please use `treeData` instead.',
     );
     const { prefixCls, direction, virtual } = useConfigInject('tree', props);
-
-    // style
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
     const treeRef = ref();
     const scrollTo: ScrollTo = scroll => {
       treeRef.value?.scrollTo(scroll);
@@ -238,7 +236,7 @@ export default defineComponent({
         itemHeight,
       };
       const children = slots.default ? filterEmpty(slots.default()) : undefined;
-      return wrapSSR(
+      return (
         <VcTree
           {...newProps}
           virtual={virtual.value}
@@ -253,13 +251,12 @@ export default defineComponent({
               [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
             },
             attrs.class,
-            hashId.value,
           )}
           direction={direction.value}
           checkable={checkable}
           selectable={selectable}
           switcherIcon={(nodeProps: SwitcherIconProps) =>
-            renderSwitcherIcon(prefixCls.value, switcherIcon, nodeProps, slots.leafIcon, showLine)
+            renderSwitcherIcon(prefixCls.value, switcherIcon, showLine, nodeProps)
           }
           onCheck={handleCheck}
           onExpand={handleExpand}
@@ -270,7 +267,7 @@ export default defineComponent({
             checkable: () => <span class={`${prefixCls.value}-checkbox-inner`} />,
           }}
           children={children}
-        ></VcTree>,
+        ></VcTree>
       );
     };
   },

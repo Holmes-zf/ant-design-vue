@@ -36,9 +36,8 @@ For instance, add an external link after the selected value.
     </template>
   </a-cascader>
 </template>
-
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import type { CascaderProps } from 'ant-design-vue';
 const options: CascaderProps['options'] = [
   {
@@ -76,11 +75,18 @@ const options: CascaderProps['options'] = [
     ],
   },
 ];
+export default defineComponent({
+  setup() {
+    const handleAreaClick = (e: Event, label: string, option: CascaderProps['options'][number]) => {
+      e.stopPropagation();
+      console.log('clicked', label, option);
+    };
 
-const handleAreaClick = (e: Event, label: string, option: CascaderProps['options'][number]) => {
-  e.stopPropagation();
-  console.log('clicked', label, option);
-};
-
-const value = ref<string[]>(['zhejiang', 'hangzhou', 'xihu']);
+    return {
+      value: ref<string[]>(['zhejiang', 'hangzhou', 'xihu']),
+      options,
+      handleAreaClick,
+    };
+  },
+});
 </script>

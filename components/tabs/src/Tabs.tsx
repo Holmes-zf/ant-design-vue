@@ -10,15 +10,10 @@ import type {
   OnTabScroll,
   Tab,
 } from './interface';
-import { defineComponent, computed, onMounted, watchEffect } from 'vue';
-import type { CSSProperties, ExtractPropTypes } from 'vue';
-import {
-  camelize,
-  flattenChildren,
-  initDefaultProps,
-  isValidElement,
-} from '../../_util/props-util';
-import useConfigInject from '../../config-provider/hooks/useConfigInject';
+import type { CSSProperties, PropType, ExtractPropTypes } from 'vue';
+import { defineComponent, computed, onMounted, watchEffect, camelize } from 'vue';
+import { flattenChildren, initDefaultProps, isValidElement } from '../../_util/props-util';
+import useConfigInject from '../../_util/hooks/useConfigInject';
 import useState from '../../_util/hooks/useState';
 import isMobile from '../../vc-util/isMobile';
 import useMergedState from '../../_util/hooks/useMergedState';
@@ -28,20 +23,12 @@ import PlusOutlined from '@ant-design/icons-vue/PlusOutlined';
 import devWarning from '../../vc-util/devWarning';
 import type { SizeType } from '../../config-provider';
 import { useProvideTabs } from './TabContext';
-import {
-  arrayType,
-  stringType,
-  someType,
-  functionType,
-  objectType,
-  booleanType,
-} from '../../_util/type';
-import type { CustomSlotsType, Key } from '../../_util/type';
+import type { Key } from '../../_util/type';
 import pick from 'lodash-es/pick';
 import PropTypes from '../../_util/vue-types';
 import type { MouseEventHandler } from '../../_util/EventInterface';
 import omit from '../../_util/omit';
-import useStyle from '../style';
+
 export type TabsType = 'line' | 'card' | 'editable-card';
 export type TabsPosition = 'top' | 'right' | 'bottom' | 'left';
 
@@ -52,33 +39,36 @@ export const tabsProps = () => {
   return {
     prefixCls: { type: String },
     id: { type: String },
-    popupClassName: String,
-    getPopupContainer: functionType<
-      ((triggerNode?: HTMLElement | undefined) => HTMLElement) | undefined
-    >(),
+
     activeKey: { type: [String, Number] },
     defaultActiveKey: { type: [String, Number] },
-    direction: stringType<'ltr' | 'rtl'>(),
-    animated: someType<boolean | AnimatedConfig>([Boolean, Object]),
-    renderTabBar: functionType<RenderTabBar>(),
+    direction: { type: String as PropType<'ltr' | 'rtl'> },
+    animated: { type: [Boolean, Object] as PropType<boolean | AnimatedConfig> },
+    renderTabBar: { type: Function as PropType<RenderTabBar> },
     tabBarGutter: { type: Number },
-    tabBarStyle: objectType<CSSProperties>(),
-    tabPosition: stringType<TabPosition>(),
-    destroyInactiveTabPane: booleanType(),
+    tabBarStyle: { type: Object as PropType<CSSProperties> },
+    tabPosition: { type: String as PropType<TabPosition> },
+    destroyInactiveTabPane: { type: Boolean },
 
     hideAdd: Boolean,
-    type: stringType<TabsType>(),
-    size: stringType<SizeType>(),
+    type: { type: String as PropType<TabsType> },
+    size: { type: String as PropType<SizeType> },
     centered: Boolean,
-    onEdit: functionType<(e: MouseEvent | KeyboardEvent | Key, action: 'add' | 'remove') => void>(),
-    onChange: functionType<(activeKey: Key) => void>(),
-    onTabClick: functionType<(activeKey: Key, e: KeyboardEvent | MouseEvent) => void>(),
-    onTabScroll: functionType<OnTabScroll>(),
-    'onUpdate:activeKey': functionType<(activeKey: Key) => void>(),
+    onEdit: {
+      type: Function as PropType<
+        (e: MouseEvent | KeyboardEvent | Key, action: 'add' | 'remove') => void
+      >,
+    },
+    onChange: { type: Function as PropType<(activeKey: Key) => void> },
+    onTabClick: {
+      type: Function as PropType<(activeKey: Key, e: KeyboardEvent | MouseEvent) => void>,
+    },
+    onTabScroll: { type: Function as PropType<OnTabScroll> },
+    'onUpdate:activeKey': { type: Function as PropType<(activeKey: Key) => void> },
     // Accessibility
-    locale: objectType<TabsLocale>(),
-    onPrevClick: functionType<MouseEventHandler>(),
-    onNextClick: functionType<MouseEventHandler>(),
+    locale: { type: Object as PropType<TabsLocale>, default: undefined as TabsLocale },
+    onPrevClick: Function as PropType<MouseEventHandler>,
+    onNextClick: Function as PropType<MouseEventHandler>,
     tabBarExtraContent: PropTypes.any,
   };
 };
@@ -136,18 +126,17 @@ const InternalTabs = defineComponent({
         tabPane: false,
       },
     }),
-    tabs: arrayType<Tab[]>(),
+    tabs: { type: Array as PropType<Tab[]> },
   },
-  slots: Object as CustomSlotsType<{
-    tabBarExtraContent?: any;
-    leftExtra?: any;
-    rightExtra?: any;
-    moreIcon?: any;
-    addIcon?: any;
-    removeIcon?: any;
-    renderTabBar?: any;
-    default: any;
-  }>,
+  slots: [
+    'tabBarExtraContent',
+    'leftExtra',
+    'rightExtra',
+    'moreIcon',
+    'addIcon',
+    'removeIcon',
+    'renderTabBar',
+  ],
   // emits: ['tabClick', 'tabScroll', 'change', 'update:activeKey'],
   setup(props, { attrs, slots }) {
     devWarning(
@@ -165,11 +154,7 @@ const InternalTabs = defineComponent({
       'Tabs',
       '`tabBarExtraContent` slot is deprecated. Please use `rightExtra` slot instead.',
     );
-    const { prefixCls, direction, size, rootPrefixCls, getPopupContainer } = useConfigInject(
-      'tabs',
-      props,
-    );
-    const [wrapSSR, hashId] = useStyle(prefixCls);
+    const { prefixCls, direction, size, rootPrefixCls } = useConfigInject('tabs', props);
     const rtl = computed(() => direction.value === 'rtl');
     const mergedAnimated = computed<AnimatedConfig>(() => {
       const { animated, tabPosition } = props;
@@ -298,8 +283,6 @@ const InternalTabs = defineComponent({
         onTabClick: onInternalTabClick,
         onTabScroll,
         style: tabBarStyle,
-        getPopupContainer: getPopupContainer.value,
-        popupClassName: classNames(props.popupClassName, hashId.value),
       };
 
       if (renderTabBar) {
@@ -314,7 +297,7 @@ const InternalTabs = defineComponent({
       }
       const pre = prefixCls.value;
 
-      return wrapSSR(
+      return (
         <div
           {...attrs}
           id={id}
@@ -322,7 +305,6 @@ const InternalTabs = defineComponent({
             pre,
             `${pre}-${mergedTabPosition.value}`,
             {
-              [hashId.value]: true,
               [`${pre}-${size.value}`]: size.value,
               [`${pre}-card`]: ['card', 'editable-card'].includes(type as string),
               [`${pre}-editable-card`]: type === 'editable-card',
@@ -340,7 +322,7 @@ const InternalTabs = defineComponent({
             {...sharedProps}
             animated={mergedAnimated.value}
           />
-        </div>,
+        </div>
       );
     };
   },
@@ -357,16 +339,15 @@ export default defineComponent({
       tabPane: false,
     },
   }),
-  slots: Object as CustomSlotsType<{
-    tabBarExtraContent?: any;
-    leftExtra?: any;
-    rightExtra?: any;
-    moreIcon?: any;
-    addIcon?: any;
-    removeIcon?: any;
-    renderTabBar?: any;
-    default?: any;
-  }>,
+  slots: [
+    'tabBarExtraContent',
+    'leftExtra',
+    'rightExtra',
+    'moreIcon',
+    'addIcon',
+    'removeIcon',
+    'renderTabBar',
+  ],
   // emits: ['tabClick', 'tabScroll', 'change', 'update:activeKey'],
   setup(props, { attrs, slots, emit }) {
     const handleChange = (key: string) => {

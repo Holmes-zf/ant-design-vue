@@ -10,17 +10,8 @@ import { renderHelper } from '../_util/util';
 import { globalConfig } from '../config-provider';
 import type { NotificationInstance as VCNotificationInstance } from '../vc-notification/Notification';
 import classNames from '../_util/classNames';
-import useStyle from './style';
-import useNotification from './useNotification';
-import { getPlacementStyle } from './util';
 
-export type NotificationPlacement =
-  | 'top'
-  | 'topLeft'
-  | 'topRight'
-  | 'bottom'
-  | 'bottomLeft'
-  | 'bottomRight';
+export type NotificationPlacement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
 
 export type IconType = 'success' | 'info' | 'error' | 'warning';
 
@@ -78,6 +69,45 @@ function setNotificationConfig(options: ConfigProps) {
   }
 }
 
+function getPlacementStyle(
+  placement: NotificationPlacement,
+  top: string = defaultTop,
+  bottom: string = defaultBottom,
+) {
+  let style: CSSProperties;
+  switch (placement) {
+    case 'topLeft':
+      style = {
+        left: '0px',
+        top,
+        bottom: 'auto',
+      };
+      break;
+    case 'topRight':
+      style = {
+        right: '0px',
+        top,
+        bottom: 'auto',
+      };
+      break;
+    case 'bottomLeft':
+      style = {
+        left: '0px',
+        top: 'auto',
+        bottom,
+      };
+      break;
+    default:
+      style = {
+        right: '0px',
+        top: 'auto',
+        bottom,
+      };
+      break;
+  }
+  return style;
+}
+
 function getNotificationInstance(
   {
     prefixCls: customizePrefixCls,
@@ -109,9 +139,8 @@ function getNotificationInstance(
     {
       name: 'notification',
       prefixCls: customizePrefixCls || defaultPrefixCls,
-      useStyle,
       class: notificationClass,
-      style: getPlacementStyle(placement, top ?? defaultTop, bottom ?? defaultBottom),
+      style: getPlacementStyle(placement, top, bottom),
       appContext,
       getContainer,
       closeIcon: ({ prefixCls }) => {
@@ -148,14 +177,13 @@ export interface NotificationArgsProps {
   duration?: number | null;
   icon?: VueNode | (() => VueNode);
   placement?: NotificationPlacement;
-  maxCount?: number;
   style?: CSSProperties;
   prefixCls?: string;
   class?: string;
   readonly type?: IconType;
   onClick?: () => void;
-  top?: string | number;
-  bottom?: string | number;
+  top?: string;
+  bottom?: string;
   getContainer?: () => HTMLElement;
   closeIcon?: VueNode | (() => VueNode);
   appContext?: any;
@@ -230,7 +258,6 @@ iconTypes.forEach(type => {
 });
 
 api.warn = api.warning;
-api.useNotification = useNotification;
 
 export interface NotificationInstance {
   success(args: NotificationArgsProps): void;
@@ -245,7 +272,6 @@ export interface NotificationApi extends NotificationInstance {
   close(key: string): void;
   config(options: ConfigProps): void;
   destroy(): void;
-  useNotification: typeof useNotification;
 }
 
 /** @private test Only function. Not work on production */

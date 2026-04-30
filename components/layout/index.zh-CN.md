@@ -4,8 +4,7 @@ subtitle: 布局
 type: 布局
 cols: 1
 title: Layout
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*4i58ToAcxaYAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*HdS6Q5vUCDcAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/hzEndUVEx/Layout.svg
 ---
 
 协助进行页面级整体布局。
@@ -88,7 +87,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*HdS6Q5vUCDcAAA
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| breakpoint | 触发响应式布局的[断点](/components/grid#api) | `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `xxl` | - |  |
+| breakpoint | 触发响应式布局的[断点](/components/grid#API) | `xs` \| `sm` \| `md` \| `lg` \| `xl` \| `xxl` | - |  |
 | class | 容器 class | string | - |  |
 | collapsed(v-model) | 当前收起状态 | boolean | - |  |
 | collapsedWidth | 收缩宽度，设置为 0 会出现特殊 trigger | number | 80 |  |

@@ -1,21 +1,19 @@
 import type { Ref } from 'vue';
-import { onMounted, onUnmounted, shallowRef } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import type { ScreenMap } from '../../_util/responsiveObserve';
-import useResponsiveObserve from '../../_util/responsiveObserve';
+import ResponsiveObserve from '../../_util/responsiveObserve';
 
 function useBreakpoint(): Ref<ScreenMap> {
-  const screens = shallowRef<ScreenMap>({});
+  const screens = ref<ScreenMap>({});
   let token = null;
-  const responsiveObserve = useResponsiveObserve();
-
   onMounted(() => {
-    token = responsiveObserve.value.subscribe(supportScreens => {
+    token = ResponsiveObserve.subscribe(supportScreens => {
       screens.value = supportScreens;
     });
   });
 
   onUnmounted(() => {
-    responsiveObserve.value.unsubscribe(token);
+    ResponsiveObserve.unsubscribe(token);
   });
 
   return screens;

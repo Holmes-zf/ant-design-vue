@@ -5,11 +5,11 @@ import type {
   TransitionGroupProps,
   TransitionProps,
 } from 'vue';
-import { nextTick } from 'vue';
+import { nextTick, Transition, TransitionGroup } from 'vue';
 import { tuple } from './type';
 
 const SelectPlacements = tuple('bottomLeft', 'bottomRight', 'topLeft', 'topRight');
-export type SelectCommonPlacement = (typeof SelectPlacements)[number];
+export type SelectCommonPlacement = typeof SelectPlacements[number];
 
 const getTransitionDirection = (placement: SelectCommonPlacement | undefined) => {
   if (placement !== undefined && (placement === 'topLeft' || placement === 'topRight')) {
@@ -27,7 +27,7 @@ export const getTransitionProps = (transitionName: string, opt: TransitionProps 
         // appearFromClass: `${transitionName}-appear ${transitionName}-appear-prepare`,
         // appearActiveClass: `antdv-base-transtion`,
         // appearToClass: `${transitionName}-appear ${transitionName}-appear-active`,
-        enterFromClass: `${transitionName}-enter ${transitionName}-enter-prepare ${transitionName}-enter-start`,
+        enterFromClass: `${transitionName}-enter ${transitionName}-enter-prepare`,
         enterActiveClass: `${transitionName}-enter ${transitionName}-enter-prepare`,
         enterToClass: `${transitionName}-enter ${transitionName}-enter-active`,
         leaveFromClass: ` ${transitionName}-leave`,
@@ -126,4 +126,6 @@ const getTransitionName = (rootPrefixCls: string, motion: string, transitionName
   return `${rootPrefixCls}-${motion}`;
 };
 
-export { collapseMotion, getTransitionName, getTransitionDirection };
+export { Transition, TransitionGroup, collapseMotion, getTransitionName, getTransitionDirection };
+
+export default Transition;

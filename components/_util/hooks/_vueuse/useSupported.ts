@@ -1,8 +1,9 @@
 import { tryOnMounted } from './tryOnMounted';
-import { shallowRef } from 'vue';
+import type { Ref } from 'vue';
+import { ref } from 'vue';
 
 export function useSupported(callback: () => unknown, sync = false) {
-  const isSupported = shallowRef<boolean>();
+  const isSupported = ref() as Ref<boolean>;
 
   const update = () => (isSupported.value = Boolean(callback()));
 

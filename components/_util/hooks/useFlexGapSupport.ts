@@ -1,8 +1,8 @@
-import { onMounted, shallowRef } from 'vue';
+import { onMounted, ref } from 'vue';
 import { detectFlexGapSupported } from '../styleChecker';
 
 export default () => {
-  const flexible = shallowRef(false);
+  const flexible = ref(false);
   onMounted(() => {
     flexible.value = detectFlexGapSupported();
   });

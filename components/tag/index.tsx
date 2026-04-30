@@ -1,36 +1,31 @@
-import type { HTMLAttributes, App, PropType, ExtractPropTypes, Plugin, CSSProperties } from 'vue';
-import { shallowRef, defineComponent, watchEffect, computed } from 'vue';
+import type { HTMLAttributes, App, PropType, ExtractPropTypes, Plugin } from 'vue';
+import { ref, defineComponent, watchEffect, computed } from 'vue';
 import classNames from '../_util/classNames';
 import PropTypes from '../_util/vue-types';
 import CloseOutlined from '@ant-design/icons-vue/CloseOutlined';
 import Wave from '../_util/wave';
 import type { PresetColorType, PresetStatusColorType } from '../_util/colors';
-import { isPresetColor, isPresetStatusColor } from '../_util/colors';
-import { eventType } from '../_util/type';
-import type { CustomSlotsType, LiteralUnion } from '../_util/type';
-
+import { PresetColorTypes, PresetStatusColorTypes } from '../_util/colors';
+import type { LiteralUnion } from '../_util/type';
 import CheckableTag from './CheckableTag';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
-import warning from '../_util/warning';
+import useConfigInject from '../_util/hooks/useConfigInject';
 
-import useStyle from './style';
+const PresetColorRegex = new RegExp(`^(${PresetColorTypes.join('|')})(-inverse)?$`);
+const PresetStatusColorRegex = new RegExp(`^(${PresetStatusColorTypes.join('|')})$`);
 
 export const tagProps = () => ({
   prefixCls: String,
   color: {
-    type: String as PropType<LiteralUnion<PresetColorType | PresetStatusColorType>>,
+    type: String as PropType<LiteralUnion<PresetColorType | PresetStatusColorType, string>>,
   },
   closable: { type: Boolean, default: false },
   closeIcon: PropTypes.any,
-  /** @deprecated `visible` will be removed in next major version. */
   visible: { type: Boolean, default: undefined },
   onClose: {
     type: Function as PropType<(e: MouseEvent) => void>,
   },
-  onClick: eventType<(e: MouseEvent) => void>(),
   'onUpdate:visible': Function as PropType<(vis: boolean) => void>,
   icon: PropTypes.any,
-  bordered: { type: Boolean, default: true },
 });
 
 export type TagProps = HTMLAttributes & Partial<ExtractPropTypes<ReturnType<typeof tagProps>>>;
@@ -38,29 +33,13 @@ export type TagProps = HTMLAttributes & Partial<ExtractPropTypes<ReturnType<type
 const Tag = defineComponent({
   compatConfig: { MODE: 3 },
   name: 'ATag',
-  inheritAttrs: false,
   props: tagProps(),
   // emits: ['update:visible', 'close'],
-  slots: Object as CustomSlotsType<{
-    closeIcon: any;
-    icon: any;
-    default: any;
-  }>,
-  setup(props, { slots, emit, attrs }) {
+  slots: ['closeIcon', 'icon'],
+  setup(props: TagProps, { slots, emit, attrs }) {
     const { prefixCls, direction } = useConfigInject('tag', props);
 
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
-    const visible = shallowRef(true);
-
-    // Warning for deprecated usage
-    if (process.env.NODE_ENV !== 'production') {
-      warning(
-        props.visible === undefined,
-        'Tag',
-        '`visible` is deprecated, please use `<Tag v-show="visible" />` instead.',
-      );
-    }
+    const visible = ref(true);
 
     watchEffect(() => {
       if (props.visible !== undefined) {
@@ -81,30 +60,23 @@ const Tag = defineComponent({
       }
     };
 
-    // const isPresetColor = computed(() => {
-    //   const { color } = props;
-    //   if (!color) {
-    //     return false;
-    //   }
-    //   return PresetColorRegex.test(color) || PresetStatusColorRegex.test(color);
-    // });
-
-    const isInternalColor = computed(
-      () => isPresetColor(props.color) || isPresetStatusColor(props.color),
-    );
+    const isPresetColor = computed(() => {
+      const { color } = props;
+      if (!color) {
+        return false;
+      }
+      return PresetColorRegex.test(color) || PresetStatusColorRegex.test(color);
+    });
 
     const tagClassName = computed(() =>
-      classNames(prefixCls.value, hashId.value, {
-        [`${prefixCls.value}-${props.color}`]: isInternalColor.value,
-        [`${prefixCls.value}-has-color`]: props.color && !isInternalColor.value,
+      classNames(prefixCls.value, {
+        [`${prefixCls.value}-${props.color}`]: isPresetColor.value,
+        [`${prefixCls.value}-has-color`]: props.color && !isPresetColor.value,
         [`${prefixCls.value}-hidden`]: !visible.value,
         [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
-        [`${prefixCls.value}-borderless`]: !props.bordered,
       }),
     );
-    const handleClick = (e: MouseEvent) => {
-      emit('click', e);
-    };
+
     return () => {
       const {
         icon = slots.icon?.(),
@@ -127,7 +99,7 @@ const Tag = defineComponent({
       };
 
       const tagStyle = {
-        backgroundColor: color && !isInternalColor.value ? color : undefined,
+        backgroundColor: color && !isPresetColor.value ? color : undefined,
       };
 
       const iconNode = icon || null;
@@ -141,20 +113,16 @@ const Tag = defineComponent({
         children
       );
 
-      const isNeedWave = props.onClick !== undefined;
+      const isNeedWave = 'onClick' in attrs;
+
       const tagNode = (
-        <span
-          {...attrs}
-          onClick={handleClick}
-          class={[tagClassName.value, attrs.class]}
-          style={[tagStyle, attrs.style as CSSProperties]}
-        >
+        <span class={tagClassName.value} style={tagStyle}>
           {kids}
           {renderCloseIcon()}
         </span>
       );
 
-      return wrapSSR(isNeedWave ? <Wave>{tagNode}</Wave> : tagNode);
+      return isNeedWave ? <Wave>{tagNode}</Wave> : tagNode;
     };
   },
 });

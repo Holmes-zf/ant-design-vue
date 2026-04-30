@@ -3,8 +3,7 @@ category: Components
 type: 数据展示
 title: Tree
 subtitle: 树形控件
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*Ag9_Q6ArswEAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*1GeUQJPTGUYAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg
 ---
 
 多层次的结构列表。
@@ -19,7 +18,6 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*1GeUQJPTGUYAAA
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |  |
 | --- | --- | --- | --- | --- | --- |
-| allowDrop | 是否允许拖拽时放置在该节点 | ({ dropNode, dropPosition }) => boolean | - |  |
 | autoExpandParent | 是否自动展开父节点 | boolean | false |  |  |
 | blockNode | 是否节点占据一行 | boolean | false |  |  |
 | checkable | 节点前添加 Checkbox 复选框 | boolean | false |  |  |
@@ -31,7 +29,6 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*1GeUQJPTGUYAAA
 | expandedKeys(v-model) | （受控）展开指定的树节点 | string\[] \| number\[] | \[] |  |  |
 | fieldNames | 替换 treeNode 中 title,key,children 字段为 treeData 中对应的字段 | object | {children:'children', title:'title', key:'key' } | 3.0.0 |  |
 | filterTreeNode | 按需筛选树节点（高亮），返回 true | function(node) | - |  |  |
-| height | 设置虚拟滚动容器高度，设置后内部节点不再支持横向滚动 | number | - |  |
 | loadData | 异步加载数据 | function(node) | - |  |  |
 | loadedKeys | （受控）已经加载的节点，需要配合 `loadData` 使用 | string\[] \| number\[] | \[] |  |  |
 | multiple | 支持点选多个节点（节点本身） | boolean | false |  |  |
@@ -41,7 +38,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*1GeUQJPTGUYAAA
 | showLine | 是否展示连接线 | boolean \| {showLeafIcon: boolean}(3.0+) | false |  |  |
 | switcherIcon | 自定义树节点的展开/折叠图标 | v-slot:switcherIcon="{active, checked, expanded, loading, selected, halfChecked, title, key, children, dataRef, data, defaultIcon, switcherCls}" | - |  |  |
 | title | 自定义标题 | slot |  | 2.0.0 |  |
-| treeData | treeNodes 数据，如果设置则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一） | [TreeNode\[\]](#treenode) | -- |  |  |
+| treeData | treeNodes 数据，如果设置则不需要手动构造 TreeNode 节点（key 在整个树范围内唯一） | [TreeNode\[\]](#TreeNode) | -- |  |  |
 | virtual | 设置 false 时关闭虚拟滚动 | boolean | true | 3.0 |  |
 
 ### 事件
@@ -75,7 +72,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*1GeUQJPTGUYAAA
 | disableCheckbox | 禁掉 checkbox | boolean | false |  |
 | disabled | 禁掉响应 | boolean | false |  |
 | icon | 自定义图标。可接收组件，props 为当前节点 props | slot\|slot-scope | - |  |
-| isLeaf | 设置为叶子节点(设置了`loadData`时有效) | boolean | - |  |
+| isLeaf | 设置为叶子节点(设置了`loadData`时有效) | boolean | false |  |
 | key | 被树的 (default)ExpandedKeys / (default)CheckedKeys / (default)SelectedKeys 属性所用。注意：整个树范围内的所有节点的 key 值不能重复！ | string \| number | 内部计算出的节点位置 |  |
 | selectable | 设置节点是否可被选中 | boolean | true |  |
 | style | 节点的 style | string\|object | - |  |

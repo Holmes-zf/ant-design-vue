@@ -224,13 +224,6 @@ export default {
     type: 'Other',
     title: 'BackTop',
   },
-  watermark: {
-    category: 'Components',
-    subtitle: '水印',
-    type: 'Other',
-    title: 'Watermark',
-    cols: 1,
-  },
   modal: {
     category: 'Components',
     subtitle: '对话框',
@@ -395,12 +388,6 @@ export default {
     subtitle: '间距',
     type: 'Layout',
     title: 'Space',
-  },
-  segmented: {
-    category: 'Components',
-    subtitle: '分段控制器',
-    type: 'Data Display',
-    title: 'Segmented',
   },
   // colorPicker: {
   //   category: 'Components',

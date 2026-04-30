@@ -12,16 +12,11 @@ import { useLocaleReceiver } from '../locale-provider/LocaleReceiver';
 import initDefaultProps from '../_util/props-util/initDefaultProps';
 import type { Direction } from '../config-provider';
 import type { VueNode } from '../_util/type';
-import { objectType } from '../_util/type';
 import { canUseDocElement } from '../_util/styleChecker';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import { getTransitionName } from '../_util/transition';
-import warning from '../_util/warning';
-import useStyle from './style';
 
-type MousePosition = { x: number; y: number } | null;
-
-let mousePosition: MousePosition;
+let mousePosition: { x: number; y: number } | null = null;
 // ref: https://github.com/ant-design/ant-design/issues/15795
 const getClickPosition = (e: MouseEvent) => {
   mousePosition = {
@@ -41,9 +36,7 @@ if (canUseDocElement()) {
 
 export const modalProps = () => ({
   prefixCls: String,
-  /** @deprecated Please use `open` instead. */
   visible: { type: Boolean, default: undefined },
-  open: { type: Boolean, default: undefined },
   confirmLoading: { type: Boolean, default: undefined },
   title: PropTypes.any,
   closable: { type: Boolean, default: undefined },
@@ -51,8 +44,7 @@ export const modalProps = () => ({
   onOk: Function as PropType<(e: MouseEvent) => void>,
   onCancel: Function as PropType<(e: MouseEvent) => void>,
   'onUpdate:visible': Function as PropType<(visible: boolean) => void>,
-  'onUpdate:open': Function as PropType<(open: boolean) => void>,
-  onChange: Function as PropType<(open: boolean) => void>,
+  onChange: Function as PropType<(visible: boolean) => void>,
   afterClose: Function as PropType<() => void>,
   centered: { type: Boolean, default: undefined },
   width: [String, Number],
@@ -63,8 +55,8 @@ export const modalProps = () => ({
   icon: PropTypes.any,
   maskClosable: { type: Boolean, default: undefined },
   forceRender: { type: Boolean, default: undefined },
-  okButtonProps: objectType<ButtonPropsType>(),
-  cancelButtonProps: objectType<ButtonPropsType>(),
+  okButtonProps: Object as PropType<ButtonPropsType>,
+  cancelButtonProps: Object as PropType<ButtonPropsType>,
   destroyOnClose: { type: Boolean, default: undefined },
   wrapClassName: String,
   maskTransitionName: String,
@@ -76,14 +68,13 @@ export const modalProps = () => ({
     default: undefined,
   },
   zIndex: Number,
-  bodyStyle: objectType<CSSProperties>(),
-  maskStyle: objectType<CSSProperties>(),
+  bodyStyle: { type: Object as PropType<CSSProperties>, default: undefined as CSSProperties },
+  maskStyle: { type: Object as PropType<CSSProperties>, default: undefined as CSSProperties },
   mask: { type: Boolean, default: undefined },
   keyboard: { type: Boolean, default: undefined },
   wrapProps: Object,
   focusTriggerAfterClose: { type: Boolean, default: undefined },
   modalRender: Function as PropType<(arg: { originVNode: VueNode }) => VueNode>,
-  mousePosition: objectType<MousePosition>(),
 });
 
 export type ModalProps = Partial<ExtractPropTypes<ReturnType<typeof modalProps>>>;
@@ -91,9 +82,8 @@ export type ModalProps = Partial<ExtractPropTypes<ReturnType<typeof modalProps>>
 export interface ModalFuncProps {
   prefixCls?: string;
   class?: string;
-  open?: boolean;
+  visible?: boolean;
   title?: string | (() => VueNode) | VueNode;
-  footer?: string | (() => VueNode) | VueNode;
   closable?: boolean;
   content?: string | (() => VueNode) | VueNode;
   // TODO: find out exact types
@@ -132,9 +122,6 @@ export interface ModalFuncProps {
   /** @deprecated please use `appContext` instead */
   parentContext?: any;
   appContext?: any;
-
-  /** @deprecated please use `open` instead */
-  visible?: boolean;
 }
 
 type getContainerFunc = () => HTMLElement;
@@ -150,13 +137,18 @@ export interface ModalLocale {
   justOkText: string;
 }
 
+export const destroyFns = [];
+
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'AModal',
   inheritAttrs: false,
   props: initDefaultProps(modalProps(), {
     width: 520,
+    transitionName: 'zoom',
+    maskTransitionName: 'fade',
     confirmLoading: false,
+    visible: false,
     okType: 'primary',
   }),
   setup(props, { emit, slots, attrs }) {
@@ -165,16 +157,9 @@ export default defineComponent({
       'modal',
       props,
     );
-    const [wrapSSR, hashId] = useStyle(prefixCls);
 
-    warning(
-      props.visible === undefined,
-      'Modal',
-      `\`visible\` will be removed in next major version, please use \`open\` instead.`,
-    );
     const handleCancel = (e: MouseEvent) => {
       emit('update:visible', false);
-      emit('update:open', false);
       emit('cancel', e);
       emit('change', false);
     };
@@ -210,7 +195,6 @@ export default defineComponent({
       const {
         prefixCls: customizePrefixCls,
         visible,
-        open,
         wrapClassName,
         centered,
         getContainer,
@@ -223,16 +207,15 @@ export default defineComponent({
         [`${prefixCls.value}-centered`]: !!centered,
         [`${prefixCls.value}-wrap-rtl`]: direction.value === 'rtl',
       });
-      return wrapSSR(
+      return (
         <Dialog
           {...restProps}
           {...attrs}
-          rootClassName={hashId.value}
-          class={classNames(hashId.value, attrs.class)}
-          getContainer={getContainer || getPopupContainer?.value}
+          getContainer={getContainer || getPopupContainer.value}
           prefixCls={prefixCls.value}
           wrapClassName={wrapClassNameExtended}
-          visible={open ?? visible}
+          visible={visible}
+          mousePosition={mousePosition}
           onClose={handleCancel}
           focusTriggerAfterClose={focusTriggerAfterClose}
           transitionName={getTransitionName(rootPrefixCls.value, 'zoom', props.transitionName)}
@@ -241,7 +224,6 @@ export default defineComponent({
             'fade',
             props.maskTransitionName,
           )}
-          mousePosition={restProps.mousePosition ?? mousePosition}
           v-slots={{
             ...slots,
             footer: slots.footer || renderFooter,
@@ -253,7 +235,7 @@ export default defineComponent({
               );
             },
           }}
-        ></Dialog>,
+        ></Dialog>
       );
     };
   },

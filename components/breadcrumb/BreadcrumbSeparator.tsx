@@ -1,7 +1,7 @@
 import type { ExtractPropTypes } from 'vue';
 import { defineComponent } from 'vue';
 import { flattenChildren } from '../_util/props-util';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 
 export const breadcrumbSeparatorProps = () => ({
   prefixCls: String,

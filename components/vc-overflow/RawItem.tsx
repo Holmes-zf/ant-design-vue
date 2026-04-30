@@ -17,8 +17,6 @@ export default defineComponent({
     onClick: { type: Function },
     onKeydown: { type: Function },
     onFocus: { type: Function },
-    role: String,
-    tabindex: Number,
   },
   setup(props, { slots, attrs }) {
     const context = useInjectOverflowContext();

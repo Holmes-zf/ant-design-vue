@@ -2,7 +2,7 @@
 ---
 order: 1
 title:
-  zh-CN: 可选择标签
+  zh-CN: 可选择
   en-US: Checkable
 ---
 
@@ -19,23 +19,27 @@ title:
 </docs>
 
 <template>
-  <span style="margin-right: 8px">Categories:</span>
-  <a-space :size="[0, 8]" wrap>
-    <a-checkable-tag
-      v-for="(tag, index) in tagsData"
-      :key="tag"
-      v-model:checked="selectTags[index]"
-      @change="checked => handleChange(tag, checked)"
-    >
-      {{ tag }}
-    </a-checkable-tag>
-  </a-space>
+  <div>
+    <a-checkable-tag v-model:checked="checked1" @change="handleChange">Tag1</a-checkable-tag>
+    <a-checkable-tag v-model:checked="checked2" @change="handleChange">Tag2</a-checkable-tag>
+    <a-checkable-tag v-model:checked="checked3" @change="handleChange">Tag3</a-checkable-tag>
+  </div>
 </template>
-<script lang="ts" setup>
-import { reactive } from 'vue';
-const tagsData = reactive(['Movies', 'Books', 'Music', 'Sports']);
-const selectTags = reactive([false, true, false, false]);
-const handleChange = (tag: string, checked: boolean) => {
-  console.log(tag, checked);
-};
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    // or use watch
+    const handleChange = (checked: boolean) => {
+      console.log(checked);
+    };
+
+    return {
+      handleChange,
+      checked1: ref(false),
+      checked2: ref(false),
+      checked3: ref(false),
+    };
+  },
+});
 </script>

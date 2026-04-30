@@ -23,7 +23,8 @@ There are two compacted table sizes: `middle` and `small`. The `small` size is u
     <a-table :columns="columns" :data-source="data" size="small" />
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 const columns = [
   { title: 'Name', dataIndex: 'name' },
   { title: 'Age', dataIndex: 'age' },
@@ -49,6 +50,15 @@ const data = [
     address: 'Sidney No. 1 Lake Park',
   },
 ];
+
+export default defineComponent({
+  setup() {
+    return {
+      data,
+      columns,
+    };
+  },
+});
 </script>
 <style>
 #components-table-demo-size h4 {

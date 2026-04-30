@@ -27,22 +27,30 @@ The label of the selected item will be packed as an object for passing to the on
     @change="handleChange"
   ></a-select>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import type { SelectProps } from 'ant-design-vue';
-import { ref } from 'vue';
-const options = ref<SelectProps['options']>([
-  {
-    value: 'jack',
-    label: 'Jack (100)',
-  },
-  {
-    value: 'lucy',
-    label: 'Lucy (101)',
-  },
-]);
-const handleChange: SelectProps['onChange'] = value => {
-  console.log(value); // { key: "lucy", label: "Lucy (101)" }
-};
+import { defineComponent, ref } from 'vue';
 
-const value = ref({ value: 'lucy', label: 'Lucy (101)' });
+export default defineComponent({
+  setup() {
+    const options = ref<SelectProps['options']>([
+      {
+        value: 'jack',
+        label: 'Jack (100)',
+      },
+      {
+        value: 'lucy',
+        label: 'Lucy (101)',
+      },
+    ]);
+    const handleChange: SelectProps['onChange'] = value => {
+      console.log(value); // { key: "lucy", label: "Lucy (101)" }
+    };
+    return {
+      value: ref({ value: 'lucy' }),
+      options,
+      handleChange,
+    };
+  },
+});
 </script>

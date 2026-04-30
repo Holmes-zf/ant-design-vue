@@ -1,6 +1,6 @@
 import type { App, Plugin, ExtractPropTypes, PropType, HTMLAttributes } from 'vue';
 import { provide, defineComponent, ref, watch, computed, toRef } from 'vue';
-import classNames from '../_util/classNames';
+import PropTypes from '../_util/vue-types';
 
 import type { SpinProps } from '../spin';
 import Spin from '../spin';
@@ -11,24 +11,13 @@ import { Row } from '../grid';
 import Item from './Item';
 import { flattenChildren } from '../_util/props-util';
 import initDefaultProps from '../_util/props-util/initDefaultProps';
-import {
-  arrayType,
-  someType,
-  booleanType,
-  objectType,
-  vNodeType,
-  functionType,
-} from '../_util/type';
-import type { CustomSlotsType, Key } from '../_util/type';
+import type { Key } from '../_util/type';
 import ItemMeta from './ItemMeta';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import useBreakpoint from '../_util/hooks/useBreakpoint';
 import type { Breakpoint } from '../_util/responsiveObserve';
 import { responsiveArray } from '../_util/responsiveObserve';
 import eagerComputed from '../_util/eagerComputed';
-
-// CSSINJS
-import useStyle from './style';
 
 export type { ListItemProps } from './Item';
 export type { ListItemMetaProps } from './ItemMeta';
@@ -52,22 +41,30 @@ export type ListSize = 'small' | 'default' | 'large';
 export type ListItemLayout = 'horizontal' | 'vertical';
 
 export const listProps = () => ({
-  bordered: booleanType(),
-  dataSource: arrayType(),
-  extra: vNodeType(),
-  grid: objectType<ListGridType>(),
+  bordered: { type: Boolean, default: undefined },
+  dataSource: PropTypes.array,
+  extra: PropTypes.any,
+  grid: { type: Object as PropType<ListGridType>, default: undefined as ListGridType },
   itemLayout: String as PropType<ListItemLayout>,
-  loading: someType<boolean | (SpinProps & HTMLAttributes)>([Boolean, Object]),
-  loadMore: vNodeType(),
-  pagination: someType<false | PaginationConfig>([Boolean, Object]),
+  loading: {
+    type: [Boolean, Object] as PropType<boolean | (SpinProps & HTMLAttributes)>,
+    default: undefined as boolean | (SpinProps & HTMLAttributes),
+  },
+  loadMore: PropTypes.any,
+  pagination: {
+    type: [Boolean, Object] as PropType<false | PaginationConfig>,
+    default: undefined as false | PaginationConfig,
+  },
   prefixCls: String,
-  rowKey: someType<Key | ((item: any) => Key)>([String, Number, Function]),
-  renderItem: functionType<(opt: { item: any; index: number }) => any>(),
+  rowKey: [String, Number, Function] as PropType<Key | ((item: any) => Key)>,
+  renderItem: Function as PropType<(opt: { item: any; index: number }) => any>,
   size: String as PropType<ListSize>,
-  split: booleanType(),
-  header: vNodeType(),
-  footer: vNodeType(),
-  locale: objectType<ListLocale>(),
+  split: { type: Boolean, default: undefined },
+  header: PropTypes.any,
+  footer: PropTypes.any,
+  locale: {
+    type: Object as PropType<ListLocale>,
+  },
 });
 
 export interface ListLocale {
@@ -77,11 +74,11 @@ export interface ListLocale {
 export type ListProps = Partial<ExtractPropTypes<ReturnType<typeof listProps>>>;
 
 import { ListContextKey } from './contextKey';
+import type { RenderEmptyHandler } from '../config-provider/renderEmpty';
 
 const List = defineComponent({
   compatConfig: { MODE: 3 },
   name: 'AList',
-  inheritAttrs: false,
   Item,
   props: initDefaultProps(listProps(), {
     dataSource: [],
@@ -90,15 +87,8 @@ const List = defineComponent({
     loading: false,
     pagination: false,
   }),
-  slots: Object as CustomSlotsType<{
-    extra: any;
-    loadMore: any;
-    renderItem: { item: any; index: number };
-    header: any;
-    footer: any;
-    default: any;
-  }>,
-  setup(props, { slots, attrs }) {
+  slots: ['extra', 'loadMore', 'renderItem', 'header', 'footer'],
+  setup(props, { slots }) {
     provide(ListContextKey, {
       grid: toRef(props, 'grid'),
       itemLayout: toRef(props, 'itemLayout'),
@@ -108,10 +98,6 @@ const List = defineComponent({
       total: 0,
     };
     const { prefixCls, direction, renderEmpty } = useConfigInject('list', props);
-
-    // Style
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
     const paginationObj = computed(() =>
       props.pagination && typeof props.pagination === 'object' ? props.pagination : {},
     );
@@ -139,6 +125,12 @@ const List = defineComponent({
     const onPaginationChange = triggerPaginationEvent('onChange');
 
     const onPaginationShowSizeChange = triggerPaginationEvent('onShowSizeChange');
+
+    const renderEmptyFunc = (renderEmptyHandler: RenderEmptyHandler) => (
+      <div class={`${prefixCls.value}-empty-text`}>
+        {props.locale?.emptyText || renderEmptyHandler('List')}
+      </div>
+    );
 
     const loadingProp = computed(() => {
       if (typeof props.loading === 'boolean') {
@@ -268,14 +260,10 @@ const List = defineComponent({
       const header = props.header ?? slots.header?.();
       const children = flattenChildren(slots.default?.());
       const isSomethingAfterLastItem = !!(loadMore || props.pagination || footer);
-      const classString = classNames(
-        {
-          ...classObj.value,
-          [`${prefixCls.value}-something-after-last-item`]: isSomethingAfterLastItem,
-        },
-        attrs.class,
-        hashId.value,
-      );
+      const classString = {
+        ...classObj.value,
+        [`${prefixCls.value}-something-after-last-item`]: isSomethingAfterLastItem,
+      };
       const paginationContent = props.pagination ? (
         <div class={`${prefixCls.value}-pagination`}>
           <Pagination
@@ -303,16 +291,12 @@ const List = defineComponent({
           <ul class={`${prefixCls.value}-items`}>{items}</ul>
         );
       } else if (!children.length && !isLoading.value) {
-        childrenContent = (
-          <div class={`${prefixCls.value}-empty-text`}>
-            {props.locale?.emptyText || renderEmpty('List')}
-          </div>
-        );
+        childrenContent = renderEmptyFunc(renderEmpty.value);
       }
 
       const paginationPosition = paginationProps.value.position || 'bottom';
-      return wrapSSR(
-        <div {...attrs} class={classString}>
+      return (
+        <div class={classString}>
           {(paginationPosition === 'top' || paginationPosition === 'both') && paginationContent}
           {header && <div class={`${prefixCls.value}-header`}>{header}</div>}
           <Spin {...loadingProp.value}>
@@ -323,7 +307,7 @@ const List = defineComponent({
           {loadMore ||
             ((paginationPosition === 'bottom' || paginationPosition === 'both') &&
               paginationContent)}
-        </div>,
+        </div>
       );
     };
   },

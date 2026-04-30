@@ -31,21 +31,34 @@ Communicated with other components
     </a-button>
   </p>
 </template>
-<script lang="ts" setup>
-import { computed, ref } from 'vue';
+<script lang="ts">
+import { computed, defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const checked = ref(false);
+    const disabled = ref(false);
 
-const checked = ref(false);
-const disabled = ref(false);
+    const toggleChecked = () => {
+      checked.value = !checked.value;
+    };
 
-const toggleChecked = () => {
-  checked.value = !checked.value;
-};
+    const toggleDisable = () => {
+      disabled.value = !disabled.value;
+    };
 
-const toggleDisable = () => {
-  disabled.value = !disabled.value;
-};
+    const label = computed(() => {
+      return `${checked.value ? 'Checked' : 'Unchecked'}-${
+        disabled.value ? 'Disabled' : 'Enabled'
+      }`;
+    });
 
-const label = computed(() => {
-  return `${checked.value ? 'Checked' : 'Unchecked'}-${disabled.value ? 'Disabled' : 'Enabled'}`;
+    return {
+      label,
+      checked,
+      disabled,
+      toggleChecked,
+      toggleDisable,
+    };
+  },
 });
 </script>

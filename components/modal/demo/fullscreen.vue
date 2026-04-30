@@ -20,7 +20,7 @@ Full screen by custom style.
   <div>
     <a-button type="primary" @click="showModal">Open Modal</a-button>
     <a-modal
-      v-model:open="open"
+      v-model:visible="visible"
       title="Basic Modal"
       width="100%"
       wrap-class-name="full-modal"
@@ -32,18 +32,27 @@ Full screen by custom style.
     </a-modal>
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const open = ref<boolean>(false);
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const visible = ref<boolean>(false);
 
-const showModal = () => {
-  open.value = true;
-};
+    const showModal = () => {
+      visible.value = true;
+    };
 
-const handleOk = (e: MouseEvent) => {
-  console.log(e);
-  open.value = false;
-};
+    const handleOk = (e: MouseEvent) => {
+      console.log(e);
+      visible.value = false;
+    };
+    return {
+      visible,
+      showModal,
+      handleOk,
+    };
+  },
+});
 </script>
 <style lang="less">
 .full-modal {

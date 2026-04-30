@@ -58,7 +58,8 @@ Customizing the header and footer of list by setting `header` and `footer` prope
     </template>
   </a-list>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 const data: string[] = [
   'Racing car sprays burning fuel into crowd.',
   'Japanese princess to wed commoner.',
@@ -66,4 +67,12 @@ const data: string[] = [
   'Man charged over missing wedding girl.',
   'Los Angeles battles huge wildfires.',
 ];
+
+export default defineComponent({
+  setup() {
+    return {
+      data,
+    };
+  },
+});
 </script>

@@ -4,15 +4,7 @@ import type {
 } from '../vc-upload/interface';
 import type { ProgressProps } from '../progress';
 import type { VueNode } from '../_util/type';
-import type { ExtractPropTypes, CSSProperties, ImgHTMLAttributes } from 'vue';
-import {
-  booleanType,
-  stringType,
-  functionType,
-  arrayType,
-  objectType,
-  someType,
-} from '../_util/type';
+import type { ExtractPropTypes, PropType, CSSProperties } from 'vue';
 
 export interface FileType extends OriRcFile {
   readonly lastModifiedDate: Date;
@@ -35,7 +27,6 @@ export interface UploadFile<T = any> {
   status?: UploadFileStatus;
   percent?: number;
   thumbUrl?: string;
-  crossOrigin?: ImgHTMLAttributes['crossorigin'];
   originFileObj?: FileType;
   response?: T;
   error?: any;
@@ -58,7 +49,7 @@ export interface ShowUploadListInterface {
 export interface UploadChangeParam<T = UploadFile> {
   // https://github.com/ant-design/ant-design/issues/14420
   file: T;
-  fileList: T[];
+  fileList: UploadFile[];
   event?: { percent: number };
 }
 
@@ -96,64 +87,70 @@ type BeforeUploadValueType = void | boolean | string | Blob | FileType;
 
 function uploadProps<T = any>() {
   return {
-    capture: someType<boolean | 'user' | 'environment'>([Boolean, String]),
-    type: stringType<UploadType>(),
+    capture: [Boolean, String] as PropType<boolean | 'user' | 'environment'>,
+    type: String as PropType<UploadType>,
     name: String,
-    defaultFileList: arrayType<Array<UploadFile<T>>>(),
-    fileList: arrayType<Array<UploadFile<T>>>(),
-    action: someType<
+    defaultFileList: Array as PropType<Array<UploadFile<T>>>,
+    fileList: Array as PropType<Array<UploadFile<T>>>,
+    action: [String, Function] as PropType<
       string | ((file: FileType) => string) | ((file: FileType) => PromiseLike<string>)
-    >([String, Function]),
-    directory: booleanType(),
-    data: someType<
+    >,
+    directory: { type: Boolean, default: undefined },
+    data: [Object, Function] as PropType<
       | Record<string, unknown>
       | ((file: UploadFile<T>) => Record<string, unknown> | Promise<Record<string, unknown>>)
-    >([Object, Function]),
-    method: stringType<'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'patch'>(),
-    headers: objectType<HttpRequestHeader>(),
-    showUploadList: someType<boolean | ShowUploadListInterface>([Boolean, Object]),
-    multiple: booleanType(),
+    >,
+    method: String as PropType<'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'patch'>,
+    headers: Object as PropType<HttpRequestHeader>,
+    showUploadList: {
+      type: [Boolean, Object] as PropType<boolean | ShowUploadListInterface>,
+      default: undefined as boolean | ShowUploadListInterface,
+    },
+    multiple: { type: Boolean, default: undefined },
     accept: String,
-    beforeUpload:
-      functionType<
-        (
-          file: FileType,
-          FileList: FileType[],
-        ) => BeforeUploadValueType | Promise<BeforeUploadValueType>
-      >(),
-    onChange: functionType<(info: UploadChangeParam<UploadFile<T>>) => void>(),
-    'onUpdate:fileList':
-      functionType<(fileList: UploadChangeParam<UploadFile<T>>['fileList']) => void>(),
-    onDrop: functionType<(event: DragEvent) => void>(),
-    listType: stringType<UploadListType>(),
-    onPreview: functionType<(file: UploadFile<T>) => void>(),
-    onDownload: functionType<(file: UploadFile<T>) => void>(),
-    onReject: functionType<(fileList: FileType[]) => void>(),
-    onRemove: functionType<(file: UploadFile<T>) => void | boolean | Promise<void | boolean>>(),
+    beforeUpload: Function as PropType<
+      (
+        file: FileType,
+        FileList: FileType[],
+      ) => BeforeUploadValueType | Promise<BeforeUploadValueType>
+    >,
+    onChange: Function as PropType<(info: UploadChangeParam<UploadFile<T>>) => void>,
+    'onUpdate:fileList': Function as PropType<
+      (fileList: UploadChangeParam<UploadFile<T>>['fileList']) => void
+    >,
+    onDrop: Function as PropType<(event: DragEvent) => void>,
+    listType: String as PropType<UploadListType>,
+    onPreview: Function as PropType<(file: UploadFile<T>) => void>,
+    onDownload: Function as PropType<(file: UploadFile<T>) => void>,
+    onReject: Function as PropType<(fileList: FileType[]) => void>,
+    onRemove: Function as PropType<
+      (file: UploadFile<T>) => void | boolean | Promise<void | boolean>
+    >,
     /** @deprecated Please use `onRemove` directly */
-    remove: functionType<(file: UploadFile<T>) => void | boolean | Promise<void | boolean>>(),
-    supportServerRender: booleanType(),
-    disabled: booleanType(),
+    remove: Function as PropType<(file: UploadFile<T>) => void | boolean | Promise<void | boolean>>,
+    supportServerRender: { type: Boolean, default: undefined },
+    disabled: { type: Boolean, default: undefined },
     prefixCls: String,
-    customRequest: functionType<(options: RcCustomRequestOptions) => void>(),
-    withCredentials: booleanType(),
-    openFileDialogOnClick: booleanType(),
-    locale: objectType<UploadLocale>(),
+    customRequest: Function as PropType<(options: RcCustomRequestOptions) => void>,
+    withCredentials: { type: Boolean, default: undefined },
+    openFileDialogOnClick: { type: Boolean, default: undefined },
+    locale: { type: Object as PropType<UploadLocale>, default: undefined as UploadLocale },
     id: String,
-    previewFile: functionType<PreviewFileHandler>(),
+    previewFile: Function as PropType<PreviewFileHandler>,
     /** @deprecated Please use `beforeUpload` directly */
-    transformFile: functionType<TransformFileHandler>(),
-    iconRender:
-      functionType<(opt: { file: UploadFile<T>; listType?: UploadListType }) => VueNode>(),
-    isImageUrl: functionType<(file: UploadFile) => boolean>(),
-    progress: objectType<UploadListProgressProps>(),
-    itemRender: functionType<ItemRender<T>>(),
+    transformFile: Function as PropType<TransformFileHandler>,
+    iconRender: Function as PropType<
+      (opt: { file: UploadFile<T>; listType?: UploadListType }) => VueNode
+    >,
+    isImageUrl: Function as PropType<(file: UploadFile) => boolean>,
+    progress: Object as PropType<UploadListProgressProps>,
+    itemRender: Function as PropType<ItemRender<T>>,
     /** Config max count of `fileList`. Will replace current one when `maxCount` is 1 */
     maxCount: Number,
-    height: someType([Number, String]),
-    removeIcon: functionType<(opt: { file: UploadFile }) => VueNode>(),
-    downloadIcon: functionType<(opt: { file: UploadFile }) => VueNode>(),
-    previewIcon: functionType<(opt: { file: UploadFile }) => VueNode>(),
+    height: [Number, String],
+    removeIcon: Function as PropType<(opt: { file: UploadFile }) => VueNode>,
+    downloadIcon: Function as PropType<(opt: { file: UploadFile }) => VueNode>,
+    previewIcon: Function as PropType<(opt: { file: UploadFile }) => VueNode>,
   };
 }
 
@@ -166,27 +163,28 @@ export interface UploadState<T = any> {
 
 function uploadListProps<T = any>() {
   return {
-    listType: stringType<UploadListType>(),
-    onPreview: functionType<(file: UploadFile<T>) => void>(),
-    onDownload: functionType<(file: UploadFile<T>) => void>(),
-    onRemove: functionType<(file: UploadFile<T>) => void | boolean>(),
-    items: arrayType<Array<UploadFile<T>>>(),
-    progress: objectType<UploadListProgressProps>(),
-    prefixCls: stringType<string>(),
-    showRemoveIcon: booleanType(),
-    showDownloadIcon: booleanType(),
-    showPreviewIcon: booleanType(),
-    removeIcon: functionType<(opt: { file: UploadFile }) => VueNode>(),
-    downloadIcon: functionType<(opt: { file: UploadFile }) => VueNode>(),
-    previewIcon: functionType<(opt: { file: UploadFile }) => VueNode>(),
-    locale: objectType<UploadLocale>(undefined as UploadLocale),
-    previewFile: functionType<PreviewFileHandler>(),
-    iconRender:
-      functionType<(opt: { file: UploadFile<T>; listType?: UploadListType }) => VueNode>(),
-    isImageUrl: functionType<(file: UploadFile) => boolean>(),
-    appendAction: functionType<() => VueNode>(),
-    appendActionVisible: booleanType(),
-    itemRender: functionType<ItemRender<T>>(),
+    listType: String as PropType<UploadListType>,
+    onPreview: Function as PropType<(file: UploadFile<T>) => void>,
+    onDownload: Function as PropType<(file: UploadFile<T>) => void>,
+    onRemove: Function as PropType<(file: UploadFile<T>) => void | boolean>,
+    items: Array as PropType<Array<UploadFile<T>>>,
+    progress: Object as PropType<UploadListProgressProps>,
+    prefixCls: String as PropType<string>,
+    showRemoveIcon: { type: Boolean, default: undefined },
+    showDownloadIcon: { type: Boolean, default: undefined },
+    showPreviewIcon: { type: Boolean, default: undefined },
+    removeIcon: Function as PropType<(opt: { file: UploadFile }) => VueNode>,
+    downloadIcon: Function as PropType<(opt: { file: UploadFile }) => VueNode>,
+    previewIcon: Function as PropType<(opt: { file: UploadFile }) => VueNode>,
+    locale: { type: Object as PropType<UploadLocale>, default: undefined as UploadLocale },
+    previewFile: Function as PropType<PreviewFileHandler>,
+    iconRender: Function as PropType<
+      (opt: { file: UploadFile<T>; listType?: UploadListType }) => VueNode
+    >,
+    isImageUrl: Function as PropType<(file: UploadFile) => boolean>,
+    appendAction: Function as PropType<() => VueNode>,
+    appendActionVisible: { type: Boolean, default: undefined },
+    itemRender: Function as PropType<ItemRender<T>>,
   };
 }
 

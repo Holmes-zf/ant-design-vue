@@ -44,7 +44,7 @@ export default defineComponent({
   },
 });
 </script>
-<style scoped>
+<style>
 [id^='components-button-demo-'] .ant-btn {
   margin-right: 8px;
   margin-bottom: 12px;

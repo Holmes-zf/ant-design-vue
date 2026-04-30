@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const assign = require('object-assign');
 const { getProjectPath } = require('./utils/projectHelper');
 
 module.exports = function () {
@@ -8,7 +9,7 @@ module.exports = function () {
   if (fs.existsSync(getProjectPath('tsconfig.json'))) {
     my = require(getProjectPath('tsconfig.json'));
   }
-  return Object.assign(
+  return assign(
     {
       noUnusedParameters: true,
       noUnusedLocals: true,

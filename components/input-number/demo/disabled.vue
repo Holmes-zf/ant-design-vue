@@ -24,12 +24,22 @@ Click the button to toggle between available and disabled states.
     </div>
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const value = ref<number>(3);
-const disabled = ref<boolean>(true);
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const value = ref<number>(3);
+    const disabled = ref<boolean>(true);
 
-const toggle = () => {
-  disabled.value = !disabled.value;
-};
+    const toggle = () => {
+      disabled.value = !disabled.value;
+    };
+
+    return {
+      value,
+      disabled,
+      toggle,
+    };
+  },
+});
 </script>

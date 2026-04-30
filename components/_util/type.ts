@@ -1,5 +1,4 @@
-// @ts-ignore
-import type { App, PropType, Plugin, Ref, VNode, SlotsType } from 'vue';
+import type { App, PropType, Plugin, Ref, VNode } from 'vue';
 
 // https://stackoverflow.com/questions/46176165/ways-to-get-string-literal-type-of-array-values-without-enum-overhead
 export const tuple = <T extends string[]>(...args: T) => args;
@@ -15,7 +14,7 @@ export type ElementOf<T> = T extends (infer E)[] ? E : T extends readonly (infer
 /**
  * https://github.com/Microsoft/TypeScript/issues/29729
  */
-export type LiteralUnion<T extends string> = T | (string & {});
+export type LiteralUnion<T extends U, U> = T | (U & {});
 
 export type Data = Record<string, unknown>;
 
@@ -31,9 +30,7 @@ export interface PropOptions<T = any, D = T> {
 }
 
 declare type VNodeChildAtom = VNode | string | number | boolean | null | undefined | void;
-
-// eslint-disable-next-line no-undef
-export type VueNode = VNodeChildAtom | VNodeChildAtom[] | VNode;
+export type VueNode = VNodeChildAtom | VNodeChildAtom[] | JSX.Element;
 
 export const withInstall = <T>(comp: T) => {
   const c = comp as any;
@@ -45,52 +42,3 @@ export const withInstall = <T>(comp: T) => {
 };
 
 export type MaybeRef<T> = T | Ref<T>;
-
-export function eventType<T>() {
-  return { type: [Function, Array] as PropType<T | T[]> };
-}
-
-export function objectType<T = {}>(defaultVal?: T) {
-  return { type: Object as PropType<T>, default: defaultVal as T };
-}
-
-export function booleanType(defaultVal?: boolean) {
-  return { type: Boolean, default: defaultVal as boolean };
-}
-
-export function functionType<T = () => {}>(defaultVal?: T) {
-  return { type: Function as PropType<T>, default: defaultVal as T };
-}
-
-export function anyType<T = any>(defaultVal?: T, required?: boolean) {
-  const type = { validator: () => true, default: defaultVal as T } as unknown;
-  return required
-    ? (type as {
-        type: PropType<T>;
-        default: T;
-        required: true;
-      })
-    : (type as {
-        default: T;
-        type: PropType<T>;
-      });
-}
-export function vNodeType<T = VueNode>() {
-  return { validator: () => true } as unknown as { type: PropType<T> };
-}
-
-export function arrayType<T extends any[]>(defaultVal?: T) {
-  return { type: Array as unknown as PropType<T>, default: defaultVal as T };
-}
-
-export function stringType<T extends string = string>(defaultVal?: T) {
-  return { type: String as unknown as PropType<T>, default: defaultVal as T };
-}
-
-export function someType<T>(types?: any[], defaultVal?: T) {
-  return types ? { type: types as PropType<T>, default: defaultVal as T } : anyType<T>(defaultVal);
-}
-
-export type CustomSlotsType<T> = SlotsType<T>;
-
-export type AnyObject = Record<PropertyKey, any>;

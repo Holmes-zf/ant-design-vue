@@ -8,11 +8,8 @@ import WarningFilled from '@ant-design/icons-vue/WarningFilled';
 import noFound from './noFound';
 import serverError from './serverError';
 import unauthorized from './unauthorized';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import classNames from '../_util/classNames';
-import type { CustomSlotsType } from '../_util/type';
-
-import useStyle from './style';
 
 export const IconMap = {
   success: CheckCircleFilled,
@@ -64,22 +61,12 @@ const renderExtra = (prefixCls: string, extra: VNodeTypes) =>
 const Result = defineComponent({
   compatConfig: { MODE: 3 },
   name: 'AResult',
-  inheritAttrs: false,
   props: resultProps(),
-  slots: Object as CustomSlotsType<{
-    title?: any;
-    subTitle?: any;
-    icon?: any;
-    extra?: any;
-    default?: any;
-  }>,
-  setup(props, { slots, attrs }) {
+  slots: ['title', 'subTitle', 'icon', 'extra'],
+  setup(props, { slots }) {
     const { prefixCls, direction } = useConfigInject('result', props);
-
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
     const className = computed(() =>
-      classNames(prefixCls.value, hashId.value, `${prefixCls.value}-${props.status}`, {
+      classNames(prefixCls.value, `${prefixCls.value}-${props.status}`, {
         [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
       }),
     );
@@ -89,14 +76,14 @@ const Result = defineComponent({
       const icon = props.icon ?? slots.icon?.();
       const extra = props.extra ?? slots.extra?.();
       const pre = prefixCls.value;
-      return wrapSSR(
-        <div {...attrs} class={[className.value, attrs.class]}>
+      return (
+        <div class={className.value}>
           {renderIcon(pre, { status: props.status, icon })}
           <div class={`${pre}-title`}>{title}</div>
           {subTitle && <div class={`${pre}-subtitle`}>{subTitle}</div>}
           {renderExtra(pre, extra)}
           {slots.default && <div class={`${pre}-content`}>{slots.default()}</div>}
-        </div>,
+        </div>
       );
     };
   },

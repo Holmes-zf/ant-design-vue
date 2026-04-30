@@ -1,5 +1,5 @@
 import type { Ref } from 'vue';
-import { onBeforeUnmount, shallowRef } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import raf from '../raf';
 
 export type Updater<State> = (prev: State) => State;
@@ -9,11 +9,11 @@ export type Updater<State> = (prev: State) => State;
 export function useLayoutState<State>(
   defaultState: State,
 ): [Ref<State>, (updater: Updater<State>) => void] {
-  const stateRef = shallowRef(defaultState);
+  const stateRef = ref(defaultState);
   let tempState = stateRef.value;
 
   let updateBatchRef = [];
-  const rafRef = shallowRef();
+  const rafRef = ref();
   function setFrameState(updater: Updater<State>) {
     raf.cancel(rafRef.value);
     updateBatchRef.push(updater);

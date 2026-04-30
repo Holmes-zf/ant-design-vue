@@ -8,7 +8,7 @@ import {
   defineComponent,
   onBeforeUnmount,
   onMounted,
-  shallowRef,
+  ref,
   Transition,
   watch,
 } from 'vue';
@@ -29,10 +29,11 @@ export default defineComponent({
     motionType: String,
     // treeNodeRequiredProps: { type: Object as PropType<TreeNodeRequiredProps> },
   },
+  slots: ['title', 'icon', 'switcherIcon', 'checkable'],
   setup(props, { attrs, slots }) {
-    const visible = shallowRef(true);
+    const visible = ref(true);
     const context = useInjectTreeContext();
-    const motionedRef = shallowRef(false);
+    const motionedRef = ref(false);
     const transitionProps = computed(() => {
       if (props.motion) {
         return props.motion;
@@ -112,6 +113,7 @@ export default defineComponent({
       return (
         <TreeNode
           v-slots={slots}
+          domRef={ref}
           class={attrs.class}
           style={attrs.style}
           {...otherProps}

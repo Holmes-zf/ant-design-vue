@@ -26,55 +26,52 @@ The most basic usage.
     allow-clear
     tree-default-expand-all
     :tree-data="treeData"
-    tree-node-filter-prop="label"
   >
-    <template #title="{ value: val, label }">
+    <template #title="{ value: val, title }">
       <b v-if="val === 'parent 1-1'" style="color: #08c">sss</b>
-      <template v-else>{{ label }}</template>
+      <template v-else>{{ title }}</template>
     </template>
   </a-tree-select>
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
+<script lang="ts">
 import type { TreeSelectProps } from 'ant-design-vue';
-const value = ref<string>();
-const treeData = ref<TreeSelectProps['treeData']>([
-  {
-    label: 'root 1',
-    value: 'root 1',
-    children: [
+import { defineComponent, ref, watch } from 'vue';
+export default defineComponent({
+  setup() {
+    const value = ref<string>();
+    const treeData = ref<TreeSelectProps['treeData']>([
       {
-        label: 'parent 1',
+        title: 'parent 1',
         value: 'parent 1',
         children: [
           {
-            label: 'parent 1-0',
+            title: 'parent 1-0',
             value: 'parent 1-0',
             children: [
               {
-                label: 'my leaf',
+                title: 'my leaf',
                 value: 'leaf1',
               },
               {
-                label: 'your leaf',
+                title: 'your leaf',
                 value: 'leaf2',
               },
             ],
           },
           {
-            label: 'parent 1-1',
+            title: 'parent 1-1',
             value: 'parent 1-1',
           },
         ],
       },
-      {
-        label: 'parent 2',
-        value: 'parent 2',
-      },
-    ],
+    ]);
+    watch(value, () => {
+      console.log(value.value);
+    });
+    return {
+      value,
+      treeData,
+    };
   },
-]);
-watch(value, () => {
-  console.log(value.value);
 });
 </script>

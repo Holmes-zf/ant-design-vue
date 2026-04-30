@@ -23,6 +23,12 @@ Avatar size can be automatically adjusted based on the screen size.
   </a-avatar>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
 import { AntDesignOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    AntDesignOutlined,
+  },
+});
 </script>

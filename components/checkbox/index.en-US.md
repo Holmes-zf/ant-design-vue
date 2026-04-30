@@ -2,8 +2,7 @@
 category: Components
 type: Data Entry
 title: Checkbox
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*DzgiRbW3khIAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*G3MjTYXL6AIAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg
 ---
 
 Checkbox component.
@@ -40,7 +39,7 @@ Checkbox component.
 | disabled | Disable all checkboxes | boolean | false |  |
 | name | The `name` property of all `input[type="checkbox"]` children | string | - | 1.5.0 |
 | options | Specifies options, you can customize `label` with slot = "label" slot-scope="option" | string\[] \| Array&lt;{ label: string value: string disabled?: boolean, indeterminate?: boolean, onChange?: function }> | \[] |  |
-| value(v-model) | Used for setting the currently selected value. | (boolean \| string \| number)\[] | \[] |  |
+| value(v-model) | Used for setting the currently selected value. | string\[] | \[] |  |
 
 #### events
 

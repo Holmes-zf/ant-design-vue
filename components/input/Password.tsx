@@ -6,9 +6,8 @@ import EyeOutlined from '@ant-design/icons-vue/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons-vue/EyeInvisibleOutlined';
 import type { InputProps } from './inputProps';
 import inputProps from './inputProps';
-import type { PropType } from 'vue';
-import { computed, defineComponent, shallowRef, watchEffect } from 'vue';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import { computed, defineComponent, ref } from 'vue';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import omit from '../_util/omit';
 
 const ActionMap = {
@@ -27,26 +26,18 @@ export default defineComponent({
     inputPrefixCls: String,
     action: { type: String, default: 'click' },
     visibilityToggle: { type: Boolean, default: true },
-    visible: { type: Boolean, default: undefined },
-    'onUpdate:visible': Function as PropType<(visible: boolean) => void>,
     iconRender: Function,
   },
-  setup(props, { slots, attrs, expose, emit }) {
-    const visible = shallowRef(false);
+  setup(props, { slots, attrs, expose }) {
+    const visible = ref(false);
     const onVisibleChange = () => {
       const { disabled } = props;
       if (disabled) {
         return;
       }
       visible.value = !visible.value;
-      emit('update:visible', visible.value);
     };
-    watchEffect(() => {
-      if (props.visible !== undefined) {
-        visible.value = !!props.visible;
-      }
-    });
-    const inputRef = shallowRef();
+    const inputRef = ref();
     const focus = () => {
       inputRef.value?.focus();
     };
@@ -59,7 +50,7 @@ export default defineComponent({
     });
     const getIcon = (prefixCls: string) => {
       const { action, iconRender = slots.iconRender || defaultIconRender } = props;
-      const iconTrigger = ActionMap[action] || '';
+      const iconTrigger = ActionMap[action!] || '';
       const icon = iconRender(visible.value);
       const iconProps = {
         [iconTrigger]: onVisibleChange,

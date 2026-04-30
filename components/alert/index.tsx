@@ -1,5 +1,5 @@
 import type { CSSProperties, ExtractPropTypes, PropType } from 'vue';
-import { computed, defineComponent, shallowRef, Transition } from 'vue';
+import { defineComponent, ref } from 'vue';
 import CloseOutlined from '@ant-design/icons-vue/CloseOutlined';
 import CheckCircleOutlined from '@ant-design/icons-vue/CheckCircleOutlined';
 import ExclamationCircleOutlined from '@ant-design/icons-vue/ExclamationCircleOutlined';
@@ -11,13 +11,12 @@ import InfoCircleFilled from '@ant-design/icons-vue/InfoCircleFilled';
 import CloseCircleFilled from '@ant-design/icons-vue/CloseCircleFilled';
 import classNames from '../_util/classNames';
 import PropTypes from '../_util/vue-types';
-import { getTransitionProps } from '../_util/transition';
-import { isValidElement } from '../_util/props-util';
+import { getTransitionProps, Transition } from '../_util/transition';
+import { isValidElement, getPropsSlot } from '../_util/props-util';
 import { tuple, withInstall } from '../_util/type';
 import { cloneElement } from '../_util/vnode';
 import type { NodeMouseEventHandler } from '../vc-tree/contextTypes';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
-import useStyle from './style';
+import useConfigInject from '../_util/hooks/useConfigInject';
 
 const iconMapFilled = {
   success: CheckCircleFilled,
@@ -35,7 +34,7 @@ const iconMapOutlined = {
 
 const AlertTypes = tuple('success', 'info', 'warning', 'error');
 
-export type AlertType = (typeof AlertTypes)[number];
+export type AlertType = typeof AlertTypes[number];
 
 export const alertProps = () => ({
   /**
@@ -70,10 +69,9 @@ const Alert = defineComponent({
   props: alertProps(),
   setup(props, { slots, emit, attrs, expose }) {
     const { prefixCls, direction } = useConfigInject('alert', props);
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-    const closing = shallowRef(false);
-    const closed = shallowRef(false);
-    const alertNode = shallowRef();
+    const closing = ref(false);
+    const closed = ref(false);
+    const alertNode = ref();
 
     const handleClose = (e: MouseEvent) => {
       e.preventDefault();
@@ -94,31 +92,25 @@ const Alert = defineComponent({
       closed.value = true;
       props.afterClose?.();
     };
-    const mergedType = computed(() => {
-      const { type } = props;
-      if (type !== undefined) {
-        return type;
-      }
-      // banner 模式默认为警告
-      return props.banner ? 'warning' : 'info';
-    });
+
     expose({ animationEnd });
-    const motionStyle = shallowRef<CSSProperties>({});
+    const motionStyle = ref<CSSProperties>({});
     return () => {
       const { banner, closeIcon: customCloseIcon = slots.closeIcon?.() } = props;
 
-      let { closable, showIcon } = props;
+      let { closable, type, showIcon } = props;
 
-      const closeText = props.closeText ?? slots.closeText?.();
-      const description = props.description ?? slots.description?.();
-      const message = props.message ?? slots.message?.();
-      const icon = props.icon ?? slots.icon?.();
-      const action = slots.action?.();
+      const closeText = getPropsSlot(slots, props, 'closeText');
+      const description = getPropsSlot(slots, props, 'description');
+      const message = getPropsSlot(slots, props, 'message');
+      const icon = getPropsSlot(slots, props, 'icon');
 
       // banner模式默认有 Icon
       showIcon = banner && showIcon === undefined ? true : showIcon;
+      // banner模式默认为警告
+      type = banner && type === undefined ? 'warning' : type || 'info';
 
-      const IconType = (description ? iconMapOutlined : iconMapFilled)[mergedType.value] || null;
+      const IconType = (description ? iconMapOutlined : iconMapFilled)[type] || null;
 
       // closeable when closeText is assigned
       if (closeText) {
@@ -126,14 +118,13 @@ const Alert = defineComponent({
       }
       const prefixClsValue = prefixCls.value;
       const alertCls = classNames(prefixClsValue, {
-        [`${prefixClsValue}-${mergedType.value}`]: true,
+        [`${prefixClsValue}-${type}`]: true,
         [`${prefixClsValue}-closing`]: closing.value,
         [`${prefixClsValue}-with-description`]: !!description,
         [`${prefixClsValue}-no-icon`]: !showIcon,
         [`${prefixClsValue}-banner`]: !!banner,
         [`${prefixClsValue}-closable`]: closable,
         [`${prefixClsValue}-rtl`]: direction.value === 'rtl',
-        [hashId.value]: true,
       });
 
       const closeIcon = closable ? (
@@ -173,30 +164,27 @@ const Alert = defineComponent({
           node.style.maxHeight = '0px';
         },
       });
-      return wrapSSR(
-        closed.value ? null : (
-          <Transition {...transitionProps}>
-            <div
-              role="alert"
-              {...attrs}
-              style={[attrs.style as CSSProperties, motionStyle.value]}
-              v-show={!closing.value}
-              class={[attrs.class, alertCls]}
-              data-show={!closing.value}
-              ref={alertNode}
-            >
-              {showIcon ? iconNode : null}
-              <div class={`${prefixClsValue}-content`}>
-                {message ? <div class={`${prefixClsValue}-message`}>{message}</div> : null}
-                {description ? (
-                  <div class={`${prefixClsValue}-description`}>{description}</div>
-                ) : null}
-              </div>
-              {action ? <div class={`${prefixClsValue}-action`}>{action}</div> : null}
-              {closeIcon}
+      return closed.value ? null : (
+        <Transition {...transitionProps}>
+          <div
+            role="alert"
+            {...attrs}
+            style={[attrs.style as CSSProperties, motionStyle.value]}
+            v-show={!closing.value}
+            class={[attrs.class, alertCls]}
+            data-show={!closing.value}
+            ref={alertNode}
+          >
+            {showIcon ? iconNode : null}
+            <div class={`${prefixClsValue}-content`}>
+              {message ? <div class={`${prefixClsValue}-message`}>{message}</div> : null}
+              {description ? (
+                <div class={`${prefixClsValue}-description`}>{description}</div>
+              ) : null}
             </div>
-          </Transition>
-        ),
+            {closeIcon}
+          </div>
+        </Transition>
       );
     };
   },

@@ -1,38 +1,32 @@
 import type { CSSProperties } from 'vue';
 import { computed, defineComponent } from 'vue';
+import { presetPrimaryColors } from '@ant-design/colors';
 import { Circle as VCCircle } from '../vc-progress';
-import { getPercentage, getSize, getStrokeColor } from './utils';
-import type { ProgressProps, ProgressGradient } from './props';
+import { getSuccessPercent, validProgress } from './utils';
+import type { ProgressProps } from './props';
 import { progressProps } from './props';
-import { initDefaultProps } from '../_util/props-util';
-import Tooltip from '../tooltip';
-import { anyType } from '../_util/type';
 
-export interface CircleProps extends ProgressProps {
-  strokeColor?: string | ProgressGradient;
+export type CircleProps = ProgressProps;
+
+function getPercentage({ percent, success, successPercent }: CircleProps) {
+  const realSuccessPercent = validProgress(getSuccessPercent({ success, successPercent }));
+  return [realSuccessPercent, validProgress(validProgress(percent) - realSuccessPercent)];
 }
 
-export const circleProps = () => ({
-  ...progressProps(),
-  strokeColor: anyType<string | ProgressGradient>(),
-});
-
-const CIRCLE_MIN_STROKE_WIDTH = 3;
-
-const getMinPercent = (width: number): number => (CIRCLE_MIN_STROKE_WIDTH / width) * 100;
+function getStrokeColor({
+  success = {},
+  strokeColor,
+}: Partial<CircleProps>): (string | Record<string, string>)[] {
+  const { strokeColor: successColor } = success;
+  return [successColor || presetPrimaryColors.green, strokeColor || null!];
+}
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
-  name: 'ProgressCircle',
+  name: 'Circle',
   inheritAttrs: false,
-  props: initDefaultProps(circleProps(), {
-    trailColor: null as unknown as string,
-  }),
-  setup(props, { slots, attrs }) {
-    const originWidth = computed(() => props.width ?? 120);
-    const mergedSize = computed(() => props.size ?? [originWidth.value, originWidth.value]);
-
-    const sizeRef = computed(() => getSize(mergedSize.value as ProgressProps['size'], 'circle'));
+  props: progressProps(),
+  setup(props, { slots }) {
     const gapDeg = computed(() => {
       // Support gapDeg = 0 when type = 'dashboard'
       if (props.gapDegree || props.gapDegree === 0) {
@@ -45,18 +39,17 @@ export default defineComponent({
     });
 
     const circleStyle = computed<CSSProperties>(() => {
+      const circleSize = props.width || 120;
       return {
-        width: `${sizeRef.value.width}px`,
-        height: `${sizeRef.value.height}px`,
-        fontSize: `${sizeRef.value.width * 0.15 + 6}px`,
+        width: typeof circleSize === 'number' ? `${circleSize}px` : circleSize,
+        height: typeof circleSize === 'number' ? `${circleSize}px` : circleSize,
+        fontSize: `${circleSize * 0.15 + 6}px`,
       };
     });
 
-    const circleWidth = computed(
-      () => props.strokeWidth ?? Math.max(getMinPercent(sizeRef.value.width), 6),
-    );
+    const circleWidth = computed(() => props.strokeWidth || 6);
     const gapPos = computed(
-      () => props.gapPosition || (props.type === 'dashboard' && 'bottom') || undefined,
+      () => props.gapPosition || (props.type === 'dashboard' && 'bottom') || 'top',
     );
 
     // using className to style stroke color
@@ -72,8 +65,8 @@ export default defineComponent({
       [`${props.prefixCls}-circle-gradient`]: isGradient.value,
     }));
 
-    return () => {
-      const circleContent = (
+    return () => (
+      <div class={wrapperClassName.value} style={circleStyle.value}>
         <VCCircle
           percent={percent.value}
           strokeWidth={circleWidth.value}
@@ -85,25 +78,8 @@ export default defineComponent({
           gapDegree={gapDeg.value}
           gapPosition={gapPos.value}
         />
-      );
-      return (
-        <div
-          {...attrs}
-          class={[wrapperClassName.value, attrs.class]}
-          style={[attrs.style as CSSProperties, circleStyle.value]}
-        >
-          {sizeRef.value.width <= 20 ? (
-            <Tooltip v-slots={{ title: slots.default }}>
-              <span>{circleContent}</span>
-            </Tooltip>
-          ) : (
-            <>
-              {circleContent}
-              {slots.default?.()}
-            </>
-          )}
-        </div>
-      );
-    };
+        {slots.default?.()}
+      </div>
+    );
   },
 });

@@ -33,13 +33,23 @@ title:
     </a-collapse-panel>
   </a-collapse>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 
-const activeKey = ref([]);
-const text = `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`;
+export default defineComponent({
+  setup() {
+    const activeKey = ref([]);
+    const text = `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`;
 
-const changeActivekey = (key: string) => {
-  console.log(key);
-};
+    const changeActivekey = (key: string) => {
+      console.log(key);
+    };
+
+    return {
+      activeKey,
+      text,
+      changeActivekey,
+    };
+  },
+});
 </script>

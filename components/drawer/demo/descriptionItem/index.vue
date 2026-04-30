@@ -9,10 +9,12 @@
     <slot v-else name="content" />
   </div>
 </template>
-<script lang="ts" setup>
-interface Props {
-  title: string;
-  content?: string;
-}
-defineProps<Props>();
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
+  props: {
+    title: String,
+    content: String,
+  },
+});
 </script>

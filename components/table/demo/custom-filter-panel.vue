@@ -53,14 +53,14 @@ Implement a customized column search example via `customFilterDropdown`.
       <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
     </template>
     <template #bodyCell="{ text, column }">
-      <span v-if="state.searchText && state.searchedColumn === column.dataIndex">
+      <span v-if="searchText && searchedColumn === column.dataIndex">
         <template
           v-for="(fragment, i) in text
             .toString()
-            .split(new RegExp(`(?<=${state.searchText})|(?=${state.searchText})`, 'i'))"
+            .split(new RegExp(`(?<=${searchText})|(?=${searchText})`, 'i'))"
         >
           <mark
-            v-if="fragment.toLowerCase() === state.searchText.toLowerCase()"
+            v-if="fragment.toLowerCase() === searchText.toLowerCase()"
             :key="i"
             class="highlight"
           >
@@ -73,9 +73,9 @@ Implement a customized column search example via `customFilterDropdown`.
   </a-table>
 </template>
 
-<script lang="ts" setup>
+<script>
 import { SearchOutlined } from '@ant-design/icons-vue';
-import { reactive, ref } from 'vue';
+import { defineComponent, reactive, ref, toRefs } from 'vue';
 const data = [
   {
     key: '1',
@@ -103,60 +103,77 @@ const data = [
   },
 ];
 
-const state = reactive({
-  searchText: '',
-  searchedColumn: '',
+export default defineComponent({
+  components: {
+    SearchOutlined,
+  },
+  setup() {
+    const state = reactive({
+      searchText: '',
+      searchedColumn: '',
+    });
+
+    const searchInput = ref();
+
+    const columns = [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        customFilterDropdown: true,
+        onFilter: (value, record) =>
+          record.name.toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownVisibleChange: visible => {
+          if (visible) {
+            setTimeout(() => {
+              searchInput.value.focus();
+            }, 100);
+          }
+        },
+      },
+      {
+        title: 'Age',
+        dataIndex: 'age',
+        key: 'age',
+      },
+      {
+        title: 'Address',
+        dataIndex: 'address',
+        key: 'address',
+        customFilterDropdown: true,
+        onFilter: (value, record) =>
+          record.address.toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownVisibleChange: visible => {
+          if (visible) {
+            setTimeout(() => {
+              searchInput.value.focus();
+            }, 100);
+          }
+        },
+      },
+    ];
+
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+      confirm();
+      state.searchText = selectedKeys[0];
+      state.searchedColumn = dataIndex;
+    };
+
+    const handleReset = clearFilters => {
+      clearFilters({ confirm: true });
+      state.searchText = '';
+    };
+
+    return {
+      data,
+      columns,
+      handleSearch,
+      handleReset,
+      searchInput,
+      ...toRefs(state),
+    };
+  },
 });
-
-const searchInput = ref();
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    customFilterDropdown: true,
-    onFilter: (value, record) => record.name.toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          searchInput.value.focus();
-        }, 100);
-      }
-    },
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-    customFilterDropdown: true,
-    onFilter: (value, record) =>
-      record.address.toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          searchInput.value.focus();
-        }, 100);
-      }
-    },
-  },
-];
-
-const handleSearch = (selectedKeys, confirm, dataIndex) => {
-  confirm();
-  state.searchText = selectedKeys[0];
-  state.searchedColumn = dataIndex;
-};
-
-const handleReset = clearFilters => {
-  clearFilters({ confirm: true });
-  state.searchText = '';
-};
 </script>
 <style scoped>
 .highlight {

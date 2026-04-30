@@ -9,7 +9,7 @@ import {
   onMounted,
   onUpdated,
   reactive,
-  shallowRef,
+  ref,
 } from 'vue';
 import { treeNodeProps } from './props';
 import classNames from '../_util/classNames';
@@ -29,6 +29,7 @@ export default defineComponent({
   inheritAttrs: false,
   props: treeNodeProps,
   isTreeNode: 1,
+  slots: ['title', 'icon', 'switcherIcon'],
   setup(props, { attrs, slots, expose }) {
     warning(
       !('slots' in props.data),
@@ -37,7 +38,7 @@ export default defineComponent({
       )}instead`,
     );
 
-    const dragNodeHighlight = shallowRef(false);
+    const dragNodeHighlight = ref(false);
     const context = useInjectTreeContext();
     const {
       expandedKeysSet,
@@ -73,7 +74,7 @@ export default defineComponent({
     const dragOverGapBottom = eagerComputed(() => mergedTreeNodeProps.value.dragOverGapBottom);
     const pos = eagerComputed(() => mergedTreeNodeProps.value.pos);
 
-    const selectHandle = shallowRef();
+    const selectHandle = ref();
 
     const hasChildren = computed(() => {
       const { eventKey } = props;

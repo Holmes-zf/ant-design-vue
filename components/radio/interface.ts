@@ -15,17 +15,7 @@ export interface RadioChangeEvent {
 }
 
 export interface RadioGroupContext {
-  onChange: (e: RadioChangeEvent) => void;
-  value: Ref<any>;
-  disabled: Ref<boolean>;
-  name: Ref<string>;
-  /**
-   * Control the appearance for Radio to display as button or not
-   *
-   * @default 'default'
-   * @internal
-   */
-  optionType?: Ref<RadioGroupOptionType>;
+  stateValue: Ref;
+  props: RadioProps;
+  onRadioChange: (e: RadioChangeEvent) => void;
 }
-
-export type RadioOptionTypeContextProps = RadioGroupOptionType;

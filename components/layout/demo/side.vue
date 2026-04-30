@@ -76,7 +76,7 @@ The level of the aside navigation is scalable. The first, second, and third leve
     </a-layout>
   </a-layout>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import {
   PieChartOutlined,
   DesktopOutlined,
@@ -84,12 +84,25 @@ import {
   TeamOutlined,
   FileOutlined,
 } from '@ant-design/icons-vue';
-import { ref } from 'vue';
-const collapsed = ref<boolean>(false);
-const selectedKeys = ref<string[]>(['1']);
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    PieChartOutlined,
+    DesktopOutlined,
+    UserOutlined,
+    TeamOutlined,
+    FileOutlined,
+  },
+  data() {
+    return {
+      collapsed: ref<boolean>(false),
+      selectedKeys: ref<string[]>(['1']),
+    };
+  },
+});
 </script>
 
-<style scoped>
+<style>
 #components-layout-demo-side .logo {
   height: 32px;
   margin: 16px;

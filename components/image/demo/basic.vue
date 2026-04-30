@@ -22,3 +22,7 @@ Click the image to zoom in.
     src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
   />
 </template>
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({});
+</script>

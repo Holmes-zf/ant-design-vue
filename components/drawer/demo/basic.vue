@@ -19,29 +19,37 @@ Basic drawer.
 <template>
   <a-button type="primary" @click="showDrawer">Open</a-button>
   <a-drawer
-    v-model:open="open"
+    v-model:visible="visible"
     class="custom-class"
-    root-class-name="root-class-name"
-    :root-style="{ color: 'blue' }"
     style="color: red"
     title="Basic Drawer"
     placement="right"
-    @after-open-change="afterOpenChange"
+    @after-visible-change="afterVisibleChange"
   >
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
   </a-drawer>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const open = ref<boolean>(false);
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const visible = ref<boolean>(false);
 
-const afterOpenChange = (bool: boolean) => {
-  console.log('open', bool);
-};
+    const afterVisibleChange = (bool: boolean) => {
+      console.log('visible', bool);
+    };
 
-const showDrawer = () => {
-  open.value = true;
-};
+    const showDrawer = () => {
+      visible.value = true;
+    };
+
+    return {
+      visible,
+      afterVisibleChange,
+      showDrawer,
+    };
+  },
+});
 </script>

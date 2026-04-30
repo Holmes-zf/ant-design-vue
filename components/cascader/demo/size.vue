@@ -26,8 +26,8 @@ Cascade selection box of different sizes.
   <br />
   <br />
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import type { CascaderProps } from 'ant-design-vue';
 const options: CascaderProps['options'] = [
   {
@@ -63,5 +63,12 @@ const options: CascaderProps['options'] = [
     ],
   },
 ];
-const value = ref<string[]>([]);
+export default defineComponent({
+  setup() {
+    return {
+      value: ref<string[]>([]),
+      options,
+    };
+  },
+});
 </script>

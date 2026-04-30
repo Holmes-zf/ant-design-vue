@@ -24,13 +24,23 @@ A notification box with a icon at the left side.
     <a-button @click="() => openNotificationWithIcon('error')">Error</a-button>
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { notification } from 'ant-design-vue';
-const openNotificationWithIcon = (type: string) => {
-  notification[type]({
-    message: 'Notification Title',
-    description:
-      'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-  });
-};
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  setup() {
+    const openNotificationWithIcon = (type: string) => {
+      notification[type]({
+        message: 'Notification Title',
+        description:
+          'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+      });
+    };
+
+    return {
+      openNotificationWithIcon,
+    };
+  },
+});
 </script>

@@ -89,7 +89,8 @@ Show all props provided by PageHeader.
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { EllipsisOutlined } from '@ant-design/icons-vue';
 
 const routes = [
@@ -125,6 +126,18 @@ const iconLinks: IconLink[] = [
     text: 'Product Doc',
   },
 ];
+
+export default defineComponent({
+  components: {
+    EllipsisOutlined,
+  },
+  setup() {
+    return {
+      routes,
+      iconLinks,
+    };
+  },
+});
 </script>
 <style scoped>
 #components-page-header-demo-content .image {

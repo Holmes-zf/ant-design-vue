@@ -9,22 +9,13 @@ import {
   ref,
   computed,
 } from 'vue';
-import scrollIntoView from 'scroll-into-view-if-needed';
 import classNames from '../_util/classNames';
 import addEventListener from '../vc-util/Dom/addEventListener';
 import Affix from '../affix';
 import scrollTo from '../_util/scrollTo';
 import getScroll from '../_util/getScroll';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import useProvideAnchor from './context';
-import useStyle from './style';
-import type { AnchorLinkItemProps } from './AnchorLink';
-import AnchorLink from './AnchorLink';
-import PropTypes from '../_util/vue-types';
-import devWarning from '../vc-util/devWarning';
-import { arrayType } from '../_util/type';
-
-export type AnchorDirection = 'vertical' | 'horizontal';
 
 function getDefaultContainer() {
   return window;
@@ -50,10 +41,10 @@ function getOffsetTop(element: HTMLElement, container: AnchorContainer): number 
 
 const sharpMatcherRegx = /#([\S ]+)$/;
 
-interface Section {
+type Section = {
   link: string;
   top: number;
-}
+};
 
 export type AnchorContainer = HTMLElement | Window;
 
@@ -66,10 +57,8 @@ export const anchorProps = () => ({
   getContainer: Function as PropType<() => AnchorContainer>,
   wrapperClass: String,
   wrapperStyle: { type: Object as PropType<CSSProperties>, default: undefined as CSSProperties },
-  getCurrentAnchor: Function as PropType<(activeLink: string) => string>,
+  getCurrentAnchor: Function as PropType<() => string>,
   targetOffset: Number,
-  items: arrayType<AnchorLinkItemProps[]>(),
-  direction: PropTypes.oneOf(['vertical', 'horizontal'] as AnchorDirection[]).def('vertical'),
   onChange: Function as PropType<(currentActiveLink: string) => void>,
   onClick: Function as PropType<(e: MouseEvent, link: { title: any; href: string }) => void>,
 });
@@ -90,25 +79,7 @@ export default defineComponent({
   props: anchorProps(),
   setup(props, { emit, attrs, slots, expose }) {
     const { prefixCls, getTargetContainer, direction } = useConfigInject('anchor', props);
-    const anchorDirection = computed(() => props.direction ?? 'vertical');
-
-    if (process.env.NODE_ENV !== 'production') {
-      devWarning(
-        props.items && typeof slots.default !== 'function',
-        'Anchor',
-        '`Anchor children` is deprecated. Please use `items` instead.',
-      );
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      devWarning(
-        !(anchorDirection.value === 'horizontal' && props.items?.some(n => 'children' in n)),
-        'Anchor',
-        '`Anchor items#children` is not supported when `Anchor` direction is horizontal.',
-      );
-    }
-
-    const spanLinkNode = ref<HTMLSpanElement>(null);
+    const inkNodeRef = ref();
     const anchorRef = ref();
     const state = reactive<AnchorState>({
       links: [],
@@ -119,7 +90,7 @@ export default defineComponent({
     const activeLink = ref(null);
     const getContainer = computed(() => {
       const { getContainer } = props;
-      return getContainer || getTargetContainer?.value || getDefaultContainer;
+      return getContainer || getTargetContainer.value || getDefaultContainer;
     });
     // func...
     const getCurrentAnchor = (offsetTop = 0, bounds = 5) => {
@@ -153,13 +124,15 @@ export default defineComponent({
       if (activeLink.value === link) {
         return;
       }
-      activeLink.value = typeof getCurrentAnchor === 'function' ? getCurrentAnchor(link) : link;
+      activeLink.value = typeof getCurrentAnchor === 'function' ? getCurrentAnchor() : link;
       emit('change', link);
     };
     const handleScrollTo = (link: string) => {
       const { offsetTop, targetOffset } = props;
 
       setCurrentActiveLink(link);
+      const container = getContainer.value();
+      const scrollTop = getScroll(container, true);
       const sharpLinkMatch = sharpMatcherRegx.exec(link);
       if (!sharpLinkMatch) {
         return;
@@ -169,8 +142,6 @@ export default defineComponent({
         return;
       }
 
-      const container = getContainer.value();
-      const scrollTop = getScroll(container, true);
       const eleOffsetTop = getOffsetTop(targetElement, container);
       let y = scrollTop + eleOffsetTop;
       y -= targetOffset !== undefined ? targetOffset : offsetTop || 0;
@@ -199,21 +170,13 @@ export default defineComponent({
     };
 
     const updateInk = () => {
-      const linkNode = anchorRef.value.querySelector(`.${prefixCls.value}-link-title-active`);
-      if (linkNode && spanLinkNode.value) {
-        const horizontalAnchor = anchorDirection.value === 'horizontal';
-        spanLinkNode.value.style.top = horizontalAnchor
-          ? ''
-          : `${linkNode.offsetTop + linkNode.clientHeight / 2}px`;
-        spanLinkNode.value.style.height = horizontalAnchor ? '' : `${linkNode.clientHeight}px`;
-        spanLinkNode.value.style.left = horizontalAnchor ? `${linkNode.offsetLeft}px` : '';
-        spanLinkNode.value.style.width = horizontalAnchor ? `${linkNode.clientWidth}px` : '';
-        if (horizontalAnchor) {
-          scrollIntoView(linkNode, {
-            scrollMode: 'if-needed',
-            block: 'nearest',
-          });
-        }
+      const linkNode = anchorRef.value.getElementsByClassName(
+        `${prefixCls.value}-link-title-active`,
+      )[0];
+      if (linkNode) {
+        (inkNodeRef.value as HTMLElement).style.top = `${
+          linkNode.offsetTop + linkNode.clientHeight / 2 - 4.5
+        }px`;
       }
     };
 
@@ -234,7 +197,6 @@ export default defineComponent({
       handleClick: (e, info) => {
         emit('click', e, info);
       },
-      direction: anchorDirection,
     });
 
     onMounted(() => {
@@ -263,38 +225,14 @@ export default defineComponent({
       updateInk();
     });
 
-    const createNestedLink = (options?: AnchorLinkItemProps[]) =>
-      Array.isArray(options)
-        ? options.map(option => {
-            const { children, key, href, target, class: cls, style, title } = option;
-            return (
-              <AnchorLink
-                key={key}
-                href={href}
-                target={target}
-                class={cls}
-                style={style}
-                title={title}
-                customTitleProps={option}
-                v-slots={{ customTitle: slots.customTitle }}
-              >
-                {anchorDirection.value === 'vertical' ? createNestedLink(children) : null}
-              </AnchorLink>
-            );
-          })
-        : null;
-
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
     return () => {
       const { offsetTop, affix, showInkInFixed } = props;
       const pre = prefixCls.value;
-      const inkClass = classNames(`${pre}-ink`, {
-        [`${pre}-ink-visible`]: activeLink.value,
+      const inkClass = classNames(`${pre}-ink-ball`, {
+        visible: activeLink.value,
       });
 
-      const wrapperClass = classNames(hashId.value, props.wrapperClass, `${pre}-wrapper`, {
-        [`${pre}-wrapper-horizontal`]: anchorDirection.value === 'horizontal',
+      const wrapperClass = classNames(props.wrapperClass, `${pre}-wrapper`, {
         [`${pre}-rtl`]: direction.value === 'rtl',
       });
 
@@ -309,20 +247,20 @@ export default defineComponent({
       const anchorContent = (
         <div class={wrapperClass} style={wrapperStyle} ref={anchorRef}>
           <div class={anchorClass}>
-            <span class={inkClass} ref={spanLinkNode} />
-            {Array.isArray(props.items) ? createNestedLink(props.items) : slots.default?.()}
+            <div class={`${pre}-ink`}>
+              <span class={inkClass} ref={inkNodeRef} />
+            </div>
+            {slots.default?.()}
           </div>
         </div>
       );
 
-      return wrapSSR(
-        !affix ? (
-          anchorContent
-        ) : (
-          <Affix {...attrs} offsetTop={offsetTop} target={getContainer.value}>
-            {anchorContent}
-          </Affix>
-        ),
+      return !affix ? (
+        anchorContent
+      ) : (
+        <Affix {...attrs} offsetTop={offsetTop} target={getContainer.value}>
+          {anchorContent}
+        </Affix>
       );
     };
   },

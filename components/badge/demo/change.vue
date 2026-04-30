@@ -35,18 +35,31 @@ The count will be animated as it changes.
   </a-badge>
   <a-switch v-model:checked="show" />
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue';
-const count = ref<number>(5);
-const show = ref<boolean>(true);
-const decline = () => {
-  if (count.value >= 1) {
-    count.value--;
-  }
-};
+export default defineComponent({
+  components: {
+    MinusOutlined,
+    PlusOutlined,
+  },
+  setup() {
+    const count = ref<number>(5);
+    const decline = () => {
+      if (count.value >= 1) {
+        count.value--;
+      }
+    };
 
-const increase = () => {
-  count.value++;
-};
+    const increase = () => {
+      count.value++;
+    };
+    return {
+      count,
+      show: ref<boolean>(true),
+      decline,
+      increase,
+    };
+  },
+});
 </script>

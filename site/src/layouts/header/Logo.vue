@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import type { GlobalConfig } from '../../type';
+import type { GlobalConfig } from '../../App.vue';
 import { GLOBAL_CONFIG } from '../../SymbolKey';
 import { defineComponent, inject } from 'vue';
 import logo from '../../assets/logo.svg';
@@ -20,13 +20,17 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
+@import '../../theme/static/theme.less';
+@import './index.less';
+
 #logo {
-  height: var(--header-height);
+  height: @header-height;
   padding-left: 40px;
   overflow: hidden;
-  color: var(--site-text-color);
+  color: @site-heading-color;
   font-size: 18px;
-  line-height: var(--header-height);
+  font-family: Avenir, @font-family, sans-serif;
+  line-height: @header-height;
   white-space: nowrap;
   text-decoration: none;
 
@@ -49,7 +53,7 @@ export default defineComponent({
   }
 }
 
-@media only screen and (max-width: 767.99px) {
+@media only screen and (max-width: @mobile-max-width) {
   #logo {
     padding-right: 0;
     padding-left: 0;

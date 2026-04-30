@@ -50,7 +50,6 @@ const DialogWrap = defineComponent({
       }
       return (
         <Portal
-          autoLock
           visible={visible}
           forceRender={forceRender}
           getContainer={getContainer}

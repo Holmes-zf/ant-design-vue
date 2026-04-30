@@ -2,27 +2,18 @@ import LoadingOutlined from '@ant-design/icons-vue/LoadingOutlined';
 import PaperClipOutlined from '@ant-design/icons-vue/PaperClipOutlined';
 import PictureTwoTone from '@ant-design/icons-vue/PictureTwoTone';
 import FileTwoTone from '@ant-design/icons-vue/FileTwoTone';
-import type { InternalUploadFile, UploadFile } from '../interface';
+import type { UploadListType, InternalUploadFile, UploadFile } from '../interface';
 import { uploadListProps } from '../interface';
 import { previewImage, isImageUrl } from '../utils';
 import type { ButtonProps } from '../../button';
 import Button from '../../button';
 import ListItem from './ListItem';
 import type { HTMLAttributes } from 'vue';
-import {
-  triggerRef,
-  watch,
-  computed,
-  defineComponent,
-  onMounted,
-  shallowRef,
-  watchEffect,
-  TransitionGroup,
-} from 'vue';
+import { computed, defineComponent, getCurrentInstance, onMounted, ref, watchEffect } from 'vue';
 import { filterEmpty, initDefaultProps, isValidElement } from '../../_util/props-util';
 import type { VueNode } from '../../_util/type';
-import useConfigInject from '../../config-provider/hooks/useConfigInject';
-import { getTransitionGroupProps } from '../../_util/transition';
+import useConfigInject from '../../_util/hooks/useConfigInject';
+import { getTransitionGroupProps, TransitionGroup } from '../../_util/transition';
 import collapseMotion from '../../_util/collapseMotion';
 
 const HackSlot = (_, { slots }) => {
@@ -33,7 +24,7 @@ export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'AUploadList',
   props: initDefaultProps(uploadListProps(), {
-    listType: 'text', // or picture
+    listType: 'text' as UploadListType, // or picture
     progress: {
       strokeWidth: 2,
       showInfo: false,
@@ -47,27 +38,16 @@ export default defineComponent({
     appendActionVisible: true,
   }),
   setup(props, { slots, expose }) {
-    const motionAppear = shallowRef(false);
+    const motionAppear = ref(false);
+    const instance = getCurrentInstance();
     onMounted(() => {
       motionAppear.value == true;
     });
-    const mergedItems = shallowRef([]);
-    watch(
-      () => props.items,
-      (val = []) => {
-        mergedItems.value = val.slice();
-      },
-      {
-        immediate: true,
-        deep: true,
-      },
-    );
     watchEffect(() => {
       if (props.listType !== 'picture' && props.listType !== 'picture-card') {
         return;
       }
-      let hasUpdate = false;
-      (props.items || []).forEach((file: InternalUploadFile, index) => {
+      (props.items || []).forEach((file: InternalUploadFile) => {
         if (
           typeof document === 'undefined' ||
           typeof window === 'undefined' ||
@@ -82,17 +62,11 @@ export default defineComponent({
         if (props.previewFile) {
           props.previewFile(file.originFileObj as File).then((previewDataUrl: string) => {
             // Need append '' to avoid dead loop
-            const thumbUrl = previewDataUrl || '';
-            if (thumbUrl !== file.thumbUrl) {
-              mergedItems.value[index].thumbUrl = thumbUrl;
-              hasUpdate = true;
-            }
+            file.thumbUrl = previewDataUrl || '';
+            instance.update();
           });
         }
       });
-      if (hasUpdate) {
-        triggerRef(mergedItems);
-      }
     });
 
     // ============================= Events =============================
@@ -147,7 +121,7 @@ export default defineComponent({
         onClick: () => {
           callback();
         },
-        class: `${prefixCls}-list-item-action`,
+        class: `${prefixCls}-list-item-card-actions-btn`,
       };
       if (isValidElement(customIcon)) {
         return <Button {...btnProps} v-slots={{ icon: () => customIcon }} />;
@@ -164,38 +138,29 @@ export default defineComponent({
       handleDownload: onInternalDownload,
     });
 
-    const { prefixCls, rootPrefixCls } = useConfigInject('upload', props);
+    const { prefixCls, direction } = useConfigInject('upload', props);
 
     const listClassNames = computed(() => ({
       [`${prefixCls.value}-list`]: true,
       [`${prefixCls.value}-list-${props.listType}`]: true,
+      [`${prefixCls.value}-list-rtl`]: direction.value === 'rtl',
     }));
-    const transitionGroupProps = computed(() => {
-      const motion = {
-        ...collapseMotion(`${rootPrefixCls.value}-motion-collapse`),
-      };
-      delete motion.onAfterAppear;
-      delete motion.onAfterEnter;
-      delete motion.onAfterLeave;
-      const motionConfig = {
-        ...getTransitionGroupProps(
-          `${prefixCls.value}-${props.listType === 'picture-card' ? 'animate-inline' : 'animate'}`,
-        ),
-        class: listClassNames.value,
-        appear: motionAppear.value,
-      };
-      return props.listType !== 'picture-card'
-        ? {
-            ...motion,
-            ...motionConfig,
-          }
-        : motionConfig;
-    });
+    const transitionGroupProps = computed(() => ({
+      ...collapseMotion(
+        `${prefixCls.value}-${props.listType === 'picture-card' ? 'animate-inline' : 'animate'}`,
+      ),
+      ...getTransitionGroupProps(
+        `${prefixCls.value}-${props.listType === 'picture-card' ? 'animate-inline' : 'animate'}`,
+      ),
+      class: listClassNames.value,
+      appear: motionAppear.value,
+    }));
     return () => {
       const {
         listType,
         locale,
         isImageUrl: isImgUrl,
+        items = [],
         showPreviewIcon,
         showRemoveIcon,
         showDownloadIcon,
@@ -208,7 +173,6 @@ export default defineComponent({
         appendActionVisible,
       } = props;
       const appendActionDom = appendAction?.();
-      const items = mergedItems.value;
       return (
         <TransitionGroup {...transitionGroupProps.value} tag="div">
           {items.map(file => {

@@ -67,7 +67,7 @@ Under different screen sizes, there should be different performance
     </a-page-header>
   </div>
 </template>
-<style scoped>
+<style>
 .components-page-header-demo-responsive {
   padding-bottom: 20px;
 }

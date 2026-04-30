@@ -1,4 +1,5 @@
-import { camelize, filterEmpty } from '../../_util/props-util';
+import { filterEmpty } from '../../_util/props-util';
+import { camelize } from 'vue';
 import { warning } from '../../vc-util/warning';
 import type { DataNode, ChangeEventExtra, RawValueType, LegacyCheckedNode } from '../interface';
 import TreeNode from '../TreeNode';

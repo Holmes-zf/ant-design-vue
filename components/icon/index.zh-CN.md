@@ -3,8 +3,7 @@ category: Components
 type: 通用
 title: Icon
 subtitle: 图标
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*PdAYS7anRpoAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*xEDOTJx2DEkAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 ---
 
 语义化的矢量图形。使用图标组件，你需要安装 `@ant-design/icons-vue` 图标组件包：
@@ -119,9 +118,7 @@ export default defineComponent({
 
 ### 自定义 SVG 图标
 
-#### vue cli 3
-
-可以通过配置 [vue-svg-loader](https://www.npmjs.com/package/vue-svg-loader) 来将 `svg` 图标作为 `Vue` 组件导入。更多`vue-svg-loader` 的使用方式请参阅 [文档](https://github.com/visualfanatic/vue-svg-loader)。
+如果使用 `vue cli 3`，可以通过配置 [vue-svg-loader](https://www.npmjs.com/package/vue-svg-loader) 来将 `svg` 图标作为 `Vue` 组件导入。更多`vue-svg-loader` 的使用方式请参阅 [文档](https://github.com/visualfanatic/vue-svg-loader)。
 
 ```js
 // vue.config.js
@@ -144,88 +141,6 @@ import MessageSvg from 'path/to/message.svg'; // '*.svg' 文件的路径
 export default defineComponent({
   setup() {
     return () => <Icon type={MessageSvg} />;
-  },
-});
-```
-
-#### Rsbuild
-
-Rsbuild 是新一代构建工具，官网 https://rsbuild.dev/
-
-自己实现一个 `vue-svg-loader.js` 文件，好处是可以自定义美化 svg，然后在 `rsbuild.config.ts` 中配置：
-
-```js
-// vue-svg-loader.js
-/* eslint-disable */
-const { optimize } = require('svgo');
-const { version } = require('vue');
-const semverMajor = require('semver/functions/major');
-
-module.exports = async function (svg) {
-  const callback = this.async();
-
-  try {
-    ({ data: svg } = await optimize(svg, {
-      path: this.resourcePath,
-      js2svg: {
-        indent: 2,
-        pretty: true,
-      },
-      plugins: [
-        'convertStyleToAttrs',
-        'removeDoctype',
-        'removeXMLProcInst',
-        'removeComments',
-        'removeMetadata',
-        'removeTitle',
-        'removeDesc',
-        'removeStyleElement',
-        'removeXMLNS',
-        'removeXMLProcInst',
-      ],
-    }));
-  } catch (error) {
-    callback(error);
-    return;
-  }
-
-  if (semverMajor(version) === 2) {
-    svg = svg.replace('<svg', '<svg v-on="$listeners"');
-  }
-
-  callback(null, `<template>${svg}</template>`);
-};
-```
-
-```js
-// rsbuild.config.ts
-/* eslint-disable */
-import { defineConfig } from '@rsbuild/core';
-import { pluginVue } from '@rsbuild/plugin-vue';
-
-export default defineConfig({
-  tools: {
-    bundlerChain(chain, { CHAIN_ID }) {
-      chain.module
-        // 先给svg排除默认的规则，方便下面自定义loader
-        .rule(CHAIN_ID.RULE.SVG)
-        .exclude.add(/\.svg$/);
-    },
-    rspack: {
-      module: {
-        rules: [
-          {
-            test: /\.svg$/,
-            use: ['vue-loader', 'vue-svg-loader'],
-          },
-        ],
-      },
-      resolveLoader: {
-        alias: {
-          'vue-svg-loader': require('path').join(__dirname, './vue-svg-loader.js'),
-        },
-      },
-    },
   },
 });
 ```

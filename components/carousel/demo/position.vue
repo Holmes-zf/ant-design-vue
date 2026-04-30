@@ -29,16 +29,21 @@ There are 4 position options available.
     <div><h3>4</h3></div>
   </a-carousel>
 </template>
-
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import type { CarouselProps } from 'ant-design-vue';
-const dotPosition = ref<CarouselProps['dotPosition']>('top');
-</script>
 
+export default defineComponent({
+  setup() {
+    return {
+      dotPosition: ref<CarouselProps['dotPosition']>('top'),
+    };
+  },
+});
+</script>
 <style scoped>
 /* For demo */
-:deep(.slick-slide) {
+.ant-carousel :deep(.slick-slide) {
   text-align: center;
   height: 160px;
   line-height: 160px;
@@ -46,7 +51,7 @@ const dotPosition = ref<CarouselProps['dotPosition']>('top');
   overflow: hidden;
 }
 
-:deep(.slick-slide h3) {
+.ant-carousel :deep(.slick-slide h3) {
   color: #fff;
 }
 </style>

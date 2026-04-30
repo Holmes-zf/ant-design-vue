@@ -38,10 +38,10 @@ Click to upload user's avatar, and validate size and format of picture with `bef
     </div>
   </a-upload>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import { defineComponent, ref } from 'vue';
 import type { UploadChangeParam, UploadProps } from 'ant-design-vue';
 
 function getBase64(img: Blob, callback: (base64Url: string) => void) {
@@ -49,42 +49,57 @@ function getBase64(img: Blob, callback: (base64Url: string) => void) {
   reader.addEventListener('load', () => callback(reader.result as string));
   reader.readAsDataURL(img);
 }
+export default defineComponent({
+  components: {
+    LoadingOutlined,
+    PlusOutlined,
+  },
+  setup() {
+    const fileList = ref([]);
+    const loading = ref<boolean>(false);
+    const imageUrl = ref<string>('');
 
-const fileList = ref([]);
-const loading = ref<boolean>(false);
-const imageUrl = ref<string>('');
+    const handleChange = (info: UploadChangeParam) => {
+      if (info.file.status === 'uploading') {
+        loading.value = true;
+        return;
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, (base64Url: string) => {
+          imageUrl.value = base64Url;
+          loading.value = false;
+        });
+      }
+      if (info.file.status === 'error') {
+        loading.value = false;
+        message.error('upload error');
+      }
+    };
 
-const handleChange = (info: UploadChangeParam) => {
-  if (info.file.status === 'uploading') {
-    loading.value = true;
-    return;
-  }
-  if (info.file.status === 'done') {
-    // Get this url from response in real world.
-    getBase64(info.file.originFileObj, (base64Url: string) => {
-      imageUrl.value = base64Url;
-      loading.value = false;
-    });
-  }
-  if (info.file.status === 'error') {
-    loading.value = false;
-    message.error('upload error');
-  }
-};
+    const beforeUpload = (file: UploadProps['fileList'][number]) => {
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      if (!isJpgOrPng) {
+        message.error('You can only upload JPG file!');
+      }
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        message.error('Image must smaller than 2MB!');
+      }
+      return isJpgOrPng && isLt2M;
+    };
 
-const beforeUpload = (file: UploadProps['fileList'][number]) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
-};
+    return {
+      fileList,
+      loading,
+      imageUrl,
+      handleChange,
+      beforeUpload,
+    };
+  },
+});
 </script>
-<style scoped>
+<style>
 .avatar-uploader > .ant-upload {
   width: 128px;
   height: 128px;

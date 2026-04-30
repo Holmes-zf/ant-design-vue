@@ -85,34 +85,42 @@ or use `tagRender` slot for custom rendering of tags.
     <span>Note: v-slot:tagRender support from v3.0</span>
   </a-space>
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
+<script lang="ts">
+import { defineComponent, ref, watch } from 'vue';
 
-const value = ref(['china']);
+export default defineComponent({
+  setup() {
+    const value = ref(['china']);
 
-const options = ref([
-  {
-    value: 'china',
-    label: 'China (中国)',
-    icon: '🇨🇳',
+    const options = ref([
+      {
+        value: 'china',
+        label: 'China (中国)',
+        icon: '🇨🇳',
+      },
+      {
+        value: 'usa',
+        label: 'USA (美国)',
+        icon: '🇺🇸',
+      },
+      {
+        value: 'japan',
+        label: 'Japan (日本)',
+        icon: '🇯🇵',
+      },
+      {
+        value: 'korea',
+        label: 'Korea (韩国)',
+        icon: '🇨🇰',
+      },
+    ]);
+    watch(value, val => {
+      console.log(`selected:`, val);
+    });
+    return {
+      options,
+      value,
+    };
   },
-  {
-    value: 'usa',
-    label: 'USA (美国)',
-    icon: '🇺🇸',
-  },
-  {
-    value: 'japan',
-    label: 'Japan (日本)',
-    icon: '🇯🇵',
-  },
-  {
-    value: 'korea',
-    label: 'Korea (韩国)',
-    icon: '🇨🇰',
-  },
-]);
-watch(value, val => {
-  console.log(`selected:`, val);
 });
 </script>

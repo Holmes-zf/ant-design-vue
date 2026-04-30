@@ -18,8 +18,8 @@ Disable option by specifying the `disabled` property in `options`.
 <template>
   <a-cascader v-model:value="value" placeholder="Please select" :options="options" />
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import type { CascaderProps } from 'ant-design-vue';
 const options: CascaderProps['options'] = [
   {
@@ -56,5 +56,12 @@ const options: CascaderProps['options'] = [
     ],
   },
 ];
-const value = ref<string[]>([]);
+export default defineComponent({
+  setup() {
+    return {
+      value: ref<string[]>([]),
+      options,
+    };
+  },
+});
 </script>

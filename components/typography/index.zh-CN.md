@@ -4,8 +4,7 @@ subtitle: 排版
 type: 通用
 title: Typography
 cols: 1
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*MLt3R6m9huoAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*LT2jR41Uj2EAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg
 ---
 
 文本的基本格式。
@@ -72,18 +71,18 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*LT2jR41Uj2EAAA
 | --- | --- | --- | --- | --- |
 | copyableIcon | 自定义拷贝图标 | `{ copied: boolean }` | `copied ? <CheckOutlined /> : <CopyOutlined />` |  |
 | copyableTooltip | 自定义提示文案，当 `copyable.tooltip = false` 时关闭 | `{ copied: boolean }` | `copied ? '复制成功' : '复制'` |  |
-| editableEnterIcon | 在编辑段中自定义“enter”图标 | `{className: string}` | `<EnterOutlined />` | 3.0 |
 | editableIcon | 自定义编辑图标 | - | &lt;EditOutlined /> |  |
 | editableTooltip | 自定义提示文本，当 `editable.tooltip = false` 时关闭 | - | `编辑` |  |
 | ellipsisSymbol | 自定义展开描述文案 | - | - |  |
 | ellipsisTooltip | 省略时，展示提示信息 | - | - |  |
+| enterEnterIcon | 在编辑段中自定义“enter”图标 | `{className: string}` | `<EnterOutlined />` | 3.0 |
 
 ### copyable
 
 ```json
   {
     text: string,
-    onCopy: function(event),
+    onCopy: function,
     tooltip: false,
   }
 ```
@@ -116,7 +115,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*LT2jR41Uj2EAAA
 | editing | 控制是否是编辑中状态 | boolean | false |  |
 | maxlength | 编辑中文本域最大长度 | number | - |  |
 | tooltip | 是否展示提示文本 | boolean | true |  |
-| triggerType | 编辑模式触发器类型，图标、文本或者两者都设置（不设置图标作为触发器时它会隐藏） | Array&lt;`icon`\|`text`> | \[`icon`] |  |
+| triggerType | Edit mode trigger - icon, text or both (not specifying icon as trigger hides it) | Array&lt;`icon`\|`text`> | \[`icon`] |  |
 | onCancel | 按 ESC 退出编辑状态时触发 | function | - |  |
 | onChange | 文本域编辑时触发 | function(event) | - |  |
 | onEnd | 按 ENTER 结束编辑状态时触发 | function | - |  |

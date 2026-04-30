@@ -34,14 +34,19 @@ Custom arrows display
     <div><h3>4</h3></div>
   </a-carousel>
 </template>
-
-<script lang="ts" setup>
+<script lang="ts">
 import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    LeftCircleOutlined,
+    RightCircleOutlined,
+  },
+});
 </script>
-
 <style scoped>
 /* For demo */
-:deep(.slick-slide) {
+.ant-carousel :deep(.slick-slide) {
   text-align: center;
   height: 160px;
   line-height: 160px;
@@ -49,25 +54,23 @@ import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
   overflow: hidden;
 }
 
-:deep(.slick-arrow.custom-slick-arrow) {
+.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
   width: 25px;
   height: 25px;
   font-size: 25px;
   color: #fff;
   background-color: rgba(31, 45, 61, 0.11);
-  transition: ease all 0.3s;
   opacity: 0.3;
   z-index: 1;
 }
-:deep(.slick-arrow.custom-slick-arrow:before) {
+.ant-carousel :deep(.custom-slick-arrow:before) {
   display: none;
 }
-:deep(.slick-arrow.custom-slick-arrow:hover) {
-  color: #fff;
+.ant-carousel :deep(.custom-slick-arrow:hover) {
   opacity: 0.5;
 }
 
-:deep(.slick-slide h3) {
+.ant-carousel :deep(.slick-slide h3) {
   color: #fff;
 }
 </style>

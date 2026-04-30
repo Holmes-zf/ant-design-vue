@@ -1,17 +1,14 @@
 import type { VNodeTypes, PropType, VNode, ExtractPropTypes, CSSProperties } from 'vue';
-import { isVNode, defineComponent } from 'vue';
+import { isVNode, defineComponent, renderSlot } from 'vue';
 import Tabs from '../tabs';
+import Row from '../row';
+import Col from '../col';
 import PropTypes from '../_util/vue-types';
 import { flattenChildren, isEmptyElement, filterEmptyWithUndefined } from '../_util/props-util';
 import type { SizeType } from '../config-provider';
 import isPlainObject from 'lodash-es/isPlainObject';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import devWarning from '../vc-util/devWarning';
-import useStyle from './style';
-import Skeleton from '../skeleton';
-import type { CustomSlotsType } from '../_util/type';
-import { customRenderSlot } from '../_util/vnode';
-
 export interface CardTabListType {
   key: string;
   tab: any;
@@ -54,20 +51,10 @@ export type CardProps = Partial<ExtractPropTypes<ReturnType<typeof cardProps>>>;
 const Card = defineComponent({
   compatConfig: { MODE: 3 },
   name: 'ACard',
-  inheritAttrs: false,
   props: cardProps(),
-  slots: Object as CustomSlotsType<{
-    title: any;
-    extra: any;
-    tabBarExtraContent: any;
-    actions: any;
-    cover: any;
-    customTab: CardTabListType;
-    default: any;
-  }>,
-  setup(props, { slots, attrs }) {
+  slots: ['title', 'extra', 'tabBarExtraContent', 'actions', 'cover', 'customTab'],
+  setup(props, { slots }) {
     const { prefixCls, direction, size } = useConfigInject('card', props);
-    const [wrapSSR, hashId] = useStyle(prefixCls);
     const getAction = (actions: VNodeTypes[]) => {
       const actionList = actions.map((action, index) =>
         (isVNode(action) && !isEmptyElement(action)) || !isVNode(action) ? (
@@ -112,7 +99,6 @@ const Card = defineComponent({
       const pre = prefixCls.value;
       const classString = {
         [`${pre}`]: true,
-        [hashId.value]: true,
         [`${pre}-loading`]: loading,
         [`${pre}-bordered`]: bordered,
         [`${pre}-hoverable`]: !!hoverable,
@@ -122,10 +108,34 @@ const Card = defineComponent({
         [`${pre}-type-${type}`]: !!type,
         [`${pre}-rtl`]: direction.value === 'rtl',
       };
+
+      const loadingBlockStyle =
+        bodyStyle.padding === 0 || bodyStyle.padding === '0px' ? { padding: '24px' } : undefined;
+
+      const block = <div class={`${pre}-loading-block`} />;
       const loadingBlock = (
-        <Skeleton loading active paragraph={{ rows: 4 }} title={false}>
-          {children}
-        </Skeleton>
+        <div class={`${pre}-loading-content`} style={loadingBlockStyle}>
+          <Row gutter={8}>
+            <Col span={22}>{block}</Col>
+          </Row>
+          <Row gutter={8}>
+            <Col span={8}>{block}</Col>
+            <Col span={15}>{block}</Col>
+          </Row>
+          <Row gutter={8}>
+            <Col span={6}>{block}</Col>
+            <Col span={18}>{block}</Col>
+          </Row>
+          <Row gutter={8}>
+            <Col span={13}>{block}</Col>
+            <Col span={9}>{block}</Col>
+          </Row>
+          <Row gutter={8}>
+            <Col span={4}>{block}</Col>
+            <Col span={3}>{block}</Col>
+            <Col span={16}>{block}</Col>
+          </Row>
+        </div>
       );
 
       const hasActiveTabKey = activeTabKey !== undefined;
@@ -154,7 +164,7 @@ const Card = defineComponent({
                 `tabList slots is deprecated, Please use \`customTab\` instead.`,
               );
               let tab = temp !== undefined ? temp : slots[name] ? slots[name](item) : null;
-              tab = customRenderSlot(slots, 'customTab', item as any, () => [tab]);
+              tab = renderSlot(slots, 'customTab', item as any, () => [tab]);
               return <TabPane tab={tab} key={item.key} disabled={item.disabled} />;
             })}
           </Tabs>
@@ -180,13 +190,13 @@ const Card = defineComponent({
       const actionDom =
         actions && actions.length ? <ul class={`${pre}-actions`}>{getAction(actions)}</ul> : null;
 
-      return wrapSSR(
-        <div ref="cardContainerRef" {...attrs} class={[classString, attrs.class]}>
+      return (
+        <div class={classString} ref="cardContainerRef">
           {head}
           {coverDom}
           {children && children.length ? body : null}
           {actionDom}
-        </div>,
+        </div>
       );
     };
   },

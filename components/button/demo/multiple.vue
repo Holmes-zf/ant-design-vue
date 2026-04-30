@@ -16,29 +16,37 @@ If you need several buttons, we recommend that you use 1 primary button + n seco
 </docs>
 
 <template>
-  <a-space>
-    <a-button type="primary">Primary</a-button>
-    <a-button>secondary</a-button>
-    <a-dropdown>
-      <template #overlay>
-        <a-menu @click="handleMenuClick">
-          <a-menu-item key="1">1st item</a-menu-item>
-          <a-menu-item key="2">2nd item</a-menu-item>
-          <a-menu-item key="3">3rd item</a-menu-item>
-        </a-menu>
-      </template>
-      <a-button>
-        Actions
-        <DownOutlined />
-      </a-button>
-    </a-dropdown>
-  </a-space>
+  <a-button type="primary">Primary</a-button>
+  <a-button>secondary</a-button>
+  <a-dropdown>
+    <template #overlay>
+      <a-menu @click="handleMenuClick">
+        <a-menu-item key="1">1st item</a-menu-item>
+        <a-menu-item key="2">2nd item</a-menu-item>
+        <a-menu-item key="3">3rd item</a-menu-item>
+      </a-menu>
+    </template>
+    <a-button>
+      Actions
+      <DownOutlined />
+    </a-button>
+  </a-dropdown>
 </template>
-
-<script lang="ts" setup>
+<script lang="ts">
 import { DownOutlined } from '@ant-design/icons-vue';
 import type { MenuProps } from 'ant-design-vue';
-const handleMenuClick: MenuProps['onClick'] = e => {
-  console.log('click', e);
-};
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    DownOutlined,
+  },
+  setup() {
+    const handleMenuClick: MenuProps['onClick'] = e => {
+      console.log('click', e);
+    };
+    return {
+      handleMenuClick,
+    };
+  },
+});
 </script>

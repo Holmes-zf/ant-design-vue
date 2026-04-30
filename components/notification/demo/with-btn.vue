@@ -20,33 +20,41 @@ To customize the style or font of the close button.
   <a-button type="primary" @click="openNotification">Open the notification box</a-button>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
 import { notification, Button } from 'ant-design-vue';
-import { h } from 'vue';
+import { h, defineComponent } from 'vue';
 
 const close = () => {
   console.log(
     'Notification was closed. Either the close button was clicked or duration time elapsed.',
   );
 };
-const openNotification = () => {
-  const key = `open${Date.now()}`;
-  notification.open({
-    message: 'Notification Title',
-    description:
-      'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
-    btn: () =>
-      h(
-        Button,
-        {
-          type: 'primary',
-          size: 'small',
-          onClick: () => notification.close(key),
-        },
-        { default: () => 'Confirm' },
-      ),
-    key,
-    onClose: close,
-  });
-};
+export default defineComponent({
+  setup() {
+    const openNotification = () => {
+      const key = `open${Date.now()}`;
+      notification.open({
+        message: 'Notification Title',
+        description:
+          'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
+        btn: () =>
+          h(
+            Button,
+            {
+              type: 'primary',
+              size: 'small',
+              onClick: () => notification.close(key),
+            },
+            { default: () => 'Confirm' },
+          ),
+        key,
+        onClose: close,
+      });
+    };
+
+    return {
+      openNotification,
+    };
+  },
+});
 </script>

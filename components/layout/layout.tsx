@@ -1,8 +1,7 @@
 import type { ExtractPropTypes, HTMLAttributes } from 'vue';
 import { computed, createVNode, defineComponent, provide, ref } from 'vue';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import { SiderHookProviderKey } from './injectionKey';
-import useStyle from './style';
 
 export const basicProps = () => ({
   prefixCls: String,
@@ -19,7 +18,7 @@ type GeneratorArgument = {
 };
 
 function generator({ suffixCls, tagName, name }: GeneratorArgument) {
-  return (BasicComponent: typeof BasicLayout) => {
+  return (BasicComponent: typeof Basic) => {
     const Adapter = defineComponent({
       compatConfig: { MODE: 3 },
       name,
@@ -50,11 +49,9 @@ const Basic = defineComponent({
 
 const BasicLayout = defineComponent({
   compatConfig: { MODE: 3 },
-  inheritAttrs: false,
   props: basicProps(),
-  setup(props, { slots, attrs }) {
-    const { prefixCls, direction } = useConfigInject('', props);
-    const [wrapSSR, hashId] = useStyle(prefixCls);
+  setup(props, { slots }) {
+    const { direction } = useConfigInject('', props);
     const siders = ref<string[]>([]);
     const siderHookProvider = {
       addSider: (id: string) => {
@@ -69,7 +66,6 @@ const BasicLayout = defineComponent({
     const divCls = computed(() => {
       const { prefixCls, hasSider } = props;
       return {
-        [hashId.value]: true,
         [`${prefixCls}`]: true,
         [`${prefixCls}-has-sider`]:
           typeof hasSider === 'boolean' ? hasSider : siders.value.length > 0,
@@ -78,7 +74,7 @@ const BasicLayout = defineComponent({
     });
     return () => {
       const { tagName } = props;
-      return wrapSSR(createVNode(tagName, { ...attrs, class: [divCls.value, attrs.class] }, slots));
+      return createVNode(tagName, { class: divCls.value }, slots);
     };
   },
 });

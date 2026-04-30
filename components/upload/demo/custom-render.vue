@@ -36,45 +36,58 @@ Custom render by using `itemRender` slot.
     </template>
   </a-upload>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import { message } from 'ant-design-vue';
 import { UploadOutlined } from '@ant-design/icons-vue';
+import { defineComponent, ref } from 'vue';
 import type { UploadChangeParam, UploadProps } from 'ant-design-vue';
 
-const handleChange = (info: UploadChangeParam) => {
-  if (info.file.status !== 'uploading') {
-    console.log(info.file, info.fileList);
-  }
-  if (info.file.status === 'done') {
-    message.success(`${info.file.name} file uploaded successfully`);
-  } else if (info.file.status === 'error') {
-    message.error(`${info.file.name} file upload failed.`);
-  }
-};
+export default defineComponent({
+  components: {
+    UploadOutlined,
+  },
+  setup() {
+    const handleChange = (info: UploadChangeParam) => {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    };
 
-const fileList = ref<UploadProps['fileList']>([
-  {
-    uid: '-1',
-    name: 'xxx.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    const fileList = ref<UploadProps['fileList']>([
+      {
+        uid: '-1',
+        name: 'xxx.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+      {
+        uid: '-2',
+        name: 'yyy.png',
+        status: 'done',
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      },
+      {
+        uid: '3',
+        name: 'zzz.png',
+        status: 'error',
+        response: 'Server Error 500', // custom error message to show
+        url: 'http://www.baidu.com/zzz.png',
+      },
+    ]);
+    return {
+      fileList,
+      headers: {
+        authorization: 'authorization-text',
+      },
+      handleChange,
+    };
   },
-  {
-    uid: '-2',
-    name: 'yyy.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    thumbUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: '3',
-    name: 'zzz.png',
-    status: 'error',
-    response: 'Server Error 500', // custom error message to show
-    url: 'http://www.baidu.com/zzz.png',
-  },
-]);
-const headers = { authorization: 'authorization-text' };
+});
 </script>

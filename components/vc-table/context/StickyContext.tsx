@@ -1,7 +1,7 @@
 import isStyleSupport from '../../_util/styleChecker';
-import { onMounted, shallowRef } from 'vue';
+import { onMounted, ref } from 'vue';
 
-const supportSticky = shallowRef(false);
+const supportSticky = ref(false);
 export const useProvideSticky = () => {
   onMounted(() => {
     supportSticky.value = supportSticky.value || isStyleSupport('position', 'sticky');

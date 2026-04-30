@@ -2,13 +2,11 @@ import type { BaseOptionType, DefaultOptionType, RawValueType, FieldNames } from
 import { warning } from '../../vc-util/warning';
 import type { FlattenOptionData } from '../interface';
 
-function getKey(data: BaseOptionType, index: number, fieldNames?: FieldNames) {
+function getKey(data: BaseOptionType, index: number) {
   const { key } = data;
   let value: RawValueType;
 
-  if (fieldNames && fieldNames.value && data[fieldNames.value] !== undefined) {
-    ({ [fieldNames.value]: value } = data);
-  } else if ('value' in data) {
+  if ('value' in data) {
     ({ value } = data);
   }
 
@@ -56,7 +54,7 @@ export function flattenOptions<OptionType extends BaseOptionType = DefaultOption
         const value = data[fieldValue];
         // Option
         flattenList.push({
-          key: getKey(data, flattenList.length, fieldNames),
+          key: getKey(data, flattenList.length),
           groupOption: isGroupOption,
           data,
           label,
@@ -69,7 +67,7 @@ export function flattenOptions<OptionType extends BaseOptionType = DefaultOption
         }
         // Option Group
         flattenList.push({
-          key: getKey(data, flattenList.length, fieldNames),
+          key: getKey(data, flattenList.length),
           group: true,
           data,
           label: grpLabel,
@@ -88,7 +86,7 @@ export function flattenOptions<OptionType extends BaseOptionType = DefaultOption
 /**
  * Inject `props` into `option` for legacy usage
  */
-export function injectPropsWithOption<T extends object>(option: T): T {
+export function injectPropsWithOption<T>(option: T): T {
   const newOption = { ...option };
   if (!('props' in newOption)) {
     Object.defineProperty(newOption, 'props', {

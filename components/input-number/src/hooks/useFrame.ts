@@ -1,11 +1,11 @@
 import raf from '../../../_util/raf';
-import { onBeforeUnmount, shallowRef } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 
 /**
  * Always trigger latest once when call multiple time
  */
 export default () => {
-  const idRef = shallowRef(0);
+  const idRef = ref(0);
 
   const cleanUp = () => {
     raf.cancel(idRef.value);

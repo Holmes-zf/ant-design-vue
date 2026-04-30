@@ -1,26 +1,17 @@
-import { flattenChildren, isValidElement } from '../../_util/props-util';
+import { flattenChildren, getPropsSlot, isValidElement } from '../../_util/props-util';
 import PropTypes from '../../_util/vue-types';
 import type { ExtractPropTypes, PropType } from 'vue';
-import {
-  computed,
-  defineComponent,
-  getCurrentInstance,
-  onBeforeUnmount,
-  shallowRef,
-  watch,
-} from 'vue';
+import { computed, defineComponent, getCurrentInstance, onBeforeUnmount, ref, watch } from 'vue';
 import { useInjectKeyPath, useMeasure } from './hooks/useKeyPath';
 import { useInjectFirstLevel, useInjectMenu } from './hooks/useMenuContext';
 import { cloneElement } from '../../_util/vnode';
 import Tooltip from '../../tooltip';
-import type { ItemType, MenuInfo } from './interface';
+import type { MenuInfo } from './interface';
 import KeyCode from '../../_util/KeyCode';
 import useDirectionStyle from './hooks/useDirectionStyle';
 import Overflow from '../../vc-overflow';
 import devWarning from '../../vc-util/devWarning';
 import type { MouseEventHandler } from '../../_util/EventInterface';
-import { objectType } from '../../_util/type';
-import type { CustomSlotsType } from '../../_util/type';
 
 let indexGuid = 0;
 export const menuItemProps = () => ({
@@ -35,8 +26,6 @@ export const menuItemProps = () => ({
   onClick: Function as PropType<MouseEventHandler>,
   onKeydown: Function as PropType<MouseEventHandler>,
   onFocus: Function as PropType<MouseEventHandler>,
-  // Internal user prop
-  originItemValue: objectType<ItemType>(),
 });
 
 export type MenuItemProps = Partial<ExtractPropTypes<ReturnType<typeof menuItemProps>>>;
@@ -46,12 +35,8 @@ export default defineComponent({
   name: 'AMenuItem',
   inheritAttrs: false,
   props: menuItemProps(),
-  slots: Object as CustomSlotsType<{
-    icon?: any;
-    title?: any;
-    default?: any;
-  }>,
-
+  // emits: ['mouseenter', 'mouseleave', 'click', 'keydown', 'focus'],
+  slots: ['icon', 'title'],
   setup(props, { slots, emit, attrs }) {
     const instance = getCurrentInstance();
     const isMeasure = useMeasure();
@@ -79,7 +64,7 @@ export default defineComponent({
       unRegisterMenuInfo,
     } = useInjectMenu();
     const firstLevel = useInjectFirstLevel();
-    const isActive = shallowRef(false);
+    const isActive = ref(false);
     const keysPath = computed(() => {
       return [...parentKeys.value, key];
     });
@@ -213,7 +198,7 @@ export default defineComponent({
         tooltipProps.title = null;
         // Reset `visible` to fix control mode tooltip display not correct
         // ref: https://github.com/ant-design/ant-design/issues/16742
-        tooltipProps.open = false;
+        tooltipProps.visible = false;
       }
 
       // ============================ Render ============================
@@ -223,7 +208,7 @@ export default defineComponent({
         optionRoleProps['aria-selected'] = selected.value;
       }
 
-      const icon = props.icon ?? slots.icon?.(props);
+      const icon = getPropsSlot(slots, props, 'icon');
       return (
         <Tooltip
           {...tooltipProps}
@@ -256,7 +241,7 @@ export default defineComponent({
             title={typeof title === 'string' ? title : undefined}
           >
             {cloneElement(
-              typeof icon === 'function' ? icon(props.originItemValue) : icon,
+              icon,
               {
                 class: `${prefixCls.value}-item-icon`,
               },

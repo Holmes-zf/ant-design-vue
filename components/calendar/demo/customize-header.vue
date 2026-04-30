@@ -37,7 +37,7 @@ Customize Calendar header content.
                 :value="String(current.year())"
                 @change="
                   newYear => {
-                    onChange(current.year(+newYear));
+                    onChange(current.year(newYear));
                   }
                 "
               >
@@ -76,30 +76,42 @@ Customize Calendar header content.
     </a-calendar>
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { Dayjs } from 'dayjs';
-const value = ref<Dayjs>();
 
-const onPanelChange = (value: Dayjs, mode: string) => {
-  console.log(value, mode);
-};
+export default defineComponent({
+  setup() {
+    const value = ref<Dayjs>();
 
-const getMonths = (value: Dayjs) => {
-  const localeData = value.localeData();
-  const months = [];
-  for (let i = 0; i < 12; i++) {
-    months.push(localeData.monthsShort(value.month(i)));
-  }
-  return months;
-};
+    const onPanelChange = (value: Dayjs, mode: string) => {
+      console.log(value, mode);
+    };
 
-const getYears = (value: Dayjs) => {
-  const year = value.year();
-  const years = [];
-  for (let i = year - 10; i < year + 10; i += 1) {
-    years.push(i);
-  }
-  return years;
-};
+    const getMonths = (value: Dayjs) => {
+      const localeData = value.localeData();
+      const months = [];
+      for (let i = 0; i < 12; i++) {
+        months.push(localeData.monthsShort(value.month(i)));
+      }
+      return months;
+    };
+
+    const getYears = (value: Dayjs) => {
+      const year = value.year();
+      const years = [];
+      for (let i = year - 10; i < year + 10; i += 1) {
+        years.push(i);
+      }
+      return years;
+    };
+
+    return {
+      value,
+      onPanelChange,
+      getMonths,
+      getYears,
+    };
+  },
+});
 </script>

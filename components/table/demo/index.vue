@@ -18,8 +18,6 @@
     <Head />
     <CustomFilterPanel />
     <ResetFilter />
-    <filterSearchVue />
-    <filterInTreeVue />
     <RowSelectionAndOperation />
     <RowSelectionCustom />
     <RowSelection />
@@ -63,8 +61,6 @@ import Summary from './summary.vue';
 import Sticky from './sticky.vue';
 import ResizableColumn from './resizable-column.vue';
 import Responsive from './responsive.vue';
-import filterSearchVue from './filter-search.vue';
-import filterInTreeVue from './filter-in-tree.vue';
 import CN from '../index.zh-CN.md';
 import US from '../index.en-US.md';
 import { defineComponent } from 'vue';
@@ -73,8 +69,6 @@ export default defineComponent({
   CN,
   US,
   components: {
-    filterInTreeVue,
-    filterSearchVue,
     Basic,
     Ellipsis,
     Ajax,

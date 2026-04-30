@@ -3,8 +3,7 @@ category: Components
 subtitle: 多选框
 type: 数据录入
 title: Checkbox
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*DzgiRbW3khIAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*G3MjTYXL6AIAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg
 ---
 
 多选框。
@@ -41,7 +40,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*G3MjTYXL6AIAAA
 | disabled | 整组失效 | boolean | false |  |
 | name | CheckboxGroup 下所有 `input[type="checkbox"]` 的 `name` 属性 | string | - | 1.5.0 |
 | options | 指定可选项，可以通过 slot="label" slot-scope="option" 定制`label` | string\[] \| Array&lt;{ label: string value: string disabled?: boolean, indeterminate?: boolean, onChange?: function }> | \[] |  |
-| value(v-model) | 指定选中的选项 | (boolean \| string \| number)\[] | \[] |  |
+| value(v-model) | 指定选中的选项 | string\[] | \[] |  |
 
 #### 事件
 

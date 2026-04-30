@@ -1,4 +1,5 @@
-import { camelize, flattenChildren } from '../_util/props-util';
+import { camelize } from 'vue';
+import { flattenChildren } from '../_util/props-util';
 import type { ColumnType, ColumnsType, ColumnTitle, ColumnTitleProps, Key } from './interface';
 
 export function getColumnKey<RecordType>(column: ColumnType<RecordType>, defaultKey: string): Key {

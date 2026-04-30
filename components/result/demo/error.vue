@@ -44,8 +44,14 @@ Complex error feedback.
     </div>
   </a-result>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { CloseCircleOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    CloseCircleOutlined,
+  },
+});
 </script>
 <style scoped>
 .desc p {

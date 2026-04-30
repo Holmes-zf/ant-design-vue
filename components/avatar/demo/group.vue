@@ -17,22 +17,20 @@ Avatar group display.
 
 <template>
   <a-avatar-group>
-    <a-avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=1" />
-    <a href="https://www.antdv.com">
-      <a-avatar style="background-color: #f56a00">K</a-avatar>
-    </a>
+    <a-avatar src="https://joeschmoe.io/api/v1/random" />
+    <a-avatar style="background-color: #f56a00">K</a-avatar>
     <a-tooltip title="Ant User" placement="top">
       <a-avatar style="background-color: #87d068">
         <template #icon><UserOutlined /></template>
       </a-avatar>
     </a-tooltip>
     <a-avatar style="background-color: #1890ff">
-      <template #icon><AntDesignOutlined /></template>
+      <template #icon><UserOutlined /></template>
     </a-avatar>
   </a-avatar-group>
   <a-divider />
   <a-avatar-group :max-count="2" :max-style="{ color: '#f56a00', backgroundColor: '#fde3cf' }">
-    <a-avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=2" />
+    <a-avatar src="https://joeschmoe.io/api/v1/random" />
     <a-avatar style="background-color: #1890ff">K</a-avatar>
     <a-tooltip title="Ant User" placement="top">
       <a-avatar style="background-color: #87d068">
@@ -40,7 +38,7 @@ Avatar group display.
       </a-avatar>
     </a-tooltip>
     <a-avatar style="background-color: #1890ff">
-      <template #icon><AntDesignOutlined /></template>
+      <template #icon><UserOutlined /></template>
     </a-avatar>
   </a-avatar-group>
   <a-divider />
@@ -52,7 +50,7 @@ Avatar group display.
       backgroundColor: '#fde3cf',
     }"
   >
-    <a-avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=3" />
+    <a-avatar src="https://joeschmoe.io/api/v1/random" />
     <a-avatar style="background-color: #1890ff">K</a-avatar>
     <a-tooltip title="Ant User" placement="top">
       <a-avatar style="background-color: #87d068">
@@ -60,42 +58,17 @@ Avatar group display.
       </a-avatar>
     </a-tooltip>
     <a-avatar style="background-color: #1890ff">
-      <template #icon><AntDesignOutlined /></template>
-    </a-avatar>
-  </a-avatar-group>
-  <a-divider />
-  <a-avatar-group
-    :max-count="2"
-    max-popover-trigger="click"
-    size="large"
-    :max-style="{ color: '#f56a00', backgroundColor: '#fde3cf', cursor: 'pointer' }"
-  >
-    <a-avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-    <a-avatar style="background-color: #f56a00">K</a-avatar>
-    <a-tooltip title="Ant User" placement="top">
-      <a-avatar style="background-color: #87d068">
-        <template #icon><UserOutlined /></template>
-      </a-avatar>
-    </a-tooltip>
-    <a-avatar style="background-color: #1890ff">
-      <template #icon><AntDesignOutlined /></template>
-    </a-avatar>
-  </a-avatar-group>
-  <a-divider />
-  <a-avatar-group shape="square">
-    <a-avatar style="background-color: #fde3cf">A</a-avatar>
-    <a-avatar style="background-color: #f56a00">K</a-avatar>
-    <a-tooltip title="Ant User" placement="top">
-      <a-avatar style="background-color: #87d068">
-        <template #icon><UserOutlined /></template>
-      </a-avatar>
-    </a-tooltip>
-    <a-avatar style="background-color: #1890ff">
-      <template #icon><AntDesignOutlined /></template>
+      <template #icon><UserOutlined /></template>
     </a-avatar>
   </a-avatar-group>
 </template>
 
-<script lang="ts" setup>
-import { UserOutlined, AntDesignOutlined } from '@ant-design/icons-vue';
+<script lang="ts">
+import { UserOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    UserOutlined,
+  },
+});
 </script>

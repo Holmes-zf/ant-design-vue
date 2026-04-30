@@ -41,6 +41,7 @@ Add or remove form items dynamically.
       <MinusCircleOutlined
         v-if="dynamicValidateForm.domains.length > 1"
         class="dynamic-delete-button"
+        :disabled="dynamicValidateForm.domains.length === 1"
         @click="removeDomain(domain)"
       />
     </a-form-item>
@@ -57,63 +58,80 @@ Add or remove form items dynamically.
   </a-form>
 </template>
 
-<script lang="ts" setup>
-import { reactive, ref } from 'vue';
+<script lang="ts">
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
+import { defineComponent, reactive, ref } from 'vue';
 import type { FormInstance } from 'ant-design-vue';
 
 interface Domain {
   value: string;
   key: number;
 }
-const formRef = ref<FormInstance>();
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 4 },
+export default defineComponent({
+  components: {
+    MinusCircleOutlined,
+    PlusOutlined,
   },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 20 },
-  },
-};
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 4 },
-  },
-};
-const dynamicValidateForm = reactive<{ domains: Domain[] }>({
-  domains: [],
-});
-const submitForm = () => {
-  formRef.value
-    .validate()
-    .then(() => {
-      console.log('values', dynamicValidateForm.domains);
-    })
-    .catch(error => {
-      console.log('error', error);
+  setup() {
+    const formRef = ref<FormInstance>();
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 4 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 20 },
+      },
+    };
+    const formItemLayoutWithOutLabel = {
+      wrapperCol: {
+        xs: { span: 24, offset: 0 },
+        sm: { span: 20, offset: 4 },
+      },
+    };
+    const dynamicValidateForm = reactive<{ domains: Domain[] }>({
+      domains: [],
     });
-};
-const resetForm = () => {
-  formRef.value.resetFields();
-};
-const removeDomain = (item: Domain) => {
-  const index = dynamicValidateForm.domains.indexOf(item);
-  if (index !== -1) {
-    dynamicValidateForm.domains.splice(index, 1);
-  }
-};
-const addDomain = () => {
-  dynamicValidateForm.domains.push({
-    value: '',
-    key: Date.now(),
-  });
-};
+    const submitForm = () => {
+      formRef.value
+        .validate()
+        .then(() => {
+          console.log('values', dynamicValidateForm.domains);
+        })
+        .catch(error => {
+          console.log('error', error);
+        });
+    };
+    const resetForm = () => {
+      formRef.value.resetFields();
+    };
+    const removeDomain = (item: Domain) => {
+      let index = dynamicValidateForm.domains.indexOf(item);
+      if (index !== -1) {
+        dynamicValidateForm.domains.splice(index, 1);
+      }
+    };
+    const addDomain = () => {
+      dynamicValidateForm.domains.push({
+        value: '',
+        key: Date.now(),
+      });
+    };
+    return {
+      formRef,
+      formItemLayout,
+      formItemLayoutWithOutLabel,
+      dynamicValidateForm,
+      submitForm,
+      resetForm,
+      removeDomain,
+      addDomain,
+    };
+  },
+});
 </script>
-
-<style scoped>
+<style>
 .dynamic-delete-button {
   cursor: pointer;
   position: relative;

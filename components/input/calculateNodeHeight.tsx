@@ -1,19 +1,21 @@
+// Thanks to https://github.com/andreypopp/react-textarea-autosize/
+
 import type { CSSProperties } from 'vue';
+
 /**
  * calculateNodeHeight(uiTextNode, useCache = false)
  */
 
 const HIDDEN_TEXTAREA_STYLE = `
-  min-height:0 !important;
-  max-height:none !important;
-  height:0 !important;
-  visibility:hidden !important;
-  overflow:hidden !important;
-  position:absolute !important;
-  z-index:-1000 !important;
-  top:0 !important;
-  right:0 !important;
-  pointer-events: none !important;
+ min-height:0 !important;
+ max-height:none !important;
+ height:0 !important;
+ visibility:hidden !important;
+ overflow:hidden !important;
+ position:absolute !important;
+ z-index:-1000 !important;
+ top:0 !important;
+ right:0 !important
 `;
 
 const SIZING_STYLE = [
@@ -34,7 +36,6 @@ const SIZING_STYLE = [
   'border-width',
   'box-sizing',
   'word-break',
-  'white-space',
 ];
 
 export interface NodeType {
@@ -44,12 +45,13 @@ export interface NodeType {
   boxSizing: string;
 }
 
-const computedStyleCache: Record<string, NodeType> = {};
+const computedStyleCache: { [key: string]: NodeType } = {};
 let hiddenTextarea: HTMLTextAreaElement;
 
 export function calculateNodeStyling(node: HTMLElement, useCache = false) {
-  const nodeRef =
-    node.getAttribute('id') || node.getAttribute('data-reactid') || node.getAttribute('name');
+  const nodeRef = (node.getAttribute('id') ||
+    node.getAttribute('data-reactid') ||
+    node.getAttribute('name')) as string;
 
   if (useCache && computedStyleCache[nodeRef]) {
     return computedStyleCache[nodeRef];
@@ -86,7 +88,7 @@ export function calculateNodeStyling(node: HTMLElement, useCache = false) {
   return nodeInfo;
 }
 
-export default function calculateAutoSizeStyle(
+export default function calculateNodeHeight(
   uiTextNode: HTMLTextAreaElement,
   useCache = false,
   minRows: number | null = null,
@@ -102,7 +104,7 @@ export default function calculateAutoSizeStyle(
   // Fix wrap="off" issue
   // https://github.com/ant-design/ant-design/issues/6577
   if (uiTextNode.getAttribute('wrap')) {
-    hiddenTextarea.setAttribute('wrap', uiTextNode.getAttribute('wrap'));
+    hiddenTextarea.setAttribute('wrap', uiTextNode.getAttribute('wrap') as string);
   } else {
     hiddenTextarea.removeAttribute('wrap');
   }
@@ -120,11 +122,10 @@ export default function calculateAutoSizeStyle(
   hiddenTextarea.setAttribute('style', `${sizingStyle};${HIDDEN_TEXTAREA_STYLE}`);
   hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
 
-  let minHeight: number | undefined = undefined;
-  let maxHeight: number | undefined = undefined;
-  let overflowY: any;
-
+  let minHeight = Number.MIN_SAFE_INTEGER;
+  let maxHeight = Number.MAX_SAFE_INTEGER;
   let height = hiddenTextarea.scrollHeight;
+  let overflowY: any;
 
   if (boxSizing === 'border-box') {
     // border-box: add border, since height = content + padding + border
@@ -154,19 +155,11 @@ export default function calculateAutoSizeStyle(
       height = Math.min(maxHeight, height);
     }
   }
-
-  const style: CSSProperties = {
+  return {
     height: `${height}px`,
+    minHeight: `${minHeight}px`,
+    maxHeight: `${maxHeight}px`,
     overflowY,
     resize: 'none',
   };
-
-  if (minHeight) {
-    style.minHeight = `${minHeight}px`;
-  }
-  if (maxHeight) {
-    style.maxHeight = `${maxHeight}px`;
-  }
-
-  return style;
 }

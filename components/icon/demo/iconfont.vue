@@ -23,12 +23,17 @@ If you are using [iconfont.cn](http://iconfont.cn/), you can use the icons in yo
     <icon-font type="icon-twitter" />
   </a-space>
 </template>
-<script lang="ts" setup>
+<script>
 import { createFromIconfontCN } from '@ant-design/icons-vue';
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
 });
+export default {
+  components: {
+    IconFont,
+  },
+};
 </script>
 <style scoped>
 .icons-list :deep(.anticon) {

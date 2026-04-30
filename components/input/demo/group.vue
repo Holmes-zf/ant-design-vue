@@ -18,7 +18,7 @@ Note: You don't need `Col` to control the width in the `compact` mode.
 
 </docs>
 <template>
-  <a-space class="site-input-group-wrapper" direction="vertical" size="middle">
+  <div>
     <a-input-group size="large">
       <a-row :gutter="8">
         <a-col :span="5">
@@ -29,10 +29,12 @@ Note: You don't need `Col` to control the width in the `compact` mode.
         </a-col>
       </a-row>
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-input v-model:value="value1" style="width: 20%" />
       <a-input v-model:value="value2" style="width: 30%" />
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-select v-model:value="value3">
         <a-select-option value="Zhejiang">Zhejiang</a-select-option>
@@ -40,6 +42,7 @@ Note: You don't need `Col` to control the width in the `compact` mode.
       </a-select>
       <a-input v-model:value="value4" style="width: 50%" />
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-select v-model:value="value5">
         <a-select-option value="Option1">Option1</a-select-option>
@@ -47,10 +50,12 @@ Note: You don't need `Col` to control the width in the `compact` mode.
       </a-select>
       <a-input v-model:value="value6" style="width: 50%" />
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-input v-model:value="value7" style="width: 50%" />
       <a-date-picker v-model:value="value8" style="width: 50%" />
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-select v-model:value="value9">
         <a-select-option value="Option1-1">Option1-1</a-select-option>
@@ -61,6 +66,7 @@ Note: You don't need `Col` to control the width in the `compact` mode.
         <a-select-option value="Option2-2">Option2-2</a-select-option>
       </a-select>
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-select v-model:value="value11">
         <a-select-option value="1">Between</a-select-option>
@@ -73,18 +79,17 @@ Note: You don't need `Col` to control the width in the `compact` mode.
       />
       <a-input
         v-model:value="value13"
-        class="site-input-split"
-        style="width: 30px; border-left: 0; pointer-events: none"
+        style="width: 30px; border-left: 0; pointer-events: none; background-color: #fff"
         placeholder="~"
         disabled
       />
       <a-input
         v-model:value="value14"
-        class="site-input-right"
-        style="width: 100px; text-align: center"
+        style="width: 100px; text-align: center; border-left: 0"
         placeholder="Maximum"
       />
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-select v-model:value="value15">
         <a-select-option value="Sign Up">Sign Up</a-select-option>
@@ -97,6 +102,7 @@ Note: You don't need `Col` to control the width in the `compact` mode.
         placeholder="Email"
       />
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-select v-model:value="value17" style="width: 30%">
         <a-select-option value="Home">Home</a-select-option>
@@ -109,10 +115,12 @@ Note: You don't need `Col` to control the width in the `compact` mode.
         placeholder="Select Address"
       />
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-input v-model:value="value19" style="width: calc(100% - 200px)" />
       <a-button type="primary">Submit</a-button>
     </a-input-group>
+    <br />
     <a-input-group compact>
       <a-input v-model:value="value20" style="width: calc(100% - 200px)" />
       <a-tooltip title="copy git url">
@@ -121,10 +129,10 @@ Note: You don't need `Col` to control the width in the `compact` mode.
         </a-button>
       </a-tooltip>
     </a-input-group>
-  </a-space>
+  </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { CopyOutlined } from '@ant-design/icons-vue';
 
 const options = [
@@ -161,50 +169,55 @@ const options = [
     ],
   },
 ];
-const value1 = ref<string>('0571');
-const value2 = ref<string>('26888888');
-const value3 = ref<string>('Zhejiang');
-const value4 = ref<string>('Xihu District, Hangzhou');
-const value5 = ref<string>('Option1');
-const value6 = ref<string>('input content');
-const value7 = ref<string>('input content');
-const value8 = ref<string | null>(null);
-const value9 = ref<string>('Option1-1');
-const value10 = ref<string>('Option2-2');
-const value11 = ref<string>('1');
-const value12 = ref<string>('');
-const value13 = ref<string>('');
-const value14 = ref<string>('');
-const value15 = ref<string>('Sign Up');
-const value16 = ref<string>('');
-const value17 = ref<string>('Home');
-const value18 = ref<string[]>([]);
-const value19 = ref<string>('https://surelyvue.com');
-const value20 = ref<string>('https://antdv.com');
+export default defineComponent({
+  components: {
+    CopyOutlined,
+  },
+  setup() {
+    const value1 = ref<string>('0571');
+    const value2 = ref<string>('26888888');
+    const value3 = ref<string>('Zhejiang');
+    const value4 = ref<string>('Xihu District, Hangzhou');
+    const value5 = ref<string>('Option1');
+    const value6 = ref<string>('input content');
+    const value7 = ref<string>('input content');
+    const value8 = ref<string | null>(null);
+    const value9 = ref<string>('Option1-1');
+    const value10 = ref<string>('Option2-2');
+    const value11 = ref<string>('1');
+    const value12 = ref<string>('');
+    const value13 = ref<string>('');
+    const value14 = ref<string>('');
+    const value15 = ref<string>('Sign Up');
+    const value16 = ref<string>('');
+    const value17 = ref<string>('Home');
+    const value18 = ref<string[]>([]);
+    const value19 = ref<string>('https://surely.cool');
+    const value20 = ref<string>('https://antdv.com');
+
+    return {
+      value1,
+      value2,
+      value3,
+      value4,
+      value5,
+      value6,
+      value7,
+      value8,
+      value9,
+      value10,
+      value11,
+      value12,
+      value13,
+      value14,
+      value15,
+      value16,
+      value17,
+      value18,
+      options,
+      value19,
+      value20,
+    };
+  },
+});
 </script>
-<style scoped>
-.site-input-group-wrapper .site-input-split {
-  background-color: #fff;
-}
-
-.site-input-group-wrapper .site-input-right {
-  border-left-width: 0;
-}
-
-.site-input-group-wrapper .site-input-right:hover,
-.site-input-group-wrapper .site-input-right:focus {
-  border-left-width: 1px;
-}
-
-.site-input-group-wrapper .ant-input-rtl.site-input-right {
-  border-right-width: 0;
-}
-
-.site-input-group-wrapper .ant-input-rtl.site-input-right:hover,
-.site-input-group-wrapper .ant-input-rtl.site-input-right:focus {
-  border-right-width: 1px;
-}
-[data-theme='dark'] .site-input-group-wrapper .site-input-split {
-  background-color: transparent;
-}
-</style>

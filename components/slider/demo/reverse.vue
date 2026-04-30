@@ -23,10 +23,20 @@ Using `reverse` to render slider reversely.
     <a-switch v-model:checked="reverse" size="small" />
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 
-const value1 = ref<number>(30);
-const value2 = ref<[number, number]>([20, 50]);
-const reverse = ref<boolean>(true);
+export default defineComponent({
+  setup() {
+    const value1 = ref<number>(30);
+    const value2 = ref<[number, number]>([20, 50]);
+    const reverse = ref<boolean>(true);
+
+    return {
+      value1,
+      value2,
+      reverse,
+    };
+  },
+});
 </script>

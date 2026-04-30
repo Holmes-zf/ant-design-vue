@@ -1,5 +1,5 @@
 import type { CSSProperties, ExtractPropTypes, HTMLAttributes, PropType } from 'vue';
-import { computed, defineComponent, shallowRef, watch } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 import ResizeObserver from '../vc-resize-observer';
 import classNames from '../_util/classNames';
 import type { MouseEventHandler } from '../_util/EventInterface';
@@ -39,27 +39,26 @@ const overflowProps = () => {
     /** When set to `full`, ssr will render full items by default and remove at client side */
     ssr: String as PropType<'full'>,
     onMousedown: Function as PropType<MouseEventHandler>,
-    role: String,
   };
 };
 type InterOverflowProps = Partial<ExtractPropTypes<ReturnType<typeof overflowProps>>>;
 export type OverflowProps = HTMLAttributes & InterOverflowProps;
-const Overflow = defineComponent({
+const Overflow = defineComponent<OverflowProps>({
   name: 'Overflow',
   inheritAttrs: false,
-  props: overflowProps(),
+  props: overflowProps() as any,
   emits: ['visibleChange'],
   setup(props, { attrs, emit, slots }) {
     const fullySSR = computed(() => props.ssr === 'full');
 
-    const containerWidth = shallowRef<number>(null);
+    const containerWidth = ref<number>(null);
     const mergedContainerWidth = computed(() => containerWidth.value || 0);
-    const itemWidths = shallowRef<Map<Key, number>>(new Map<Key, number>());
-    const prevRestWidth = shallowRef(0);
-    const restWidth = shallowRef(0);
-    const suffixWidth = shallowRef(0);
-    const suffixFixedStart = shallowRef<number>(null);
-    const displayCount = shallowRef<number>(null);
+    const itemWidths = ref<Map<Key, number>>(new Map<Key, number>());
+    const prevRestWidth = ref(0);
+    const restWidth = ref(0);
+    const suffixWidth = ref(0);
+    const suffixFixedStart = ref<number>(null);
+    const displayCount = ref<number>(null);
 
     const mergedDisplayCount = computed(() => {
       if (displayCount.value === null && fullySSR.value) {
@@ -69,7 +68,7 @@ const Overflow = defineComponent({
       return displayCount.value || 0;
     });
 
-    const restReady = shallowRef(false);
+    const restReady = ref(false);
 
     const itemPrefixCls = computed(() => `${props.prefixCls}-item`);
 
@@ -332,7 +331,6 @@ const Overflow = defineComponent({
           class={classNames(!invalidate.value && prefixCls, className)}
           style={style}
           onMousedown={onMousedown}
-          role={props.role}
           {...restAttrs}
         >
           {mergedData.value.map(internalRenderItemNode)}

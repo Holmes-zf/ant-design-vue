@@ -32,8 +32,14 @@ Use `label` show time alone.
     </a-timeline-item>
   </a-timeline>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import type { TimelineProps } from 'ant-design-vue';
-const mode = ref<TimelineProps['mode']>('left');
+export default defineComponent({
+  setup() {
+    return {
+      mode: ref<TimelineProps['mode']>('left'),
+    };
+  },
+});
 </script>

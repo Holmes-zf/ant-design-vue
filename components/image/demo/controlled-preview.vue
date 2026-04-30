@@ -30,10 +30,18 @@ You can make preview controlled.
     />
   </div>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const visible = ref<boolean>(false);
-const setVisible = (value): void => {
-  visible.value = value;
-};
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    const visible = ref<boolean>(false);
+    const setVisible = (value): void => {
+      visible.value = value;
+    };
+    return {
+      visible,
+      setVisible,
+    };
+  },
+});
 </script>

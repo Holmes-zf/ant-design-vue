@@ -31,41 +31,47 @@ Replace the title,key and children fields in treeNode with the corresponding fie
       label: 'name',
       value: 'value',
     }"
-    tree-node-filter-prop="name"
   ></a-tree-select>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import type { TreeSelectProps } from 'ant-design-vue';
-import { ref, watch } from 'vue';
-
-const value = ref<string>();
-const treeData = ref<TreeSelectProps['treeData']>([
-  {
-    name: 'parent 1',
-    value: 'parent 1',
-    children: [
+import { defineComponent, ref, watch } from 'vue';
+export default defineComponent({
+  setup() {
+    const value = ref<string>();
+    const treeData = ref<TreeSelectProps['treeData']>([
       {
-        name: 'parent 1-0',
-        value: 'parent 1-0',
+        name: 'parent 1',
+        value: 'parent 1',
         children: [
           {
-            name: 'my leaf',
-            value: 'leaf1',
+            name: 'parent 1-0',
+            value: 'parent 1-0',
+            children: [
+              {
+                name: 'my leaf',
+                value: 'leaf1',
+              },
+              {
+                name: 'your leaf',
+                value: 'leaf2',
+              },
+            ],
           },
           {
-            name: 'your leaf',
-            value: 'leaf2',
+            name: 'parent 1-1',
+            value: 'parent 1-1',
           },
         ],
       },
-      {
-        name: 'parent 1-1',
-        value: 'parent 1-1',
-      },
-    ],
+    ]);
+    watch(value, () => {
+      console.log(value.value);
+    });
+    return {
+      value,
+      treeData,
+    };
   },
-]);
-watch(value, () => {
-  console.log(value.value);
 });
 </script>

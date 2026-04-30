@@ -17,18 +17,13 @@ function toArray<T>(list: T | T[]): T[] {
   return Array.isArray(list) ? list : [list];
 }
 
-export function getTimeProps<DateType, DisabledTime>(
-  props: { format?: string; picker?: PickerMode } & Omit<
-    SharedTimeProps<DateType>,
-    'disabledTime'
-  > & {
-      disabledTime?: DisabledTime;
-    },
+export function getTimeProps<DateType>(
+  props: { format?: string; picker?: PickerMode } & SharedTimeProps<DateType>,
 ) {
   const { format, picker, showHour, showMinute, showSecond, use12Hours } = props;
 
   const firstFormat = toArray(format)[0];
-  const showTimeObj = { ...props };
+  const showTimeObj: SharedTimeProps<DateType> = { ...props };
 
   if (firstFormat && typeof firstFormat === 'string') {
     if (!firstFormat.includes('s') && showSecond === undefined) {

@@ -25,7 +25,6 @@ Use virtual list through `height` prop.
     :height="233"
     :tree-data="treeData"
     :max-tag-count="10"
-    tree-node-filter-prop="title"
   >
     <template #title="{ title, value }">
       <span v-if="value === '0-0-1-0'" style="color: #1890ff">{{ title }}</span>
@@ -33,10 +32,10 @@ Use virtual list through `height` prop.
     </template>
   </a-tree-select>
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
+<script lang="ts">
 import type { TreeSelectProps } from 'ant-design-vue';
 import { TreeSelect } from 'ant-design-vue';
+import { defineComponent, ref, watch } from 'vue';
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
 function dig(path = '0', level = 3) {
@@ -57,9 +56,18 @@ function dig(path = '0', level = 3) {
   return list;
 }
 
-const checkedKeys = ref<string[]>(['0-0-0', '0-0-1']);
-watch(checkedKeys, () => {
-  console.log('checkedKeys', checkedKeys);
+export default defineComponent({
+  setup() {
+    const checkedKeys = ref<string[]>(['0-0-0', '0-0-1']);
+    watch(checkedKeys, () => {
+      console.log('checkedKeys', checkedKeys);
+    });
+
+    return {
+      treeData: dig(),
+      checkedKeys,
+      SHOW_PARENT,
+    };
+  },
 });
-const treeData = ref<TreeSelectProps['treeData']>(dig());
 </script>

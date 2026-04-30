@@ -25,6 +25,7 @@ const ignoreFiles = [
   'dist/**',
   '**/**.snap',
   '**/**.map',
+  '**/components/style/color/**',
   '**/dist/**',
   '_site/**',
 ];

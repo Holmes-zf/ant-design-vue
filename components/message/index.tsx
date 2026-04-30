@@ -8,8 +8,7 @@ import InfoCircleFilled from '@ant-design/icons-vue/InfoCircleFilled';
 import type { Key, VueNode } from '../_util/type';
 import type { NotificationInstance } from '../vc-notification/Notification';
 import classNames from '../_util/classNames';
-import useStyle from './style';
-import useMessage from './useMessage';
+
 let defaultDuration = 3;
 let defaultTop: string;
 let messageInstance: NotificationInstance;
@@ -70,7 +69,6 @@ function getMessageInstance(args: MessageArgsProps, callback: (i: NotificationIn
     callback(messageInstance);
     return;
   }
-
   Notification.newInstance(
     {
       appContext: args.appContext,
@@ -82,7 +80,6 @@ function getMessageInstance(args: MessageArgsProps, callback: (i: NotificationIn
       getContainer: getContainer || args.getPopupContainer,
       maxCount,
       name: 'message',
-      useStyle,
     },
     (instance: any) => {
       if (messageInstance) {
@@ -108,7 +105,7 @@ const typeToIcon = {
   warning: ExclamationCircleFilled,
   loading: LoadingOutlined,
 };
-export const typeList = Object.keys(typeToIcon) as NoticeType[];
+
 export interface MessageType extends PromiseLike<any> {
   (): void;
 }
@@ -223,10 +220,12 @@ export function attachTypeApi(originalApi: MessageApi, type: NoticeType) {
   };
 }
 
-typeList.forEach(type => attachTypeApi(api, type));
+(['success', 'info', 'warning', 'error', 'loading'] as NoticeType[]).forEach(type =>
+  attachTypeApi(api, type),
+);
 
 api.warn = api.warning;
-api.useMessage = useMessage;
+
 export interface MessageInstance {
   info(content: JointContent, duration?: ConfigDuration, onClose?: ConfigOnClose): MessageType;
   success(content: JointContent, duration?: ConfigDuration, onClose?: ConfigOnClose): MessageType;
@@ -234,7 +233,6 @@ export interface MessageInstance {
   warning(content: JointContent, duration?: ConfigDuration, onClose?: ConfigOnClose): MessageType;
   loading(content: JointContent, duration?: ConfigDuration, onClose?: ConfigOnClose): MessageType;
   open(args: MessageArgsProps): MessageType;
-  useMessage: typeof useMessage;
 }
 
 export interface MessageApi extends MessageInstance {

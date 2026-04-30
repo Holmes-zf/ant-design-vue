@@ -1,15 +1,5 @@
 import type { PropType, Ref, ComputedRef } from 'vue';
-import {
-  ref,
-  shallowRef,
-  provide,
-  defineComponent,
-  inject,
-  watch,
-  reactive,
-  computed,
-  watchEffect,
-} from 'vue';
+import { ref, provide, defineComponent, inject, watch, reactive, computed, watchEffect } from 'vue';
 import { type ImagePreviewType, mergeDefaultValue } from './Image';
 import Preview from './Preview';
 import type { PreviewProps } from './Preview';
@@ -53,7 +43,7 @@ export const context = {
   },
   inject: () => {
     return inject<GroupConsumerValue>(previewGroupContext, {
-      isPreviewGroup: shallowRef(false),
+      isPreviewGroup: ref(false),
       previewUrls: computed(() => new Map()),
       setPreviewUrls: () => {},
       current: ref(null),
@@ -66,23 +56,21 @@ export const context = {
   },
 };
 
-export const imageGroupProps = () => ({
-  previewPrefixCls: String,
-  preview: {
-    type: [Boolean, Object] as PropType<boolean | ImagePreviewType>,
-    default: true as boolean | ImagePreviewType,
-  },
-  icons: {
-    type: Object as PropType<PreviewProps['icons']>,
-    default: () => ({}),
-  },
-});
-
 const Group = defineComponent({
   compatConfig: { MODE: 3 },
   name: 'PreviewGroup',
   inheritAttrs: false,
-  props: imageGroupProps(),
+  props: {
+    previewPrefixCls: String,
+    preview: {
+      type: [Boolean, Object] as PropType<boolean | ImagePreviewType>,
+      default: true as boolean | ImagePreviewType,
+    },
+    icons: {
+      type: Object as PropType<PreviewProps['icons']>,
+      default: () => ({}),
+    },
+  },
   setup(props, { slots }) {
     const preview = computed<PreviewGroupPreview>(() => {
       const defaultValues = {
@@ -95,7 +83,7 @@ const Group = defineComponent({
         ? mergeDefaultValue(props.preview, defaultValues)
         : defaultValues;
     });
-    const previewUrls = reactive(new Map<number, PreviewUrl>());
+    const previewUrls = reactive<Map<number, PreviewUrl>>(new Map());
     const current = ref<number>();
 
     const previewVisible = computed(() => preview.value.visible);
@@ -173,7 +161,7 @@ const Group = defineComponent({
     );
 
     context.provide({
-      isPreviewGroup: shallowRef(true),
+      isPreviewGroup: ref(true),
       previewUrls: canPreviewUrls,
       setPreviewUrls,
       current,

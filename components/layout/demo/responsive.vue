@@ -56,21 +56,34 @@ Layout.Sider supports responsive layout.
     </a-layout>
   </a-layout>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
 import { UserOutlined, VideoCameraOutlined, UploadOutlined } from '@ant-design/icons-vue';
-const onCollapse = (collapsed: boolean, type: string) => {
-  console.log(collapsed, type);
-};
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    UserOutlined,
+    VideoCameraOutlined,
+    UploadOutlined,
+  },
+  setup() {
+    const onCollapse = (collapsed: boolean, type: string) => {
+      console.log(collapsed, type);
+    };
 
-const onBreakpoint = (broken: boolean) => {
-  console.log(broken);
-};
+    const onBreakpoint = (broken: boolean) => {
+      console.log(broken);
+    };
 
-const selectedKeys = ref<string[]>(['4']);
+    return {
+      selectedKeys: ref<string[]>(['4']),
+      onCollapse,
+      onBreakpoint,
+    };
+  },
+});
 </script>
 
-<style scoped>
+<style>
 #components-layout-demo-responsive .logo {
   height: 32px;
   background: rgba(255, 255, 255, 0.2);

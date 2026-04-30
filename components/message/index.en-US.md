@@ -2,8 +2,7 @@
 category: Components
 type: Feedback
 title: Message
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*JjZBT6N1MusAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*7qMTRoq3ZGkAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg
 ---
 
 Display global messages as feedback in response to user operations.
@@ -64,7 +63,6 @@ Methods for global configuration and destruction are also provided:
 
 - `message.config(options)`
 - `message.destroy()`
-- `message.useMessage()`
 
 #### message.config
 
@@ -86,33 +84,3 @@ message.config({
 | prefixCls | The prefix className of message node | string | `ant-message` | 3.0 |
 | rtl | Whether to enable RTL mode | boolean | false | 3.0 |
 | top | distance from top | string | `8px` |  |
-
-## FAQ
-
-### Why I can not access context, Pinia, ConfigProvider `locale/prefixCls/theme` in message?
-
-antdv will dynamic create Vue instance by `Vue.render` when call message methods. Whose context is different with origin code located context.
-
-When you need context info (like ConfigProvider context), you can use `message.useMessage` to get `api` instance and `contextHolder` node. And put it in your children:
-
-```html
-<template>
-  <contextHolder />
-  <!-- <component :is='contextHolder'/> -->
-</template>
-<script setup>
-  import { message } from 'ant-design-vue';
-  const [messageApi, contextHolder] = message.useMessage();
-  messageApi.open({
-    // ...
-  });
-</script>
-```
-
-**Note:** You must insert `contextHolder` into your children with hooks. You can use origin method if you do not need context connection.
-
-> [App Package Component](/components/app) can be used to simplify the problem of `useMessage` and other methods that need to manually implant contextHolder.
-
-### How to set static methods prefixCls ？
-
-You can config with [`ConfigProvider.config`](/components/config-provider#configproviderconfig-4130)

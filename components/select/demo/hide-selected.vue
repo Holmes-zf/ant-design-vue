@@ -25,11 +25,20 @@ Hide already selected options in the dropdown.
     :options="filteredOptions.map(item => ({ value: item }))"
   ></a-select>
 </template>
-<script lang="ts" setup>
-import { computed, ref } from 'vue';
+<script lang="ts">
+import { computed, defineComponent, ref } from 'vue';
 
 const OPTIONS = ['Apples', 'Nails', 'Bananas', 'Helicopters'];
-const selectedItems = ref<string[]>([]);
+export default defineComponent({
+  setup() {
+    const selectedItems = ref<string[]>([]);
 
-const filteredOptions = computed(() => OPTIONS.filter(o => !selectedItems.value.includes(o)));
+    const filteredOptions = computed(() => OPTIONS.filter(o => !selectedItems.value.includes(o)));
+
+    return {
+      selectedItems,
+      filteredOptions,
+    };
+  },
+});
 </script>

@@ -5,14 +5,13 @@ import ListItem from './ListItem';
 import Pagination from '../pagination';
 import PropTypes from '../_util/vue-types';
 import type { TransferItem } from '.';
-import { booleanType } from '../_util/type';
 
 export const transferListBodyProps = {
   prefixCls: String,
   filteredRenderItems: PropTypes.array.def([]),
   selectedKeys: PropTypes.array,
-  disabled: booleanType(),
-  showRemove: booleanType(),
+  disabled: { type: Boolean, default: undefined },
+  showRemove: { type: Boolean, default: undefined },
   pagination: PropTypes.any,
   onItemSelect: Function,
   onScroll: Function,
@@ -28,9 +27,6 @@ function parsePagination(pagination) {
 
   const defaultPagination = {
     pageSize: 10,
-    simple: true,
-    showSizeChanger: false,
-    showLessItems: false,
   };
 
   if (typeof pagination === 'object') {
@@ -76,7 +72,10 @@ const ListBody = defineComponent({
           const maxPageCount = Math.ceil(
             props.filteredRenderItems.length / mergedPagination.value.pageSize,
           );
-          current.value = Math.min(current.value, maxPageCount);
+
+          if (current.value > maxPageCount) {
+            current.value = maxPageCount;
+          }
         }
       },
       { immediate: true },
@@ -116,9 +115,7 @@ const ListBody = defineComponent({
       if (mergedPagination.value) {
         paginationNode = (
           <Pagination
-            simple={mergedPagination.value.simple}
-            showSizeChanger={mergedPagination.value.showSizeChanger}
-            showLessItems={mergedPagination.value.showLessItems}
+            simple
             size="small"
             disabled={globalDisabled}
             class={`${prefixCls}-pagination`}

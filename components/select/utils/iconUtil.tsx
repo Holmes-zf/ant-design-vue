@@ -6,34 +6,31 @@ import CloseCircleFilled from '@ant-design/icons-vue/CloseCircleFilled';
 import SearchOutlined from '@ant-design/icons-vue/SearchOutlined';
 
 export default function getIcons(props: any, slots: any = {}) {
-  const { loading, multiple, prefixCls, hasFeedback, feedbackIcon, showArrow } = props;
+  const { loading, multiple, prefixCls } = props;
   const suffixIcon = props.suffixIcon || (slots.suffixIcon && slots.suffixIcon());
   const clearIcon = props.clearIcon || (slots.clearIcon && slots.clearIcon());
   const menuItemSelectedIcon =
     props.menuItemSelectedIcon || (slots.menuItemSelectedIcon && slots.menuItemSelectedIcon());
   const removeIcon = props.removeIcon || (slots.removeIcon && slots.removeIcon());
   // Clear Icon
-  const mergedClearIcon = clearIcon ?? <CloseCircleFilled />;
-  // Validation Feedback Icon
-  const getSuffixIconNode = arrowIcon => (
-    <>
-      {showArrow !== false && arrowIcon}
-      {hasFeedback && feedbackIcon}
-    </>
-  );
+  let mergedClearIcon = clearIcon;
+  if (!clearIcon) {
+    mergedClearIcon = <CloseCircleFilled />;
+  }
+
   // Arrow item icon
   let mergedSuffixIcon = null;
   if (suffixIcon !== undefined) {
-    mergedSuffixIcon = getSuffixIconNode(suffixIcon);
+    mergedSuffixIcon = suffixIcon;
   } else if (loading) {
-    mergedSuffixIcon = getSuffixIconNode(<LoadingOutlined spin />);
+    mergedSuffixIcon = <LoadingOutlined spin />;
   } else {
     const iconCls = `${prefixCls}-suffix`;
     mergedSuffixIcon = ({ open, showSearch }: { open: boolean; showSearch: boolean }) => {
       if (open && showSearch) {
-        return getSuffixIconNode(<SearchOutlined class={iconCls} />);
+        return <SearchOutlined class={iconCls} />;
       }
-      return getSuffixIconNode(<DownOutlined class={iconCls} />);
+      return <DownOutlined class={iconCls} />;
     };
   }
 

@@ -5,20 +5,20 @@ import mountTest from '../../../tests/shared/mountTest';
 
 describe('Tooltip', () => {
   mountTest(Tooltip);
-  it('check `onOpenChange` arguments', async () => {
-    const onOpenChange = jest.fn();
+  it('check `onVisibleChange` arguments', async () => {
+    const onVisibleChange = jest.fn();
     const wrapper = mount(
       {
-        props: ['title', 'open'],
+        props: ['title', 'visible'],
         render() {
           const props = {
             title: this.title || '',
             mouseEnterDelay: 0,
             mouseLeaveDelay: 0,
-            onOpenChange,
+            onVisibleChange,
           };
-          if (this.open !== undefined) {
-            props.open = this.open;
+          if (this.visible !== undefined) {
+            props.visible = this.visible;
           }
           return (
             <Tooltip ref="tooltip" {...props}>
@@ -38,15 +38,15 @@ describe('Tooltip', () => {
       div.dispatchEvent(new MouseEvent('mouseenter'));
     });
     await asyncExpect(() => {
-      expect(onOpenChange).not.toHaveBeenCalled();
-      expect(wrapper.vm.$refs.tooltip.open).toBe(false);
+      expect(onVisibleChange).not.toHaveBeenCalled();
+      expect(wrapper.vm.$refs.tooltip.visible).toBe(false);
     });
     await asyncExpect(() => {
       div.dispatchEvent(new MouseEvent('mouseleave'));
     });
     await asyncExpect(() => {
-      expect(onOpenChange).not.toHaveBeenCalled();
-      expect(wrapper.vm.$refs.tooltip.open).toBe(false);
+      expect(onVisibleChange).not.toHaveBeenCalled();
+      expect(wrapper.vm.$refs.tooltip.visible).toBe(false);
     });
     await asyncExpect(() => {
       // update `title` value.
@@ -56,35 +56,35 @@ describe('Tooltip', () => {
       document.getElementById('hello').dispatchEvent(new MouseEvent('mouseenter'));
     });
     await asyncExpect(() => {
-      expect(onOpenChange).toHaveBeenLastCalledWith(true);
-      expect(wrapper.vm.$refs.tooltip.open).toBe(true);
+      expect(onVisibleChange).toHaveBeenLastCalledWith(true);
+      expect(wrapper.vm.$refs.tooltip.visible).toBe(true);
     }, 0);
     await asyncExpect(() => {
       document.getElementById('hello').dispatchEvent(new MouseEvent('mouseleave'));
     });
     await asyncExpect(() => {
-      expect(onOpenChange).toHaveBeenLastCalledWith(false);
-      expect(wrapper.vm.$refs.tooltip.open).toBe(false);
+      expect(onVisibleChange).toHaveBeenLastCalledWith(false);
+      expect(wrapper.vm.$refs.tooltip.visible).toBe(false);
     });
     await asyncExpect(() => {
-      // add `open` props.
-      wrapper.setProps({ open: false });
+      // add `visible` props.
+      wrapper.setProps({ visible: false });
     });
     await asyncExpect(() => {
       document.getElementById('hello').dispatchEvent(new MouseEvent('mouseenter'));
     });
     await asyncExpect(() => {
-      expect(onOpenChange).toHaveBeenLastCalledWith(true);
-      expect(wrapper.vm.$refs.tooltip.open).toBe(false);
+      expect(onVisibleChange).toHaveBeenLastCalledWith(true);
+      expect(wrapper.vm.$refs.tooltip.visible).toBe(false);
     });
     await asyncExpect(() => {
-      // always trigger onOpenChange
+      // always trigger onVisibleChange
       document.getElementById('hello').dispatchEvent(new MouseEvent('mouseleave'));
-      lastCount = onOpenChange.mock.calls.length;
+      lastCount = onVisibleChange.mock.calls.length;
     });
     await asyncExpect(() => {
-      expect(onOpenChange.mock.calls.length).toBe(lastCount); // no change with lastCount
-      expect(wrapper.vm.$refs.tooltip.open).toBe(false);
+      expect(onVisibleChange.mock.calls.length).toBe(lastCount); // no change with lastCount
+      expect(wrapper.vm.$refs.tooltip.visible).toBe(false);
     });
   });
 });

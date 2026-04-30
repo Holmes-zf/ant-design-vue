@@ -40,7 +40,7 @@ Mouse to click, focus and move in.
     </a-popover>
   </div>
 </template>
-<style scoped>
+<style>
 #components-popover-demo-triggerType .ant-btn {
   margin-right: 8px;
 }

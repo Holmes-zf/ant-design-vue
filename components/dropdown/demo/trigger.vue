@@ -35,6 +35,12 @@ The default trigger mode is `hover`, you can change it to `click`.
     </template>
   </a-dropdown>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
+export default defineComponent({
+  components: {
+    DownOutlined,
+  },
+});
 </script>

@@ -19,6 +19,8 @@ declare module 'vue' {
 
     AAvatarGroup: typeof import('ant-design-vue')['AvatarGroup'];
 
+    ABackTop: typeof import('ant-design-vue')['BackTop'];
+
     ABadge: typeof import('ant-design-vue')['Badge'];
 
     ABadgeRibbon: typeof import('ant-design-vue')['BadgeRibbon'];
@@ -60,8 +62,6 @@ declare module 'vue' {
     AComment: typeof import('ant-design-vue')['Comment'];
 
     AConfigProvider: typeof import('ant-design-vue')['ConfigProvider'];
-
-    AStyleProvider: typeof import('ant-design-vue')['StyleProvider'];
 
     ADatePicker: typeof import('ant-design-vue')['DatePicker'];
 
@@ -163,8 +163,6 @@ declare module 'vue' {
 
     ASelect: typeof import('ant-design-vue')['Select'];
 
-    ASegmented: typeof import('ant-design-vue')['Segmented'];
-
     ASelectOptGroup: typeof import('ant-design-vue')['SelectOptGroup'];
 
     ASelectOption: typeof import('ant-design-vue')['SelectOption'];
@@ -182,8 +180,6 @@ declare module 'vue' {
     ASlider: typeof import('ant-design-vue')['Slider'];
 
     ASpace: typeof import('ant-design-vue')['Space'];
-
-    ASpaceCompact: typeof import('ant-design-vue')['Compact'];
 
     ASpin: typeof import('ant-design-vue')['Spin'];
 
@@ -254,20 +250,6 @@ declare module 'vue' {
     AUploadDragger: typeof import('ant-design-vue')['UploadDragger'];
 
     AWeekPicker: typeof import('ant-design-vue')['WeekPicker'];
-
-    AQrCode: typeof import('ant-design-vue')['QRCode'];
-
-    ATour: typeof import('ant-design-vue')['Tour'];
-
-    AFloatButton: typeof import('ant-design-vue')['FloatButton'];
-
-    AFloatButtonGroup: typeof import('ant-design-vue')['FloatButtonGroup'];
-
-    ABackTop: typeof import('ant-design-vue')['BackTop'];
-
-    AWatermark: typeof import('ant-design-vue')['Watermark'];
-
-    AFlex: typeof import('ant-design-vue')['Flex'];
   }
 }
 export {};

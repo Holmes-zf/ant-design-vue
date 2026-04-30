@@ -52,46 +52,62 @@ More content can be hosted
   </a-card>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
 import { HomeOutlined } from '@ant-design/icons-vue';
-import { ref } from 'vue';
-const tabList = [
-  {
-    key: 'tab1',
-    tab: 'tab1',
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  components: {
+    HomeOutlined,
   },
-  {
-    key: 'tab2',
-    tab: 'tab2',
-  },
-];
-const contentList = {
-  tab1: 'content1',
-  tab2: 'content2',
-};
-const tabListNoTitle = [
-  {
-    key: 'article',
-    tab: 'article',
-  },
-  {
-    key: 'app',
-    tab: 'app',
-  },
-  {
-    key: 'project',
-    tab: 'project',
-  },
-];
-const key = ref('tab1');
-const noTitleKey = ref('app');
+  setup() {
+    const tabList = [
+      {
+        key: 'tab1',
+        tab: 'tab1',
+      },
+      {
+        key: 'tab2',
+        tab: 'tab2',
+      },
+    ];
+    const contentList = {
+      tab1: 'content1',
+      tab2: 'content2',
+    };
+    const tabListNoTitle = [
+      {
+        key: 'article',
+        tab: 'article',
+      },
+      {
+        key: 'app',
+        tab: 'app',
+      },
+      {
+        key: 'project',
+        tab: 'project',
+      },
+    ];
+    const key = ref('tab1');
+    const noTitleKey = ref('app');
 
-const onTabChange = (value: string, type: string) => {
-  console.log(value, type);
-  if (type === 'key') {
-    key.value = value;
-  } else if (type === 'noTitleKey') {
-    noTitleKey.value = value;
-  }
-};
+    const onTabChange = (value: string, type: string) => {
+      console.log(value, type);
+      if (type === 'key') {
+        key.value = value;
+      } else if (type === 'noTitleKey') {
+        noTitleKey.value = value;
+      }
+    };
+
+    return {
+      tabList,
+      contentList,
+      tabListNoTitle,
+      key,
+      noTitleKey,
+      onTabChange,
+    };
+  },
+});
 </script>

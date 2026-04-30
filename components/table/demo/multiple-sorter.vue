@@ -20,7 +20,9 @@ title:
   <a-table :columns="columns" :data-source="data" @change="onChange" />
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
+
 const columns = [
   {
     title: 'Name',
@@ -83,7 +85,15 @@ const data = [
   },
 ];
 
-function onChange(pagination, filters, sorter, extra) {
-  console.log('params', pagination, filters, sorter, extra);
-}
+export default defineComponent({
+  setup() {
+    return {
+      data,
+      columns,
+      onChange: (pagination, filters, sorter, extra) => {
+        console.log('params', pagination, filters, sorter, extra);
+      },
+    };
+  },
+});
 </script>

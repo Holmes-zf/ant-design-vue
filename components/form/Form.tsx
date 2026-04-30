@@ -1,4 +1,4 @@
-import type { ExtractPropTypes, HTMLAttributes, ComponentPublicInstance } from 'vue';
+import type { PropType, ExtractPropTypes, HTMLAttributes, ComponentPublicInstance } from 'vue';
 import { defineComponent, computed, watch, ref } from 'vue';
 import PropTypes from '../_util/vue-types';
 import classNames from '../_util/classNames';
@@ -13,15 +13,7 @@ import isEqual from 'lodash-es/isEqual';
 import type { Options } from 'scroll-into-view-if-needed';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import initDefaultProps from '../_util/props-util/initDefaultProps';
-import {
-  anyType,
-  booleanType,
-  functionType,
-  objectType,
-  someType,
-  stringType,
-  tuple,
-} from '../_util/type';
+import { tuple } from '../_util/type';
 import type { ColProps } from '../grid/Col';
 import type {
   InternalNamePath,
@@ -34,44 +26,45 @@ import type {
   Rule,
   FormLabelAlign,
 } from './interface';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import { useInjectSize } from '../_util/hooks/useSize';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import { useProvideForm } from './context';
 import type { SizeType } from '../config-provider';
 import useForm from './useForm';
 import { useInjectGlobalForm } from '../config-provider/context';
-import useStyle from './style';
-import { useProviderSize } from '../config-provider/SizeContext';
-import { useProviderDisabled } from '../config-provider/DisabledContext';
+
 export type RequiredMark = boolean | 'optional';
 export type FormLayout = 'horizontal' | 'inline' | 'vertical';
 
 export const formProps = () => ({
-  layout: PropTypes.oneOf(tuple('horizontal', 'inline', 'vertical')),
-  labelCol: objectType<ColProps & HTMLAttributes>(),
-  wrapperCol: objectType<ColProps & HTMLAttributes>(),
-  colon: booleanType(),
-  labelAlign: stringType<FormLabelAlign>(),
-  labelWrap: booleanType(),
+  layout: PropTypes.oneOf(tuple('horizontal', 'inline', 'vertical') as FormLayout[]),
+  labelCol: { type: Object as PropType<ColProps & HTMLAttributes> },
+  wrapperCol: { type: Object as PropType<ColProps & HTMLAttributes> },
+  colon: { type: Boolean, default: undefined },
+  labelAlign: PropTypes.oneOf(tuple('left', 'right') as FormLabelAlign[]),
+  labelWrap: { type: Boolean, default: undefined },
   prefixCls: String,
-  requiredMark: someType<RequiredMark | ''>([String, Boolean]),
+  requiredMark: { type: [String, Boolean] as PropType<RequiredMark | ''>, default: undefined },
   /** @deprecated Will warning in future branch. Pls use `requiredMark` instead. */
-  hideRequiredMark: booleanType(),
+  hideRequiredMark: { type: Boolean, default: undefined },
   model: PropTypes.object,
-  rules: objectType<{ [k: string]: Rule[] | Rule }>(),
-  validateMessages: objectType<ValidateMessages>(),
-  validateOnRuleChange: booleanType(),
+  rules: { type: Object as PropType<{ [k: string]: Rule[] | Rule }> },
+  validateMessages: {
+    type: Object as PropType<ValidateMessages>,
+    default: undefined as ValidateMessages,
+  },
+  validateOnRuleChange: { type: Boolean, default: undefined },
   // 提交失败自动滚动到第一个错误字段
-  scrollToFirstError: anyType<boolean | Options>(),
-  onSubmit: functionType<(e: Event) => void>(),
+  scrollToFirstError: { type: [Boolean, Object] as PropType<boolean | Options> },
+  onSubmit: Function as PropType<(e: Event) => void>,
   name: String,
-  validateTrigger: someType<string | string[]>([String, Array]),
-  size: stringType<SizeType>(),
-  disabled: booleanType(),
-  onValuesChange: functionType<Callbacks['onValuesChange']>(),
-  onFieldsChange: functionType<Callbacks['onFieldsChange']>(),
-  onFinish: functionType<Callbacks['onFinish']>(),
-  onFinishFailed: functionType<Callbacks['onFinishFailed']>(),
-  onValidate: functionType<Callbacks['onValidate']>(),
+  validateTrigger: { type: [String, Array] as PropType<string | string[]> },
+  size: { type: String as PropType<SizeType> },
+  onValuesChange: { type: Function as PropType<Callbacks['onValuesChange']> },
+  onFieldsChange: { type: Function as PropType<Callbacks['onFieldsChange']> },
+  onFinish: { type: Function as PropType<Callbacks['onFinish']> },
+  onFinishFailed: { type: Function as PropType<Callbacks['onFinishFailed']> },
+  onValidate: { type: Function as PropType<Callbacks['onValidate']> },
 });
 
 export type FormProps = Partial<ExtractPropTypes<ReturnType<typeof formProps>>>;
@@ -116,13 +109,8 @@ const Form = defineComponent({
   useForm,
   // emits: ['finishFailed', 'submit', 'finish', 'validate'],
   setup(props, { emit, slots, expose, attrs }) {
-    const {
-      prefixCls,
-      direction,
-      form: contextForm,
-      size,
-      disabled,
-    } = useConfigInject('form', props);
+    const size = useInjectSize(props);
+    const { prefixCls, direction, form: contextForm } = useConfigInject('form', props);
     const requiredMark = computed(() => props.requiredMark === '' || props.requiredMark);
     const mergedRequiredMark = computed(() => {
       if (requiredMark.value !== undefined) {
@@ -138,8 +126,6 @@ const Form = defineComponent({
       }
       return true;
     });
-    useProviderSize(size);
-    useProviderDisabled(disabled);
     const mergedColon = computed(() => props.colon ?? contextForm.value?.colon);
     const { validateMessages: globalValidateMessages } = useInjectGlobalForm();
     const validateMessages = computed(() => {
@@ -149,21 +135,13 @@ const Form = defineComponent({
         ...props.validateMessages,
       };
     });
-
-    // Style
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
     const formClassName = computed(() =>
-      classNames(
-        prefixCls.value,
-        {
-          [`${prefixCls.value}-${props.layout}`]: true,
-          [`${prefixCls.value}-hide-required-mark`]: mergedRequiredMark.value === false,
-          [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
-          [`${prefixCls.value}-${size.value}`]: size.value,
-        },
-        hashId.value,
-      ),
+      classNames(prefixCls.value, {
+        [`${prefixCls.value}-${props.layout}`]: true,
+        [`${prefixCls.value}-hide-required-mark`]: mergedRequiredMark.value === false,
+        [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
+        [`${prefixCls.value}-${size.value}`]: size.value,
+      }),
     );
     const lastValidatePromise = ref();
     const fields: Record<string, FieldExpose> = {};
@@ -398,10 +376,10 @@ const Form = defineComponent({
     );
 
     return () => {
-      return wrapSSR(
+      return (
         <form {...attrs} onSubmit={handleSubmit} class={[formClassName.value, attrs.class]}>
           {slots.default?.()}
-        </form>,
+        </form>
       );
     };
   },

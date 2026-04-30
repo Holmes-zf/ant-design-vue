@@ -3,11 +3,10 @@ import type { AvatarSize } from './Avatar';
 import Avatar from './Avatar';
 import Popover from '../popover';
 import type { PropType, ExtractPropTypes, CSSProperties } from 'vue';
-import { computed, defineComponent, watchEffect } from 'vue';
+import { defineComponent } from 'vue';
 import { flattenChildren, getPropsSlot } from '../_util/props-util';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
-import useStyle from './style';
-import { useAvatarProviderContext } from './AvatarContext';
+import useConfigInject from '../_util/hooks/useConfigInject';
+import useProvideSize from '../_util/hooks/useSize';
 
 export const groupProps = () => ({
   prefixCls: String,
@@ -23,7 +22,6 @@ export const groupProps = () => ({
     type: [Number, String, Object] as PropType<AvatarSize>,
     default: 'default' as AvatarSize,
   },
-  shape: { type: String as PropType<'circle' | 'square'>, default: 'circle' },
 });
 
 export type AvatarGroupProps = Partial<ExtractPropTypes<ReturnType<typeof groupProps>>>;
@@ -34,27 +32,20 @@ const Group = defineComponent({
   inheritAttrs: false,
   props: groupProps(),
   setup(props, { slots, attrs }) {
-    const { prefixCls, direction } = useConfigInject('avatar', props);
-    const groupPrefixCls = computed(() => `${prefixCls.value}-group`);
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-    watchEffect(() => {
-      const context = { size: props.size, shape: props.shape };
-      useAvatarProviderContext(context);
-    });
+    const { prefixCls, direction } = useConfigInject('avatar-group', props);
+    useProvideSize<AvatarSize>(props);
     return () => {
       const {
         maxPopoverPlacement = 'top',
         maxCount,
         maxStyle,
         maxPopoverTrigger = 'hover',
-        shape,
       } = props;
 
       const cls = {
-        [groupPrefixCls.value]: true,
-        [`${groupPrefixCls.value}-rtl`]: direction.value === 'rtl',
+        [prefixCls.value]: true,
+        [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
         [`${attrs.class}`]: !!attrs.class,
-        [hashId.value]: true,
       };
 
       const children = getPropsSlot(slots, props);
@@ -75,22 +66,22 @@ const Group = defineComponent({
             content={childrenHidden}
             trigger={maxPopoverTrigger}
             placement={maxPopoverPlacement}
-            overlayClassName={`${groupPrefixCls.value}-popover`}
+            overlayClassName={`${prefixCls.value}-popover`}
           >
-            <Avatar style={maxStyle} shape={shape}>{`+${numOfChildren - maxCount}`}</Avatar>
+            <Avatar style={maxStyle}>{`+${numOfChildren - maxCount}`}</Avatar>
           </Popover>,
         );
-        return wrapSSR(
+        return (
           <div {...attrs} class={cls} style={attrs.style as CSSProperties}>
             {childrenShow}
-          </div>,
+          </div>
         );
       }
 
-      return wrapSSR(
+      return (
         <div {...attrs} class={cls} style={attrs.style as CSSProperties}>
           {childrenWithProps}
-        </div>,
+        </div>
       );
     };
   },

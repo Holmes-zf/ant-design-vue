@@ -26,7 +26,8 @@ Import icons from `@ant-design/icons-vue`, component name of icons with differen
     <loading-outlined />
   </a-space>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import {
   HomeOutlined,
   SettingFilled,
@@ -34,4 +35,13 @@ import {
   SyncOutlined,
   LoadingOutlined,
 } from '@ant-design/icons-vue';
+export default defineComponent({
+  components: {
+    HomeOutlined,
+    SettingFilled,
+    SmileOutlined,
+    SyncOutlined,
+    LoadingOutlined,
+  },
+});
 </script>

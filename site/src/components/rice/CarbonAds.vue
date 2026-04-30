@@ -19,7 +19,7 @@ export default {
   },
   watch: {
     $route(e, t) {
-      const adId = '#carbonads';
+      let adId = '#carbonads';
       // if(isGitee) {
       //   adId = '#cf';
       // }

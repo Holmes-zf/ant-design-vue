@@ -1,3 +1,5 @@
+@import '../../../../components/style/themes/default.less';
+
 #header {
   // ===================== Home Page =====================
   &.home-header {
@@ -27,7 +29,7 @@
   }
 }
 
-@media (max-width: var(--screen-sm-min)) {
+@media (max-width: @screen-sm-min) {
   #header.home-header {
     .ant-row {
       .ant-col {

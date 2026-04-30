@@ -40,6 +40,12 @@ Divider and disabled menu item.
     </template>
   </a-dropdown>
 </template>
-<script lang="ts" setup>
+<script lant="ts">
+import { defineComponent } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
+export default defineComponent({
+  components: {
+    DownOutlined,
+  },
+});
 </script>

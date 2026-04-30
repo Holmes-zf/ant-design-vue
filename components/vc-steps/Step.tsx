@@ -1,23 +1,19 @@
 import PropTypes, { withUndefined } from '../_util/vue-types';
-import type { CSSProperties, ExtractPropTypes } from 'vue';
+import type { CSSProperties, PropType } from 'vue';
 import { defineComponent } from 'vue';
 import type { EventHandler } from '../_util/EventInterface';
-import classNames from '../_util/classNames';
-import type { VueNode } from '../_util/type';
-import { booleanType, stringType, functionType } from '../_util/type';
-import type { StepIconRender, Status } from './interface';
-import omit from '../_util/omit';
+
 function isString(str: any): str is string {
   return typeof str === 'string';
 }
 function noop() {}
-
 export const VcStepProps = () => ({
   prefixCls: String,
+  wrapperStyle: { type: Object as PropType<CSSProperties>, default: undefined as CSSProperties },
   itemWidth: String,
   active: { type: Boolean, default: undefined },
   disabled: { type: Boolean, default: undefined },
-  status: stringType<Status>(),
+  status: String,
   iconPrefix: String,
   icon: PropTypes.any,
   adjustMarginRight: String,
@@ -32,31 +28,22 @@ export const VcStepProps = () => ({
     finish: PropTypes.any,
     error: PropTypes.any,
   }).loose,
-  onClick: functionType(),
-  onStepClick: functionType<(next: number) => void>(),
-  stepIcon: functionType<StepIconRender>(),
-  itemRender: functionType<(stepItem: VueNode) => VueNode>(),
-  __legacy: booleanType(),
+  onClick: Function,
+  onStepClick: Function,
+  stepIcon: Function,
 });
-
-export type VCStepProps = Partial<ExtractPropTypes<ReturnType<typeof VcStepProps>>>;
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'Step',
-  inheritAttrs: false,
   props: VcStepProps(),
-  setup(props, { slots, emit, attrs }) {
+  slots: ['title', 'subTitle', 'description', 'tailContent', 'stepIcon', 'progressDot'],
+  emits: ['click', 'stepClick'],
+  setup(props, { slots, emit }) {
     const onItemClick: EventHandler = e => {
       emit('click', e);
       emit('stepClick', props.stepIndex);
     };
-    // if (props.__legacy !== false) {
-    //   warning(
-    //     false,
-    //     'Steps',
-    //     'Step is deprecated, and not support inline type. Please use `items` directly. ',
-    //   );
-    // }
+
     const renderIconNode = ({ icon, title, description }) => {
       const {
         prefixCls,
@@ -68,14 +55,14 @@ export default defineComponent({
         stepIcon = slots.stepIcon,
       } = props;
 
-      let iconNode;
-      const iconClassName = classNames(`${prefixCls}-icon`, `${iconPrefix}icon`, {
+      let iconNode: any;
+      const iconClassName = {
+        [`${prefixCls}-icon`]: true,
+        [`${iconPrefix}icon`]: true,
         [`${iconPrefix}icon-${icon}`]: icon && isString(icon),
-        [`${iconPrefix}icon-check`]:
-          !icon && status === 'finish' && ((icons && !icons.finish) || !icons),
-        [`${iconPrefix}icon-cross`]:
-          !icon && status === 'error' && ((icons && !icons.error) || !icons),
-      });
+        [`${iconPrefix}icon-check`]: !icon && status === 'finish' && icons && !icons.finish,
+        [`${iconPrefix}icon-close`]: !icon && status === 'error' && icons && !icons.error,
+      };
       const iconDot = <span class={`${prefixCls}-icon-dot`} />;
       // `progressDot` enjoy the highest priority
       if (progressDot) {
@@ -116,7 +103,6 @@ export default defineComponent({
           node: iconNode,
         });
       }
-
       return iconNode;
     };
     return () => {
@@ -135,12 +121,17 @@ export default defineComponent({
         onClick,
         onStepClick,
       } = props;
-      const mergedStatus = status || 'wait';
-      const classString = classNames(`${prefixCls}-item`, `${prefixCls}-item-${mergedStatus}`, {
+
+      const classString = {
+        [`${prefixCls}-item`]: true,
+        [`${prefixCls}-item-${status}`]: true,
         [`${prefixCls}-item-custom`]: icon,
         [`${prefixCls}-item-active`]: active,
         [`${prefixCls}-item-disabled`]: disabled === true,
-      });
+      };
+      const stepProps = {
+        class: classString,
+      };
       const stepItemStyle: CSSProperties = {};
       if (itemWidth) {
         stepItemStyle.width = itemWidth;
@@ -162,12 +153,8 @@ export default defineComponent({
         accessibilityProps.tabindex = 0;
         accessibilityProps.onClick = onItemClick;
       }
-      const stepNode = (
-        <div
-          {...omit(attrs, ['__legacy'])}
-          class={[classString, attrs.class]}
-          style={[attrs.style as CSSProperties, stepItemStyle]}
-        >
+      return (
+        <div {...stepProps} style={stepItemStyle}>
           <div {...accessibilityProps} class={`${prefixCls}-item-container`}>
             <div class={`${prefixCls}-item-tail`}>{tailContent}</div>
             <div class={`${prefixCls}-item-icon`}>
@@ -177,10 +164,7 @@ export default defineComponent({
               <div class={`${prefixCls}-item-title`}>
                 {title}
                 {subTitle && (
-                  <div
-                    title={typeof subTitle === 'string' ? subTitle : undefined}
-                    class={`${prefixCls}-item-subtitle`}
-                  >
+                  <div title={subTitle} class={`${prefixCls}-item-subtitle`}>
                     {subTitle}
                   </div>
                 )}
@@ -190,10 +174,6 @@ export default defineComponent({
           </div>
         </div>
       );
-      if (props.itemRender) {
-        return props.itemRender(stepNode);
-      }
-      return stepNode;
     };
   },
 });

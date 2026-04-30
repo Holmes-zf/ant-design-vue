@@ -20,7 +20,7 @@ Lookup-Patterns - Certain Category.
     <a-auto-complete
       v-model:value="value"
       class="certain-category-search"
-      popup-class-name="certain-category-search-dropdown"
+      dropdown-class-name="certain-category-search-dropdown"
       :dropdown-match-select-width="500"
       style="width: 250px"
       :options="dataSource"
@@ -63,8 +63,8 @@ Lookup-Patterns - Certain Category.
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { UserOutlined } from '@ant-design/icons-vue';
 const dataSource = [
   {
@@ -106,10 +106,20 @@ const dataSource = [
     value: 'all',
   },
 ];
-const value = ref('');
+export default defineComponent({
+  components: {
+    UserOutlined,
+  },
+  setup() {
+    return {
+      value: ref(''),
+      dataSource,
+    };
+  },
+});
 </script>
 
-<style scoped>
+<style>
 .certain-category-search-dropdown .ant-select-dropdown-menu-item-group-title {
   color: #666;
   font-weight: bold;

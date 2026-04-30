@@ -24,22 +24,30 @@ Update message content with unique `key`，or use reactive data.
     Open the message box (update by reactive)
   </a-button>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { message } from 'ant-design-vue';
-import { ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 const key = 'updatable';
-const openMessage = () => {
-  message.loading({ content: 'Loading...', key });
-  setTimeout(() => {
-    message.success({ content: 'Loaded!', key, duration: 2 });
-  }, 1000);
-};
-const content = ref('Loading...');
-const openMessage2 = () => {
-  // content must use function
-  message.loading({ content: () => content.value });
-  setTimeout(() => {
-    content.value = 'Loaded!';
-  }, 1000);
-};
+export default defineComponent({
+  setup() {
+    const openMessage = () => {
+      message.loading({ content: 'Loading...', key });
+      setTimeout(() => {
+        message.success({ content: 'Loaded!', key, duration: 2 });
+      }, 1000);
+    };
+    const content = ref('Loading...');
+    const openMessage2 = () => {
+      // content must use function
+      message.loading({ content: () => content.value });
+      setTimeout(() => {
+        content.value = 'Loaded!';
+      }, 1000);
+    };
+    return {
+      openMessage,
+      openMessage2,
+    };
+  },
+});
 </script>

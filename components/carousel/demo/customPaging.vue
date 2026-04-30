@@ -46,33 +46,33 @@ export default defineComponent({
 </script>
 <style scoped>
 /* For demo */
-:deep(.slick-dots) {
+.ant-carousel :deep(.slick-dots) {
   position: relative;
   height: auto;
 }
-:deep(.slick-slide img) {
+.ant-carousel :deep(.slick-slide img) {
   border: 5px solid #fff;
   display: block;
   margin: auto;
   max-width: 80%;
 }
-:deep(.slick-arrow) {
+.ant-carousel :deep(.slick-arrow) {
   display: none !important;
 }
-:deep(.slick-thumb) {
+.ant-carousel :deep(.slick-thumb) {
   bottom: 0px;
 }
-:deep(.slick-thumb li) {
+.ant-carousel :deep(.slick-thumb li) {
   width: 60px;
   height: 45px;
 }
-:deep(.slick-thumb li img) {
+.ant-carousel :deep(.slick-thumb li img) {
   width: 100%;
   height: 100%;
   filter: grayscale(100%);
   display: block;
 }
-:deep .slick-thumb li.slick-active img {
+.ant-carousel :deep .slick-thumb li.slick-active img {
   filter: grayscale(0%);
 }
 </style>

@@ -1,6 +1,6 @@
 import type { ExtractPropTypes } from 'vue';
 import { defineComponent, computed } from 'vue';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 
 export const cardGridProps = () => ({
   prefixCls: String,

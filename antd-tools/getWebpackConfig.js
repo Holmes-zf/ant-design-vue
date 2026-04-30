@@ -22,7 +22,7 @@ const imageOptions = {
   limit: 10000,
 };
 
-function getWebpackConfig(modules, esm = false) {
+function getWebpackConfig(modules) {
   const pkg = require(getProjectPath('package.json'));
   const babelConfig = require('./getBabelCommonConfig')(modules || false);
 
@@ -150,6 +150,36 @@ function getWebpackConfig(modules, esm = false) {
             },
           ],
         },
+        {
+          test: /\.less$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['autoprefixer'],
+                },
+                sourceMap: true,
+              },
+            },
+            {
+              loader: 'less-loader',
+              options: {
+                lessOptions: {
+                  javascriptEnabled: true,
+                },
+                sourceMap: true,
+              },
+            },
+          ],
+        },
         // Images
         {
           test: svgRegex,
@@ -170,7 +200,7 @@ function getWebpackConfig(modules, esm = false) {
       new webpack.BannerPlugin(`
 ${pkg.name} v${pkg.version}
 
-Copyright 2017-present, Ant Design Vue.
+Copyright 2017-present, ant-design-vue.
 All rights reserved.
       `),
       new WebpackBar({
@@ -185,7 +215,7 @@ All rights reserved.
   };
 
   if (process.env.RUN_ENV === 'PRODUCTION') {
-    let entry = ['./index'];
+    const entry = ['./index'];
     config.externals = [
       {
         vue: {
@@ -193,29 +223,11 @@ All rights reserved.
           commonjs2: 'vue',
           commonjs: 'vue',
           amd: 'vue',
-          module: 'vue',
         },
       },
     ];
-    if (esm) {
-      entry = ['./index.esm'];
-      config.experiments = {
-        ...config.experiments,
-        outputModule: true,
-      };
-      config.output.chunkFormat = 'module';
-      config.output.library = {
-        type: 'module',
-      };
-      config.target = 'es2019';
-    } else {
-      config.output.libraryTarget = 'umd';
-      config.output.library = distFileBaseName;
-      config.output.globalObject = 'this';
-    }
-
-    const entryName = esm ? `${distFileBaseName}.esm` : distFileBaseName;
-
+    config.output.library = distFileBaseName;
+    config.output.libraryTarget = 'umd';
     config.optimization = {
       minimizer: [
         new TerserPlugin({
@@ -226,10 +238,11 @@ All rights reserved.
         }),
       ],
     };
+
     // Development
     const uncompressedConfig = merge({}, config, {
       entry: {
-        [entryName]: entry,
+        [distFileBaseName]: entry,
       },
       mode: 'development',
       plugins: [
@@ -242,7 +255,7 @@ All rights reserved.
     // Production
     const prodConfig = merge({}, config, {
       entry: {
-        [`${entryName}.min`]: entry,
+        [`${distFileBaseName}.min`]: entry,
       },
       mode: 'production',
       plugins: [

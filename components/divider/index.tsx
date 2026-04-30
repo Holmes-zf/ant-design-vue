@@ -2,8 +2,7 @@ import { flattenChildren } from '../_util/props-util';
 import type { ExtractPropTypes, PropType } from 'vue';
 import { computed, defineComponent } from 'vue';
 import { withInstall } from '../_util/type';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
-import useStyle from './style';
+import useConfigInject from '../_util/hooks/useConfigInject';
 
 export const dividerProps = () => ({
   prefixCls: String,
@@ -28,13 +27,11 @@ export const dividerProps = () => ({
 export type DividerProps = Partial<ExtractPropTypes<ReturnType<typeof dividerProps>>>;
 
 const Divider = defineComponent({
-  name: 'ADivider',
-  inheritAttrs: false,
   compatConfig: { MODE: 3 },
+  name: 'ADivider',
   props: dividerProps(),
-  setup(props, { slots, attrs }) {
+  setup(props, { slots }) {
     const { prefixCls: prefixClsRef, direction } = useConfigInject('divider', props);
-    const [wrapSSR, hashId] = useStyle(prefixClsRef);
     const hasCustomMarginLeft = computed(
       () => props.orientation === 'left' && props.orientationMargin != null,
     );
@@ -46,7 +43,6 @@ const Divider = defineComponent({
       const prefixCls = prefixClsRef.value;
       return {
         [prefixCls]: true,
-        [hashId.value]: !!hashId.value,
         [`${prefixCls}-${type}`]: true,
         [`${prefixCls}-dashed`]: !!dashed,
         [`${prefixCls}-plain`]: !!plain,
@@ -71,15 +67,13 @@ const Divider = defineComponent({
 
     return () => {
       const children = flattenChildren(slots.default?.());
-      return wrapSSR(
+      return (
         <div
-          {...attrs}
           class={[
             classString.value,
             children.length
               ? `${prefixClsRef.value}-with-text ${prefixClsRef.value}-with-text${orientationPrefix.value}`
               : '',
-            attrs.class,
           ]}
           role="separator"
         >
@@ -88,7 +82,7 @@ const Divider = defineComponent({
               {children}
             </span>
           ) : null}
-        </div>,
+        </div>
       );
     };
   },

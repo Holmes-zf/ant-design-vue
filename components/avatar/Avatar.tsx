@@ -1,17 +1,16 @@
-import type { CustomSlotsType, VueNode } from '../_util/type';
+import type { VueNode } from '../_util/type';
 
 import type { CSSProperties, ExtractPropTypes, PropType } from 'vue';
-import { computed, defineComponent, nextTick, onMounted, shallowRef, watch } from 'vue';
+import { computed, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 import { getPropsSlot } from '../_util/props-util';
 import PropTypes from '../_util/vue-types';
 import useBreakpoint from '../_util/hooks/useBreakpoint';
 import type { Breakpoint, ScreenSizeMap } from '../_util/responsiveObserve';
 import { responsiveArray } from '../_util/responsiveObserve';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import ResizeObserver from '../vc-resize-observer';
+import { useInjectSize } from '../_util/hooks/useSize';
 import eagerComputed from '../_util/eagerComputed';
-import useStyle from './style';
-import { useAvatarInjectContext } from './AvatarContext';
 
 export type AvatarSize = 'large' | 'small' | 'default' | number | ScreenSizeMap;
 
@@ -42,23 +41,20 @@ const Avatar = defineComponent({
   name: 'AAvatar',
   inheritAttrs: false,
   props: avatarProps(),
-  slots: Object as CustomSlotsType<{
-    icon: any;
-    default: any;
-  }>,
+  slots: ['icon'],
   setup(props, { slots, attrs }) {
-    const isImgExist = shallowRef(true);
-    const isMounted = shallowRef(false);
-    const scale = shallowRef(1);
+    const isImgExist = ref(true);
+    const isMounted = ref(false);
+    const scale = ref(1);
 
-    const avatarChildrenRef = shallowRef<HTMLElement>(null);
-    const avatarNodeRef = shallowRef<HTMLElement>(null);
+    const avatarChildrenRef = ref<HTMLElement>(null);
+    const avatarNodeRef = ref<HTMLElement>(null);
 
     const { prefixCls } = useConfigInject('avatar', props);
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-    const avatarCtx = useAvatarInjectContext();
+
+    const groupSize = useInjectSize();
     const size = computed(() => {
-      return props.size === 'default' ? avatarCtx.size : props.size;
+      return props.size === 'default' ? groupSize.value : props.size;
     });
     const screens = useBreakpoint();
     const responsiveSize = eagerComputed(() => {
@@ -135,7 +131,6 @@ const Avatar = defineComponent({
 
     return () => {
       const { shape, src, alt, srcset, draggable, crossOrigin } = props;
-      const mergeShape = avatarCtx.shape ?? shape;
       const icon = getPropsSlot(slots, props, 'icon');
       const pre = prefixCls.value;
       const classString = {
@@ -143,10 +138,9 @@ const Avatar = defineComponent({
         [pre]: true,
         [`${pre}-lg`]: size.value === 'large',
         [`${pre}-sm`]: size.value === 'small',
-        [`${pre}-${mergeShape}`]: true,
+        [`${pre}-${shape}`]: shape,
         [`${pre}-image`]: src && isImgExist.value,
         [`${pre}-icon`]: icon,
-        [hashId.value]: true,
       };
 
       const sizeStyle: CSSProperties =
@@ -205,7 +199,7 @@ const Avatar = defineComponent({
           </span>
         );
       }
-      return wrapSSR(
+      return (
         <span
           {...attrs}
           ref={avatarNodeRef}
@@ -213,7 +207,7 @@ const Avatar = defineComponent({
           style={[sizeStyle, responsiveSizeStyle(!!icon), attrs.style as CSSProperties]}
         >
           {childrenToRender}
-        </span>,
+        </span>
       );
     };
   },

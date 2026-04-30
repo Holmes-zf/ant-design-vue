@@ -4,8 +4,7 @@ subtitle: 分页
 type: 导航
 title: Pagination
 cols: 1
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*8y_iTJGY_aUAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*WM86SrBC8TsAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/1vqv2bj68/Pagination.svg
 ---
 
 采用分页的形式分隔长列表，每次只加载一个页面。
@@ -24,7 +23,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*WM86SrBC8TsAAA
 | hideOnSinglePage | 只有一页时是否隐藏分页器 | boolean | false |  |
 | itemRender | 用于自定义页码的结构，可用于优化 SEO | ({page, type: 'page' \| 'prev' \| 'next', originalElement}) => vNode \| v-slot | - |  |
 | pageSize(v-model) | 每页条数 | number | - |  |
-| pageSizeOptions | 指定每页可以显示多少条 | string\[] \| number\[] | \['10', '20', '50', '100'] |  |
+| pageSizeOptions | 指定每页可以显示多少条 | string\[] | \['10', '20', '30', '40'] |  |
 | responsive | 当 size 未指定时，根据屏幕宽度自动调整尺寸 | boolean | - | 3.1 |
 | showLessItems | 是否显示较少页面内容 | boolean | false | 1.5.0 |
 | showQuickJumper | 是否可以快速跳转至某页 | boolean | false |  |

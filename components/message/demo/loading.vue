@@ -19,10 +19,18 @@ Display a global loading indicator, which is dismissed by itself asynchronously.
 <template>
   <a-button @click="success">Display a loading indicator</a-button>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { message } from 'ant-design-vue';
-const success = () => {
-  const hide = message.loading('Action in progress..', 0);
-  setTimeout(hide, 2500);
-};
+import { defineComponent } from 'vue';
+export default defineComponent({
+  setup() {
+    const success = () => {
+      const hide = message.loading('Action in progress..', 0);
+      setTimeout(hide, 2500);
+    };
+    return {
+      success,
+    };
+  },
+});
 </script>

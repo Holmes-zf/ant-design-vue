@@ -7,7 +7,6 @@ import {
   onBeforeUnmount,
   onMounted,
   ref,
-  shallowRef,
   watch,
 } from 'vue';
 import addEventListenerWrap from '../vc-util/Dom/addEventListener';
@@ -36,9 +35,9 @@ export default defineComponent<StickyScrollBarProps>({
   emits: ['scroll'],
   setup(props, { emit, expose }) {
     const tableContext = useInjectTable();
-    const bodyScrollWidth = shallowRef(0);
-    const bodyWidth = shallowRef(0);
-    const scrollBarWidth = shallowRef(0);
+    const bodyScrollWidth = ref(0);
+    const bodyWidth = ref(0);
+    const scrollBarWidth = ref(0);
     watchEffect(
       () => {
         bodyScrollWidth.value = props.scrollBodySizeInfo.scrollWidth || 0;
@@ -49,7 +48,7 @@ export default defineComponent<StickyScrollBarProps>({
       { flush: 'post' },
     );
 
-    const scrollBarRef = shallowRef();
+    const scrollBarRef = ref();
 
     const [scrollState, setScrollState] = useLayoutState({
       scrollLeft: 0,
@@ -61,7 +60,7 @@ export default defineComponent<StickyScrollBarProps>({
       x: 0,
     });
 
-    const isActive = shallowRef(false);
+    const isActive = ref(false);
 
     const onMouseUp: MouseEventHandler = () => {
       isActive.value = false;

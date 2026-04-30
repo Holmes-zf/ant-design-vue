@@ -13,6 +13,9 @@ export { default as Alert } from './alert';
 export type { AvatarProps } from './avatar';
 export { default as Avatar, AvatarGroup } from './avatar';
 
+export type { BackTopProps } from './back-top';
+export { default as BackTop } from './back-top';
+
 export type { BadgeProps } from './badge';
 export { default as Badge, BadgeRibbon } from './badge';
 
@@ -73,13 +76,6 @@ export { default as Drawer } from './drawer';
 export type { EmptyProps } from './empty';
 export { default as Empty } from './empty';
 
-export type {
-  FloatButtonProps,
-  FloatButtonGroupProps,
-  BackTopProps,
-} from './float-button/interface';
-export { default as FloatButton, FloatButtonGroup, BackTop } from './float-button';
-
 export type { FormProps, FormItemProps, FormInstance, FormItemInstance } from './form';
 export { default as Form, FormItem, FormItemRest } from './form';
 
@@ -116,7 +112,6 @@ export type {
   MenuItemProps,
   MenuMode,
   MenuDividerProps,
-  ItemType,
 } from './menu';
 export { default as Menu, MenuDivider, MenuItem, MenuItemGroup, SubMenu } from './menu';
 
@@ -183,7 +178,7 @@ export type { SliderProps } from './slider';
 export { default as Slider } from './slider';
 
 export type { SpaceProps } from './space';
-export { default as Space, Compact } from './space';
+export { default as Space } from './space';
 
 export type { SpinProps } from './spin';
 export { default as Spin } from './spin';
@@ -249,21 +244,3 @@ export type { UploadProps, UploadListProps, UploadChangeParam, UploadFile } from
 export { default as Upload, UploadDragger } from './upload';
 
 export { default as LocaleProvider } from './locale-provider';
-
-export { default as Watermark } from './watermark';
-export type { WatermarkProps } from './watermark';
-
-export type { SegmentedProps } from './segmented';
-export { default as Segmented } from './segmented';
-
-export type { QRCodeProps } from './qrcode';
-export { default as QRCode } from './qrcode';
-
-export type { TourProps, TourStepProps } from './tour';
-export { default as Tour } from './tour';
-
-export type { AppProps } from './app';
-export { default as App } from './app';
-
-export type { FlexProps } from './flex';
-export { default as Flex } from './flex';

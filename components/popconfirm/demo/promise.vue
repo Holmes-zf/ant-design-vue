@@ -22,17 +22,26 @@ Asynchronously close a popconfirm when the OK button is pressed. For example, yo
     <a-button type="primary">Open Popconfirm with Promise</a-button>
   </a-popconfirm>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { message } from 'ant-design-vue';
-const confirm = (e: MouseEvent) => {
-  console.log(e);
-  return new Promise(resolve => {
-    setTimeout(() => resolve(true), 3000);
-  });
-};
+export default defineComponent({
+  setup() {
+    const confirm = (e: MouseEvent) => {
+      console.log(e);
+      return new Promise(resolve => {
+        setTimeout(() => resolve(true), 3000);
+      });
+    };
 
-const cancel = (e: MouseEvent) => {
-  console.log(e);
-  message.error('Click on No');
-};
+    const cancel = (e: MouseEvent) => {
+      console.log(e);
+      message.error('Click on No');
+    };
+    return {
+      confirm,
+      cancel,
+    };
+  },
+});
 </script>

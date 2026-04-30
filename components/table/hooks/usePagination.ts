@@ -3,13 +3,12 @@ import type { Ref } from 'vue';
 import { computed } from 'vue';
 import type { PaginationProps } from '../../pagination';
 import type { TablePaginationConfig } from '../interface';
-import extendsObject from '../../_util/extendsObject';
 
 export const DEFAULT_PAGE_SIZE = 10;
 
 export function getPaginationParam(
-  mergedPagination: TablePaginationConfig,
   pagination: TablePaginationConfig | boolean | undefined,
+  mergedPagination: TablePaginationConfig,
 ) {
   const param: any = {
     current: mergedPagination.current,
@@ -26,6 +25,23 @@ export function getPaginationParam(
   });
 
   return param;
+}
+
+function extendsObject<T extends Object>(...list: T[]) {
+  const result: T = {} as T;
+
+  list.forEach(obj => {
+    if (obj) {
+      Object.keys(obj).forEach(key => {
+        const val = (obj as any)[key];
+        if (val !== undefined) {
+          (result as any)[key] = val;
+        }
+      });
+    }
+  });
+
+  return result;
 }
 
 export default function usePagination(
@@ -65,7 +81,7 @@ export default function usePagination(
   });
 
   const refreshPagination = (current?: number, pageSize?: number) => {
-    if (paginationRef.value === false) return;
+    if (pagination.value === false) return;
     setInnerPagination({
       current: current ?? 1,
       pageSize: pageSize || mergedPagination.value.pageSize,
@@ -73,7 +89,7 @@ export default function usePagination(
   };
 
   const onInternalChange: PaginationProps['onChange'] = (current, pageSize) => {
-    if (paginationRef.value) {
+    if (pagination.value) {
       pagination.value.onChange?.(current, pageSize);
     }
     refreshPagination(current, pageSize);
@@ -82,7 +98,7 @@ export default function usePagination(
 
   return [
     computed(() => {
-      return paginationRef.value === false
+      return pagination.value === false
         ? {}
         : { ...mergedPagination.value, onChange: onInternalChange };
     }),

@@ -2,7 +2,7 @@ import TransBtn from '../TransBtn';
 import type { InnerSelectorProps } from './interface';
 import Input from './Input';
 import type { Ref, PropType } from 'vue';
-import { ref, watchEffect, computed, defineComponent, onMounted, shallowRef, watch } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import classNames from '../../_util/classNames';
 import pickAttrs from '../../_util/pickAttrs';
 import PropTypes from '../../_util/vue-types';
@@ -23,8 +23,6 @@ type SelectorProps = InnerSelectorProps & {
   tokenSeparators?: string[];
   tagRender?: (props: CustomTagProps) => VueNode;
   onToggleOpen: any;
-
-  compositionStatus: boolean;
 
   // Motion
   choiceTransitionName?: string;
@@ -48,7 +46,7 @@ const props = {
   autocomplete: String,
   activeDescendantId: String,
   tabindex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  compositionStatus: Boolean,
+
   removeIcon: PropTypes.any,
   choiceTransitionName: String,
 
@@ -79,9 +77,9 @@ const SelectSelector = defineComponent<SelectorProps>({
   inheritAttrs: false,
   props: props as any,
   setup(props) {
-    const measureRef = shallowRef();
-    const inputWidth = shallowRef(0);
-    const focused = shallowRef(false);
+    const measureRef = ref();
+    const inputWidth = ref(0);
+    const focused = ref(false);
     const legacyTreeSelectContext = useInjectLegacySelectContext();
     const selectionPrefixCls = computed(() => `${props.prefixCls}-selection`);
 
@@ -93,14 +91,11 @@ const SelectSelector = defineComponent<SelectorProps>({
       () =>
         props.mode === 'tags' || ((props.showSearch && (props.open || focused.value)) as boolean),
     );
-    const targetValue = ref('');
-    watchEffect(() => {
-      targetValue.value = inputValue.value;
-    });
+
     // We measure width and set to the input immediately
     onMounted(() => {
       watch(
-        targetValue,
+        inputValue,
         () => {
           inputWidth.value = measureRef.value.scrollWidth;
         },
@@ -151,7 +146,7 @@ const SelectSelector = defineComponent<SelectorProps>({
     ) {
       const onMouseDown = (e: MouseEvent) => {
         onPreventMouseDown(e);
-        props.onToggleOpen(!props.open);
+        props.onToggleOpen(!open);
       };
       let originData = option;
       // For TreeSelect
@@ -207,14 +202,6 @@ const SelectSelector = defineComponent<SelectorProps>({
       return defaultRenderSelector(content, content, false);
     }
 
-    const handleInput = (e: Event) => {
-      const composing = (e.target as any).composing;
-      targetValue.value = (e.target as any).value;
-      if (!composing) {
-        props.onInputChange(e);
-      }
-    };
-
     return () => {
       const {
         id,
@@ -228,13 +215,14 @@ const SelectSelector = defineComponent<SelectorProps>({
         autocomplete,
         activeDescendantId,
         tabindex,
-        compositionStatus,
+        onInputChange,
         onInputPaste,
         onInputKeyDown,
         onInputMouseDown,
         onInputCompositionStart,
         onInputCompositionEnd,
       } = props;
+
       // >>> Input Node
       const inputNode = (
         <div
@@ -253,10 +241,10 @@ const SelectSelector = defineComponent<SelectorProps>({
             autocomplete={autocomplete}
             editable={inputEditable.value}
             activeDescendantId={activeDescendantId}
-            value={targetValue.value}
+            value={inputValue.value}
             onKeydown={onInputKeyDown}
             onMousedown={onInputMouseDown}
-            onChange={handleInput}
+            onChange={onInputChange}
             onPaste={onInputPaste}
             onCompositionstart={onInputCompositionStart}
             onCompositionend={onInputCompositionEnd}
@@ -268,7 +256,7 @@ const SelectSelector = defineComponent<SelectorProps>({
 
           {/* Measure Node */}
           <span ref={measureRef} class={`${selectionPrefixCls.value}-search-mirror`} aria-hidden>
-            {targetValue.value}&nbsp;
+            {inputValue.value}&nbsp;
           </span>
         </div>
       );
@@ -289,7 +277,7 @@ const SelectSelector = defineComponent<SelectorProps>({
       return (
         <>
           {selectionNode}
-          {!values.length && !inputValue.value && !compositionStatus && (
+          {!values.length && !inputValue.value && (
             <span class={`${selectionPrefixCls.value}-placeholder`}>{placeholder}</span>
           )}
         </>

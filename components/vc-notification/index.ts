@@ -1,5 +1,4 @@
+// based on rc-notification 4.5.7
 import Notification from './Notification';
-import useNotification from './useNotification';
-import type { NotificationAPI } from './useNotification';
-export { useNotification, NotificationAPI };
+
 export default Notification;

@@ -26,35 +26,43 @@ Update content with unique key, or use reactive data.
     Open the notification box (update by reactive)
   </a-button>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
 import { notification } from 'ant-design-vue';
-import { ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 const key = 'updatable';
-const openNotification = () => {
-  notification.open({
-    key,
-    message: 'Notification Title',
-    description: 'description.',
-  });
-  setTimeout(() => {
-    notification.open({
-      key,
-      message: 'New Title',
-      description: 'New description.',
-    });
-  }, 1000);
-};
-const message = ref('Notification Title');
-const description = ref('description');
-const openNotification2 = () => {
-  // content must use function
-  notification.open({
-    message: () => message.value,
-    description: () => description.value,
-  });
-  setTimeout(() => {
-    message.value = 'New Title';
-    description.value = 'New description.';
-  }, 1000);
-};
+export default defineComponent({
+  setup() {
+    const openNotification = () => {
+      notification.open({
+        key,
+        message: 'Notification Title',
+        description: 'description.',
+      });
+      setTimeout(() => {
+        notification.open({
+          key,
+          message: 'New Title',
+          description: 'New description.',
+        });
+      }, 1000);
+    };
+    const message = ref('Notification Title');
+    const description = ref('description');
+    const openNotification2 = () => {
+      // content must use function
+      notification.open({
+        message: () => message.value,
+        description: () => description.value,
+      });
+      setTimeout(() => {
+        message.value = 'New Title';
+        description.value = 'New description.';
+      }, 1000);
+    };
+    return {
+      openNotification,
+      openNotification2,
+    };
+  },
+});
 </script>

@@ -12,44 +12,34 @@ Ant Design Vue 致力于提供给程序员**愉悦**的开发体验。
 
 ## 引入 ant-design-vue
 
-### 1. 新建项目
+### 1. 安装脚手架工具
 
-如果你需要新建一个项目，可以使用 [Vite](https://github.com/vitejs/vite)、[Rsbuild](https://github.com/web-infra-dev/rsbuild) 或 [Vue CLI](https://github.com/vuejs/vue-cli)。
-
-请使用命令行来初始化项目：
-
-- Vite:
-
-```bash
-$ npm create vite@latest
-```
-
-- Rsbuild:
-
-```bash
-$ npm create rsbuild@latest
-```
-
-- Vue CLI:
+[vue-cli](https://github.com/vuejs/vue-cli)
 
 ```bash
 $ npm install -g @vue/cli
 # OR
 $ yarn global add @vue/cli
+```
 
+### 2. 创建一个项目
+
+使用命令行进行初始化。
+
+```bash
 $ vue create antd-demo
 ```
 
-> Vue CLI 已经停止迭代，因此不推荐使用。
+并配置项目。
 
 若安装缓慢报错，可尝试用 `cnpm` 或别的镜像源自行安装：`rm -rf node_modules && cnpm install`。
 
-### 2. 使用组件
+### 3. 使用组件
 
 #### 安装
 
 ```bash
-$ npm i --save ant-design-vue@4.x
+$ npm i --save ant-design-vue
 ```
 
 #### 注册
@@ -62,7 +52,7 @@ $ npm i --save ant-design-vue@4.x
 import { createApp } from 'vue';
 import Antd from 'ant-design-vue';
 import App from './App';
-import 'ant-design-vue/dist/reset.css';
+import 'ant-design-vue/dist/antd.css';
 
 const app = createApp(App);
 
@@ -107,9 +97,37 @@ app.config.globalProperties.$message = message;
 </script>
 ```
 
+## 兼容性
+
+Ant Design Vue 2.x+ 支持所有的现代浏览器。
+
+如果需要支持 IE9+，你可以使用 Ant Design Vue 1.x & Vue 2.x。
+
 ## 按需加载
 
-`ant-design-vue` 默认支持基于 ES modules 的 tree shaking，直接引入 `import { Button } from 'ant-design-vue';` 就会有按需加载的效果。
+如果你仅需要加载使用的组件，可以通过以下的写法来按需加载组件。
+
+```jsx
+import Button from 'ant-design-vue/lib/button';
+import 'ant-design-vue/lib/button/style'; // 或者 ant-design-vue/lib/button/style/css 加载 css 文件
+```
+
+如果你使用了 babel，那么可以使用 [babel-plugin-import](https://github.com/ant-design/babel-plugin-import) 来进行按需加载，加入这个插件后。你可以仍然这么写：
+
+```jsx
+import { Button } from 'ant-design-vue';
+```
+
+插件会帮你转换成 `ant-design-vue/lib/xxx` 的写法。另外此插件配合 [style](https://github.com/ant-design/babel-plugin-import#usage) 属性可以做到模块样式的按需自动加载。
+
+> 注意，babel-plugin-import 的 `style` 属性除了引入对应组件的样式，也会引入一些必要的全局样式。如果你不需要它们，建议不要使用此属性。你可以 `import 'ant-design-vue/dist/antd.css` 手动引入，并覆盖全局样式。
+
+如果你使用的 Vite，你可以使用 [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components) 来进行按需加载。但是此插件无法处理非组件模块，如 message，这种组件需要手动加载：
+
+```ts
+import { message } from 'ant-design-vue';
+import 'ant-design-vue/es/message/style/css'; //vite只能用 ant-design-vue/es 而非 ant-design-vue/lib
+```
 
 ## 配置主题和字体
 

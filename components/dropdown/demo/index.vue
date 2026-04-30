@@ -7,8 +7,6 @@
     <item />
     <overlay-visible />
     <placement />
-    <arrow-vue />
-    <arrow-center-vue></arrow-center-vue>
     <sub-menu />
     <trigger />
     <loadingVue />
@@ -29,14 +27,11 @@ import Placement from './placement.vue';
 import SubMenu from './sub-menu.vue';
 import Trigger from './trigger.vue';
 import loadingVue from './loading.vue';
-import arrowVue from './arrow.vue';
-import arrowCenterVue from './arrow-center.vue';
+
 export default defineComponent({
   CN,
   US,
   components: {
-    arrowCenterVue,
-    arrowVue,
     loadingVue,
     Basic,
     ContextMenu,

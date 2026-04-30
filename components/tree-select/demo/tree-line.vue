@@ -35,7 +35,6 @@ Use `treeLine` to show the line style.
       placeholder="Please select"
       :tree-line="treeLine && { showLeafIcon }"
       :tree-data="treeData"
-      tree-node-filter-prop="title"
     >
       <template #title="{ value: val, title }">
         <b v-if="val === 'parent 1-1'" style="color: #08c">sss</b>
@@ -44,40 +43,49 @@ Use `treeLine` to show the line style.
     </a-tree-select>
   </a-space>
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
+<script lang="ts">
 import type { TreeSelectProps } from 'ant-design-vue';
-
-const treeLine = ref(true);
-const showLeafIcon = ref(false);
-const value = ref<string>();
-const treeData = ref<TreeSelectProps['treeData']>([
-  {
-    title: 'parent 1',
-    value: 'parent 1',
-    children: [
+import { defineComponent, ref, watch } from 'vue';
+export default defineComponent({
+  setup() {
+    const treeLine = ref(true);
+    const showLeafIcon = ref(false);
+    const value = ref<string>();
+    const treeData = ref<TreeSelectProps['treeData']>([
       {
-        title: 'parent 1-0',
-        value: 'parent 1-0',
+        title: 'parent 1',
+        value: 'parent 1',
         children: [
           {
-            title: 'my leaf',
-            value: 'leaf1',
+            title: 'parent 1-0',
+            value: 'parent 1-0',
+            children: [
+              {
+                title: 'my leaf',
+                value: 'leaf1',
+              },
+              {
+                title: 'your leaf',
+                value: 'leaf2',
+              },
+            ],
           },
           {
-            title: 'your leaf',
-            value: 'leaf2',
+            title: 'parent 1-1',
+            value: 'parent 1-1',
           },
         ],
       },
-      {
-        title: 'parent 1-1',
-        value: 'parent 1-1',
-      },
-    ],
+    ]);
+    watch(value, () => {
+      console.log(value.value);
+    });
+    return {
+      treeLine,
+      showLeafIcon,
+      value,
+      treeData,
+    };
   },
-]);
-watch(value, () => {
-  console.log(value.value);
 });
 </script>

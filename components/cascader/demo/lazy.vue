@@ -26,43 +26,51 @@ Load options lazily with `loadData`.
     change-on-select
   />
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import type { CascaderProps } from 'ant-design-vue';
 
-const options = ref<CascaderProps['options']>([
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    isLeaf: false,
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    isLeaf: false,
-  },
-]);
-
-const loadData: CascaderProps['loadData'] = selectedOptions => {
-  const targetOption = selectedOptions[selectedOptions.length - 1];
-  targetOption.loading = true;
-
-  // load options lazily
-  setTimeout(() => {
-    targetOption.loading = false;
-    targetOption.children = [
+export default defineComponent({
+  setup() {
+    const options = ref<CascaderProps['options']>([
       {
-        label: `${targetOption.label} Dynamic 1`,
-        value: 'dynamic1',
+        value: 'zhejiang',
+        label: 'Zhejiang',
+        isLeaf: false,
       },
       {
-        label: `${targetOption.label} Dynamic 2`,
-        value: 'dynamic2',
+        value: 'jiangsu',
+        label: 'Jiangsu',
+        isLeaf: false,
       },
-    ];
-    options.value = [...options.value];
-  }, 1000);
-};
+    ]);
 
-const value = ref<string[]>([]);
+    const loadData: CascaderProps['loadData'] = selectedOptions => {
+      const targetOption = selectedOptions[selectedOptions.length - 1];
+      targetOption.loading = true;
+
+      // load options lazily
+      setTimeout(() => {
+        targetOption.loading = false;
+        targetOption.children = [
+          {
+            label: `${targetOption.label} Dynamic 1`,
+            value: 'dynamic1',
+          },
+          {
+            label: `${targetOption.label} Dynamic 2`,
+            value: 'dynamic2',
+          },
+        ];
+        options.value = [...options.value];
+      }, 1000);
+    };
+
+    return {
+      value: ref<string[]>([]),
+      options,
+      loadData,
+    };
+  },
+});
 </script>

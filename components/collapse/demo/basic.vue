@@ -29,13 +29,22 @@ By default, any number of panels can be expanded at a time. The first panel is e
     </a-collapse-panel>
   </a-collapse>
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
+<script lang="ts">
+import { defineComponent, ref, watch } from 'vue';
 
-const text = `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`;
-const activeKey = ref(['1']);
+export default defineComponent({
+  setup() {
+    const text = `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`;
+    const activeKey = ref(['1']);
 
-watch(activeKey, val => {
-  console.log(val);
+    watch(activeKey, val => {
+      console.log(val);
+    });
+
+    return {
+      text,
+      activeKey,
+    };
+  },
 });
 </script>

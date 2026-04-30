@@ -34,11 +34,11 @@ import scrollTo from '../_util/scrollTo';
 import defaultLocale from '../locale/en_US';
 import type { SizeType } from '../config-provider';
 import devWarning from '../vc-util/devWarning';
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, PropType } from 'vue';
 import { nextTick, reactive, ref, computed, defineComponent, toRef, watchEffect, watch } from 'vue';
-import type { DefaultRecordType, RenderExpandIconProps } from '../vc-table/interface';
+import type { DefaultRecordType } from '../vc-table/interface';
 import useBreakpoint from '../_util/hooks/useBreakpoint';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import { useLocaleReceiver } from '../locale-provider/LocaleReceiver';
 import classNames from '../_util/classNames';
 import omit from '../_util/omit';
@@ -47,19 +47,6 @@ import { useProvideSlots, useProvideTableContext } from './context';
 import type { ContextSlots } from './context';
 import useColumns from './hooks/useColumns';
 import { convertChildrenToColumns } from './util';
-
-import {
-  stringType,
-  booleanType,
-  arrayType,
-  someType,
-  functionType,
-  objectType,
-} from '../_util/type';
-
-// CSSINJS
-import useStyle from './style';
-import type { CustomSlotsType } from '../_util/type';
 
 export type { ColumnsType, TablePaginationConfig };
 
@@ -108,7 +95,6 @@ export interface TableProps<RecordType = DefaultRecordType>
     sorter: SorterResult<RecordType> | SorterResult<RecordType>[],
     extra: TableCurrentDataSource<RecordType>,
   ) => void;
-  onResizeColumn?: (w: number, col: ColumnType) => void;
   rowSelection?: TableRowSelection<RecordType>;
 
   getPopupContainer?: GetPopupContainer;
@@ -121,82 +107,154 @@ export interface TableProps<RecordType = DefaultRecordType>
 
 export const tableProps = () => {
   return {
-    prefixCls: stringType<string>(),
-    columns: arrayType<ColumnsType>(),
-    rowKey: someType<TableProps['rowKey']>([String, Function]),
-    tableLayout: stringType<TableProps['tableLayout']>(),
-    rowClassName: someType<TableProps['rowClassName']>([String, Function]),
-    title: functionType<TableProps['title']>(),
-    footer: functionType<TableProps['footer']>(),
-    id: stringType<TableProps['id']>(),
-    showHeader: booleanType(),
-    components: objectType<TableProps['components']>(),
-    customRow: functionType<TableProps['customRow']>(),
-    customHeaderRow: functionType<TableProps['customHeaderRow']>(),
-    direction: stringType<TableProps['direction']>(),
-    expandFixed: someType<TableProps['expandFixed']>([Boolean, String]),
-    expandColumnWidth: Number,
-    expandedRowKeys: arrayType<TableProps['expandedRowKeys']>(),
-    defaultExpandedRowKeys: arrayType<TableProps['defaultExpandedRowKeys']>(),
-    expandedRowRender: functionType<TableProps['expandedRowRender']>(),
-    expandRowByClick: booleanType(),
-    expandIcon: functionType<TableProps['expandIcon']>(),
-    onExpand: functionType<TableProps['onExpand']>(),
-    onExpandedRowsChange: functionType<TableProps['onExpandedRowsChange']>(),
-    'onUpdate:expandedRowKeys': functionType<TableProps['onExpandedRowsChange']>(),
-    defaultExpandAllRows: booleanType(),
-    indentSize: Number,
+    prefixCls: { type: String as PropType<string>, default: undefined },
+    columns: { type: Array as PropType<ColumnsType>, default: undefined },
+    rowKey: { type: [String, Function] as PropType<TableProps['rowKey']>, default: undefined },
+    tableLayout: { type: String as PropType<TableProps['tableLayout']>, default: undefined },
+    rowClassName: {
+      type: [String, Function] as PropType<TableProps['rowClassName']>,
+      default: undefined,
+    },
+    title: { type: Function as PropType<TableProps['title']>, default: undefined },
+    footer: { type: Function as PropType<TableProps['footer']>, default: undefined },
+    id: { type: String as PropType<TableProps['id']>, default: undefined },
+    showHeader: { type: Boolean as PropType<TableProps['showHeader']>, default: undefined },
+    components: { type: Object as PropType<TableProps['components']>, default: undefined },
+    customRow: { type: Function as PropType<TableProps['customRow']>, default: undefined },
+    customHeaderRow: {
+      type: Function as PropType<TableProps['customHeaderRow']>,
+      default: undefined,
+    },
+    direction: { type: String as PropType<TableProps['direction']>, default: undefined },
+    expandFixed: {
+      type: [Boolean, String] as PropType<TableProps['expandFixed']>,
+      default: undefined,
+    },
+    expandColumnWidth: {
+      type: Number as PropType<TableProps['expandColumnWidth']>,
+      default: undefined,
+    },
+    expandedRowKeys: {
+      type: Array as PropType<TableProps['expandedRowKeys']>,
+      default: undefined as TableProps['expandedRowKeys'],
+    },
+    defaultExpandedRowKeys: {
+      type: Array as PropType<TableProps['defaultExpandedRowKeys']>,
+      default: undefined as TableProps['defaultExpandedRowKeys'],
+    },
+    expandedRowRender: {
+      type: Function as PropType<TableProps['expandedRowRender']>,
+      default: undefined,
+    },
+    expandRowByClick: {
+      type: Boolean as PropType<TableProps['expandRowByClick']>,
+      default: undefined,
+    },
+    expandIcon: { type: Function as PropType<TableProps['expandIcon']>, default: undefined },
+    onExpand: { type: Function as PropType<TableProps['onExpand']>, default: undefined },
+    onExpandedRowsChange: {
+      type: Function as PropType<TableProps['onExpandedRowsChange']>,
+      default: undefined,
+    },
+    'onUpdate:expandedRowKeys': {
+      type: Function as PropType<TableProps['onExpandedRowsChange']>,
+      default: undefined,
+    },
+    defaultExpandAllRows: {
+      type: Boolean as PropType<TableProps['defaultExpandAllRows']>,
+      default: undefined,
+    },
+    indentSize: { type: Number as PropType<TableProps['indentSize']>, default: undefined },
     /** @deprecated Please use `EXPAND_COLUMN` in `columns` directly */
-    expandIconColumnIndex: Number,
-    showExpandColumn: booleanType(),
-    expandedRowClassName: functionType<TableProps['expandedRowClassName']>(),
-    childrenColumnName: stringType<TableProps['childrenColumnName']>(),
-    rowExpandable: functionType<TableProps['rowExpandable']>(),
-    sticky: someType<TableProps['sticky']>([Boolean, Object]),
+    expandIconColumnIndex: {
+      type: Number as PropType<TableProps['expandIconColumnIndex']>,
+      default: undefined,
+    },
+    showExpandColumn: { type: Boolean, default: undefined },
+    expandedRowClassName: {
+      type: Function as PropType<TableProps['expandedRowClassName']>,
+      default: undefined,
+    },
+    childrenColumnName: {
+      type: String as PropType<TableProps['childrenColumnName']>,
+      default: undefined,
+    },
+    rowExpandable: { type: Function as PropType<TableProps['rowExpandable']>, default: undefined },
+    sticky: { type: [Boolean, Object] as PropType<TableProps['sticky']>, default: undefined },
 
     dropdownPrefixCls: String,
-    dataSource: arrayType<RcTableProps['data']>(),
-    pagination: someType<false | TablePaginationConfig>([Boolean, Object]),
-    loading: someType<boolean | SpinProps>([Boolean, Object]),
-    size: stringType<SizeType>(),
-    bordered: booleanType(),
-    locale: objectType<TableLocale>(),
+    dataSource: { type: Array as PropType<RcTableProps['data']>, default: undefined },
+    pagination: {
+      type: [Boolean, Object] as PropType<false | TablePaginationConfig>,
+      default: undefined,
+    },
+    loading: { type: [Boolean, Object] as PropType<boolean | SpinProps>, default: undefined },
+    size: { type: String as PropType<SizeType>, default: undefined },
+    bordered: Boolean,
+    locale: { type: Object as PropType<TableLocale>, default: undefined },
 
-    onChange:
-      functionType<
+    onChange: {
+      type: Function as PropType<
         (
           pagination: TablePaginationConfig,
           filters: Record<string, FilterValue | null>,
           sorter: SorterResult | SorterResult[],
           extra: TableCurrentDataSource,
         ) => void
-      >(),
-    onResizeColumn: functionType<(w: number, col: ColumnType) => void>(),
-    rowSelection: objectType<TableRowSelection>(),
-    getPopupContainer: functionType<GetPopupContainer>(),
-    scroll: objectType<
-      RcTableProps['scroll'] & {
-        scrollToFirstRowOnChange?: boolean;
-      }
-    >(),
-    sortDirections: arrayType<SortOrder[]>(),
-    showSorterTooltip: someType<boolean | TooltipProps>([Boolean, Object], true),
-    transformCellText: functionType<TableProps['transformCellText']>(),
+      >,
+      default: undefined,
+    },
+    onResizeColumn: {
+      type: Function as PropType<(w: number, col: ColumnType) => void>,
+      default: undefined,
+    },
+    rowSelection: { type: Object as PropType<TableRowSelection>, default: undefined },
+    getPopupContainer: { type: Function as PropType<GetPopupContainer>, default: undefined },
+    scroll: {
+      type: Object as PropType<
+        RcTableProps['scroll'] & {
+          scrollToFirstRowOnChange?: boolean;
+        }
+      >,
+      default: undefined,
+    },
+    sortDirections: { type: Array as PropType<SortOrder[]>, default: undefined },
+    showSorterTooltip: {
+      type: [Boolean, Object] as PropType<boolean | TooltipProps>,
+      default: true,
+    },
+    contextSlots: {
+      type: Object as PropType<ContextSlots>,
+    },
+    transformCellText: {
+      type: Function as PropType<TableProps['transformCellText']>,
+    },
   };
 };
 
-const InternalTable = defineComponent({
-  name: 'InternalTable',
+const InteralTable = defineComponent<
+  TableProps & {
+    contextSlots: ContextSlots;
+  }
+>({
+  name: 'InteralTable',
   inheritAttrs: false,
-  props: initDefaultProps(
-    {
-      ...tableProps(),
-      contextSlots: objectType<ContextSlots>(),
-    },
-    {
-      rowKey: 'key',
-    },
-  ),
+  props: initDefaultProps(tableProps(), {
+    rowKey: 'key',
+  }) as any,
+  // emits: ['expandedRowsChange', 'change', 'expand'],
+  slots: [
+    'emptyText',
+    'expandIcon',
+    'title',
+    'footer',
+    'summary',
+    'expandedRowRender',
+    'bodyCell',
+    'headerCell',
+    'customFilterIcon',
+    'customFilterDropdown',
+  ],
   setup(props, { attrs, slots, expose, emit }) {
     devWarning(
       !(typeof props.rowKey === 'function' && props.rowKey.length > 1),
@@ -229,12 +287,8 @@ const InternalTable = defineComponent({
       prefixCls,
       configProvider,
     } = useConfigInject('table', props);
-
-    // Style
-    const [wrapSSR, hashId] = useStyle(prefixCls);
-
     const transformCellText = computed(
-      () => props.transformCellText || configProvider.transformCellText?.value,
+      () => props.transformCellText || configProvider.transformCellText,
     );
     const [tableLocale] = useLocaleReceiver('Table', defaultLocale.Table, toRef(props, 'locale'));
     const rawData = computed(() => props.dataSource || EMPTY_LIST);
@@ -374,19 +428,9 @@ const InternalTable = defineComponent({
 
     const [transformBasicColumns] = useColumns(toRef(props, 'contextSlots'));
 
-    const columnTitleProps = computed(() => {
-      const mergedFilters: Record<string, FilterValue> = {};
-      const filtersValue = filters.value;
-      Object.keys(filtersValue).forEach(filterKey => {
-        if (filtersValue[filterKey] !== null) {
-          mergedFilters[filterKey] = filtersValue[filterKey]!;
-        }
-      });
-      return {
-        ...sorterTitleProps.value,
-        filters: mergedFilters,
-      };
-    });
+    const columnTitleProps = computed(() => ({
+      ...sorterTitleProps.value,
+    }));
     const [transformTitleColumns] = useTitleColumns(columnTitleProps);
 
     // ========================== Pagination ==========================
@@ -414,7 +458,7 @@ const InternalTable = defineComponent({
       changeEventInfo.pagination =
         props.pagination === false
           ? {}
-          : getPaginationParam(mergedPagination.value, props.pagination);
+          : getPaginationParam(props.pagination, mergedPagination.value);
 
       changeEventInfo.resetPagination = resetPagination;
     });
@@ -557,8 +601,8 @@ const InternalTable = defineComponent({
         const defaultPosition = direction.value === 'rtl' ? 'left' : 'right';
         const { position } = mergedPagination.value;
         if (position !== null && Array.isArray(position)) {
-          const topPos = position.find(p => p.includes('top'));
-          const bottomPos = position.find(p => p.includes('bottom'));
+          const topPos = position.find(p => p.indexOf('top') !== -1);
+          const bottomPos = position.find(p => p.indexOf('bottom') !== -1);
           const isDisable = position.every(p => `${p}` === 'none');
           if (!topPos && !bottomPos && !isDisable) {
             bottomPaginationNode = renderPagination(defaultPosition);
@@ -593,10 +637,9 @@ const InternalTable = defineComponent({
           [`${prefixCls.value}-wrapper-rtl`]: direction.value === 'rtl',
         },
         attrs.class,
-        hashId.value,
       );
       const tableProps = omit(props, ['columns']);
-      return wrapSSR(
+      return (
         <div class={wrapperClassNames} style={attrs.style as CSSProperties}>
           <Spin spinning={false} {...spinProps}>
             {topPaginationNode}
@@ -629,57 +672,34 @@ const InternalTable = defineComponent({
               v-slots={{
                 ...slots,
                 emptyText: () =>
-                  slots.emptyText?.() || props.locale?.emptyText || renderEmpty('Table'),
+                  slots.emptyText?.() || props.locale?.emptyText || renderEmpty.value('Table'),
               }}
             />
             {bottomPaginationNode}
           </Spin>
-        </div>,
+        </div>
       );
     };
   },
 });
 
-const Table = defineComponent({
+const Table = defineComponent<TableProps>({
   name: 'ATable',
   inheritAttrs: false,
-  props: initDefaultProps(tableProps(), {
-    rowKey: 'key',
-  }),
-  slots: Object as CustomSlotsType<{
-    emptyText?: any;
-    expandIcon?: RenderExpandIconProps<any>;
-    title?: any;
-    footer?: any;
-    summary?: any;
-    expandedRowRender?: any;
-    expandColumnTitle?: any;
-    bodyCell?: (props: {
-      text: any;
-      value: any;
-      record: Record<string, any>;
-      index: number;
-      column: ColumnType;
-    }) => void;
-    headerCell?: (props: { title: any; column: ColumnType }) => void;
-    customFilterIcon?: any;
-    customFilterDropdown?: any;
-    default: any;
-  }>,
-  setup(props, { attrs, slots, expose }) {
+  setup(_props, { attrs, slots, expose }) {
     const table = ref();
     expose({
       table,
     });
     return () => {
+      const props = attrs as TableProps;
       const columns = props.columns || convertChildrenToColumns(slots.default?.());
       return (
-        <InternalTable
+        <InteralTable
           ref={table}
           {...attrs}
-          {...props}
           columns={columns || []}
-          expandedRowRender={slots.expandedRowRender || props.expandedRowRender}
+          expandedRowRender={slots.expandedRowRender}
           contextSlots={{ ...slots }} // use new object, 否则slot热更新失效，原因需进一步探究
           v-slots={slots}
         />

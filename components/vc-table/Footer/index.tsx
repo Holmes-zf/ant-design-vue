@@ -13,7 +13,7 @@ export interface FooterProps<RecordType = DefaultRecordType> {
 }
 
 export default defineComponent<FooterProps>({
-  name: 'TableFooter',
+  name: 'Footer',
   inheritAttrs: false,
   props: ['stickyOffsets', 'flattenColumns'] as any,
   setup(props, { slots }) {

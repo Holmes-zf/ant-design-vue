@@ -47,11 +47,17 @@ Top-bottom structure is conform with the top-bottom viewing habit, it's a classi
     </a-layout-footer>
   </a-layout>
 </template>
-<script lang="ts" setup>
-import { ref } from 'vue';
-const selectedKeys = ref<string[]>(['2']);
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    return {
+      selectedKeys: ref<string[]>(['2']),
+    };
+  },
+});
 </script>
-<style scoped>
+<style>
 .site-layout-content {
   min-height: 280px;
   padding: 24px;

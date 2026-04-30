@@ -1,44 +1,26 @@
 import type { ExtractPropTypes } from 'vue';
 import { defineComponent, nextTick, onBeforeUnmount, onMounted, watch } from 'vue';
-import { initDefaultProps } from '../_util/props-util';
+import PropTypes from '../_util/vue-types';
+import { getPropsSlot, initDefaultProps } from '../_util/props-util';
 import classNames from '../_util/classNames';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import { useInjectAnchor } from './context';
-import type { Key, VueNode, CustomSlotsType } from '../_util/type';
-import { objectType, anyType } from '../_util/type';
-import type { CSSProperties } from '../_util/cssinjs/hooks/useStyleRegister';
 
 export const anchorLinkProps = () => ({
   prefixCls: String,
   href: String,
-  title: anyType<VueNode | ((item: any) => VueNode)>(),
+  title: PropTypes.any,
   target: String,
-  /* private use  */
-  customTitleProps: objectType<AnchorLinkItemProps>(),
 });
-export interface AnchorLinkItemProps {
-  key: Key;
-  class?: string;
-  style?: CSSProperties;
-  href?: string;
-  target?: string;
-  children?: AnchorLinkItemProps[];
-  title?: VueNode | ((item: AnchorLinkItemProps) => VueNode);
-}
 
 export type AnchorLinkProps = Partial<ExtractPropTypes<ReturnType<typeof anchorLinkProps>>>;
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
   name: 'AAnchorLink',
-  inheritAttrs: false,
   props: initDefaultProps(anchorLinkProps(), { href: '#' }),
-  slots: Object as CustomSlotsType<{
-    title: any;
-    default: any;
-    customTitle: any;
-  }>,
-  setup(props, { slots, attrs }) {
+  slots: ['title'],
+  setup(props, { slots }) {
     let mergedTitle = null;
     const {
       handleClick: contextHandleClick,
@@ -74,30 +56,27 @@ export default defineComponent({
     });
 
     return () => {
-      const { href, target, title = slots.title, customTitleProps = {} } = props;
+      const { href, target } = props;
       const pre = prefixCls.value;
-      mergedTitle = typeof title === 'function' ? title(customTitleProps) : title;
+      const title = getPropsSlot(slots, props, 'title');
+      mergedTitle = title;
       const active = activeLink.value === href;
-      const wrapperClassName = classNames(
-        `${pre}-link`,
-        {
-          [`${pre}-link-active`]: active,
-        },
-        attrs.class,
-      );
+      const wrapperClassName = classNames(`${pre}-link`, {
+        [`${pre}-link-active`]: active,
+      });
       const titleClassName = classNames(`${pre}-link-title`, {
         [`${pre}-link-title-active`]: active,
       });
       return (
-        <div {...attrs} class={wrapperClassName}>
+        <div class={wrapperClassName}>
           <a
             class={titleClassName}
             href={href}
-            title={typeof mergedTitle === 'string' ? mergedTitle : ''}
+            title={typeof title === 'string' ? title : ''}
             target={target}
             onClick={handleClick}
           >
-            {slots.customTitle ? slots.customTitle(customTitleProps) : mergedTitle}
+            {title}
           </a>
           {slots.default?.()}
         </div>

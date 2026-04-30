@@ -1,24 +1,14 @@
-import type { ComputedRef, ExtractPropTypes, InjectionKey, PropType, Ref } from 'vue';
+import type { ExtractPropTypes, InjectionKey, PropType, Ref } from 'vue';
 import { computed, inject, provide } from 'vue';
 import type { ValidateMessages } from '../form/interface';
 import type { RequiredMark } from '../form/Form';
 import type { RenderEmptyHandler } from './renderEmpty';
 import type { TransformCellTextProps } from '../table/interface';
 import type { Locale } from '../locale-provider';
-import type { DerivativeFunc } from '../_util/cssinjs';
-import type { AliasToken, SeedToken } from '../theme/internal';
-import type { MapToken, OverrideToken } from '../theme/interface';
-import type { VueNode } from '../_util/type';
-import { objectType } from '../_util/type';
-
-export const defaultIconPrefixCls = 'anticon';
 
 type GlobalFormCOntextProps = {
   validateMessages?: Ref<ValidateMessages>;
 };
-
-export type DirectionType = 'ltr' | 'rtl' | undefined;
-
 export const GlobalFormContextKey: InjectionKey<GlobalFormCOntextProps> =
   Symbol('GlobalFormContextKey');
 
@@ -49,20 +39,38 @@ export type SizeType = 'small' | 'middle' | 'large' | undefined;
 
 export type Direction = 'ltr' | 'rtl';
 
-export type MappingAlgorithm = DerivativeFunc<SeedToken, MapToken>;
-
-export interface ThemeConfig {
-  token?: Partial<AliasToken>;
-  components?: OverrideToken;
-  algorithm?: MappingAlgorithm | MappingAlgorithm[];
-  hashed?: boolean;
-  inherit?: boolean;
+export interface ConfigConsumerProps {
+  getTargetContainer?: () => HTMLElement;
+  getPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
+  rootPrefixCls?: string;
+  getPrefixCls: (suffixCls?: string, customizePrefixCls?: string) => string;
+  renderEmpty: RenderEmptyHandler;
+  transformCellText?: (tableProps: TransformCellTextProps) => any;
+  csp?: CSPConfig;
+  autoInsertSpaceInButton?: boolean;
+  input?: {
+    autocomplete?: string;
+  };
+  locale?: Locale;
+  pageHeader?: {
+    ghost: boolean;
+  };
+  componentSize?: SizeType;
+  direction?: 'ltr' | 'rtl';
+  space?: {
+    size?: SizeType | number;
+  };
+  virtual?: boolean;
+  dropdownMatchSelectWidth?: boolean | number;
+  form?: {
+    requiredMark?: RequiredMark;
+    colon?: boolean;
+  };
 }
 
 export const configProviderProps = () => ({
-  iconPrefixCls: String,
   getTargetContainer: {
-    type: Function as PropType<() => HTMLElement | Window>,
+    type: Function as PropType<() => HTMLElement>,
   },
   getPopupContainer: {
     type: Function as PropType<(triggerNode?: HTMLElement) => HTMLElement>,
@@ -77,101 +85,46 @@ export const configProviderProps = () => ({
   transformCellText: {
     type: Function as PropType<(tableProps: TransformCellTextProps) => any>,
   },
-  csp: objectType<CSPConfig>(),
-  input: objectType<{ autocomplete?: string }>(),
+  csp: {
+    type: Object as PropType<CSPConfig>,
+    default: undefined as CSPConfig,
+  },
+  input: {
+    type: Object as PropType<{ autocomplete: string }>,
+  },
   autoInsertSpaceInButton: { type: Boolean, default: undefined },
-  locale: objectType<Locale>(),
-  pageHeader: objectType<{ ghost?: boolean }>(),
+  locale: {
+    type: Object as PropType<Locale>,
+    default: undefined as Locale,
+  },
+  pageHeader: {
+    type: Object as PropType<{ ghost: boolean }>,
+  },
   componentSize: {
     type: String as PropType<SizeType>,
   },
-  componentDisabled: { type: Boolean, default: undefined },
   direction: {
     type: String as PropType<'ltr' | 'rtl'>,
-    default: 'ltr',
   },
-  space: objectType<{ size?: SizeType | number }>(),
+  space: {
+    type: Object as PropType<{ size: SizeType | number }>,
+  },
   virtual: { type: Boolean, default: undefined },
   dropdownMatchSelectWidth: { type: [Number, Boolean], default: true },
-  form: objectType<{
-    validateMessages?: ValidateMessages;
-    requiredMark?: RequiredMark;
-    colon?: boolean;
-  }>(),
-  pagination: objectType<{
-    showSizeChanger?: boolean;
-  }>(),
-  theme: objectType<ThemeConfig>(),
-  select: objectType<{
-    showSearch?: boolean;
-  }>(),
-  wave: objectType<{
-    disabled?: boolean;
-  }>(),
+  form: {
+    type: Object as PropType<{
+      validateMessages?: ValidateMessages;
+      requiredMark?: RequiredMark;
+      colon?: boolean;
+    }>,
+    default: undefined as {
+      validateMessages?: ValidateMessages;
+      requiredMark?: RequiredMark;
+      colon?: boolean;
+    },
+  },
+  // internal use
+  notUpdateGlobalConfig: Boolean,
 });
 
 export type ConfigProviderProps = Partial<ExtractPropTypes<ReturnType<typeof configProviderProps>>>;
-
-export interface ConfigProviderInnerProps {
-  csp?: ComputedRef<CSPConfig>;
-  autoInsertSpaceInButton?: ComputedRef<boolean>;
-  locale?: ComputedRef<Locale>;
-  direction?: ComputedRef<'ltr' | 'rtl'>;
-  space?: ComputedRef<{
-    size?: number | SizeType;
-  }>;
-  virtual?: ComputedRef<boolean>;
-  dropdownMatchSelectWidth?: ComputedRef<number | boolean>;
-  getPrefixCls: (suffixCls?: string, customizePrefixCls?: string) => string;
-  iconPrefixCls: ComputedRef<string>;
-  theme?: ComputedRef<ThemeConfig>;
-  renderEmpty?: (name?: string) => VueNode;
-  getTargetContainer?: ComputedRef<() => HTMLElement | Window>;
-  getPopupContainer?: ComputedRef<(triggerNode?: HTMLElement) => HTMLElement>;
-  pageHeader?: ComputedRef<{
-    ghost?: boolean;
-  }>;
-  input?: ComputedRef<{
-    autocomplete?: string;
-  }>;
-  pagination?: ComputedRef<{
-    showSizeChanger?: boolean;
-  }>;
-  form?: ComputedRef<{
-    validateMessages?: ValidateMessages;
-    requiredMark?: RequiredMark;
-    colon?: boolean;
-  }>;
-  select?: ComputedRef<{
-    showSearch?: boolean;
-  }>;
-  componentSize?: ComputedRef<SizeType>;
-  componentDisabled?: ComputedRef<boolean>;
-  transformCellText?: ComputedRef<(tableProps: TransformCellTextProps) => any>;
-  wave?: ComputedRef<{
-    disabled?: boolean;
-  }>;
-  flex?: ComputedRef<{
-    vertical?: boolean;
-  }>;
-}
-
-export const configProviderKey: InjectionKey<ConfigProviderInnerProps> = Symbol('configProvider');
-
-export const defaultConfigProvider: ConfigProviderInnerProps = {
-  getPrefixCls: (suffixCls?: string, customizePrefixCls?: string) => {
-    if (customizePrefixCls) return customizePrefixCls;
-    return suffixCls ? `ant-${suffixCls}` : 'ant';
-  },
-  iconPrefixCls: computed(() => defaultIconPrefixCls),
-  getPopupContainer: computed(() => () => document.body),
-  direction: computed(() => 'ltr'),
-};
-
-export const useConfigContextInject = () => {
-  return inject(configProviderKey, defaultConfigProvider);
-};
-
-export const useConfigContextProvider = (props: ConfigProviderInnerProps) => {
-  return provide(configProviderKey, props);
-};

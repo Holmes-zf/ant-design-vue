@@ -4,6 +4,7 @@ import {
   toRaw,
   onMounted,
   onUpdated,
+  ref,
   defineComponent,
   watchEffect,
   computed,
@@ -139,9 +140,9 @@ const List = defineComponent({
       },
       { immediate: true },
     );
-    const componentRef = shallowRef<HTMLDivElement>();
-    const fillerInnerRef = shallowRef<HTMLDivElement>();
-    const scrollBarRef = shallowRef<any>(); // Hack on scrollbar to enable flash call
+    const componentRef = ref<HTMLDivElement>();
+    const fillerInnerRef = ref<HTMLDivElement>();
+    const scrollBarRef = ref<any>(); // Hack on scrollbar to enable flash call
     // =============================== Item Key ===============================
     const getKey = (item: Record<string, any>) => {
       return itemKey.value(item);
@@ -188,7 +189,7 @@ const List = defineComponent({
       offset: undefined,
     });
 
-    const offsetHeight = shallowRef(0);
+    const offsetHeight = ref(0);
     onMounted(() => {
       nextTick(() => {
         offsetHeight.value = fillerInnerRef.value?.offsetHeight || 0;
@@ -442,9 +443,7 @@ const List = defineComponent({
       },
       { flush: 'post' },
     );
-    const delayHideScrollBar = () => {
-      scrollBarRef.value?.delayHidden();
-    };
+
     return {
       state,
       mergedData,
@@ -459,10 +458,8 @@ const List = defineComponent({
       sharedConfig,
       scrollBarRef,
       fillerInnerRef,
-      delayHideScrollBar,
     };
   },
-
   render() {
     const {
       prefixCls = 'rc-virtual-list',
@@ -492,7 +489,6 @@ const List = defineComponent({
       sharedConfig,
       setInstance,
       mergedData,
-      delayHideScrollBar,
     } = this;
     return (
       <div
@@ -508,7 +504,6 @@ const List = defineComponent({
           style={componentStyle}
           ref="componentRef"
           onScroll={onFallbackScroll}
-          onMouseenter={delayHideScrollBar}
         >
           <Filler
             prefixCls={prefixCls}

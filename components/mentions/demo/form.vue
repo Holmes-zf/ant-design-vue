@@ -24,7 +24,11 @@ to work with `Form`.
       name="coders"
       v-bind="validateInfos.coders"
     >
-      <a-mentions v-model:value="modelRef.coders" rows="1" :options="options"></a-mentions>
+      <a-mentions v-model:value="modelRef.coders" rows="1">
+        <a-mentions-option value="afc163">afc163</a-mentions-option>
+        <a-mentions-option value="zombieJ">zombieJ</a-mentions-option>
+        <a-mentions-option value="yesmeck">yesmeck</a-mentions-option>
+      </a-mentions>
     </a-form-item>
     <a-form-item
       label="Bio"
@@ -37,8 +41,11 @@ to work with `Form`.
         v-model:value="modelRef.bio"
         rows="3"
         placeholder="You can use @ to ref user here"
-        :options="options"
-      ></a-mentions>
+      >
+        <a-mentions-option value="afc163">afc163</a-mentions-option>
+        <a-mentions-option value="zombieJ">zombieJ</a-mentions-option>
+        <a-mentions-option value="yesmeck">yesmeck</a-mentions-option>
+      </a-mentions>
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
       <a-button type="primary" @click="handleSubmit">Submit</a-button>
@@ -46,51 +53,47 @@ to work with `Form`.
     </a-form-item>
   </a-form>
 </template>
-<script lang="ts" setup>
+<script>
 import { Mentions, Form } from 'ant-design-vue';
-import { reactive } from 'vue';
+import { defineComponent, reactive } from 'vue';
 
 const useForm = Form.useForm;
 const { getMentions } = Mentions;
-const checkMention = async (_, value) => {
-  const mentions = getMentions(value);
-  if (mentions.length < 2) {
-    return Promise.reject('More than one must be selected!');
-  } else {
-    return Promise.resolve();
-  }
-};
-const modelRef = reactive({
-  bio: '',
-  coders: '',
-});
-const rulesRef = reactive({
-  bio: [{ required: true, message: 'Must input bio' }],
-  coders: [{ required: true, validator: checkMention }],
-});
-const { resetFields, validate, validateInfos } = useForm(modelRef, rulesRef);
-const handleSubmit = e => {
-  e.preventDefault();
-  validate()
-    .then(() => {
-      console.log('Submit!!!', modelRef);
-    })
-    .catch(errors => {
-      console.log('Errors in the form!!!', errors);
+export default defineComponent({
+  setup() {
+    const checkMention = async (rule, value) => {
+      const mentions = getMentions(value);
+      if (mentions.length < 2) {
+        return Promise.reject('More than one must be selected!');
+      } else {
+        return Promise.resolve();
+      }
+    };
+    const modelRef = reactive({
+      bio: '',
+      coders: '',
     });
-};
-const options = [
-  {
-    value: 'afc163',
-    label: 'afc163',
+    const rulesRef = reactive({
+      bio: [{ required: true, message: 'Must input bio' }],
+      coders: [{ required: true, validator: checkMention }],
+    });
+    const { resetFields, validate, validateInfos } = useForm(modelRef, rulesRef);
+    const handleSubmit = e => {
+      e.preventDefault();
+      validate()
+        .then(() => {
+          console.log('Submit!!!', modelRef);
+        })
+        .catch(errors => {
+          console.log('Errors in the form!!!', errors);
+        });
+    };
+    return {
+      modelRef,
+      resetFields,
+      validateInfos,
+      handleSubmit,
+    };
   },
-  {
-    value: 'zombieJ',
-    label: 'zombieJ',
-  },
-  {
-    value: 'yesmeck',
-    label: 'yesmeck',
-  },
-];
+});
 </script>

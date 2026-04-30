@@ -10,8 +10,6 @@
     <IntervalOptions />
     <Size />
     <Suffix />
-    <statusVue />
-    <placementVue />
   </demo-sort>
 </template>
 
@@ -26,8 +24,6 @@ import Size from './size.vue';
 import Suffix from './suffix.vue';
 import Bordered from './bordered.vue';
 import RangePicker from './range-picker.vue';
-import placementVue from './placement.vue';
-import statusVue from './status.vue';
 import CN from '../index.zh-CN.md';
 import US from '../index.en-US.md';
 
@@ -35,8 +31,6 @@ export default {
   CN,
   US,
   components: {
-    placementVue,
-    statusVue,
     Hours,
     Addon,
     Basic,

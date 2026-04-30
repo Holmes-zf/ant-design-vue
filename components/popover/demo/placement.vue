@@ -148,11 +148,17 @@ There are 12 `placement` options available.
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
-const buttonWidth = ref<number>(70);
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+  setup() {
+    return {
+      buttonWidth: ref<number>(70),
+    };
+  },
+});
 </script>
-<style scoped>
+<style>
 #components-popover-demo-placement .ant-btn {
   width: 70px;
   text-align: center;

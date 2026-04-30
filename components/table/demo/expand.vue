@@ -17,7 +17,7 @@ When there's too much information to show and the table can't display all at onc
 </docs>
 
 <template>
-  <a-table :columns="columns" :data-source="data" :scroll="{ x: 2000 }" :expand-column-width="100">
+  <a-table :columns="columns" :data-source="data" :scroll="{ x: 2000 }">
     <template #bodyCell="{ column }">
       <template v-if="column.key === 'action'">
         <a>Delete</a>
@@ -28,12 +28,10 @@ When there's too much information to show and the table can't display all at onc
         {{ record.description }}
       </p>
     </template>
-    <template #expandColumnTitle>
-      <span style="color: red">More</span>
-    </template>
   </a-table>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 const columns = [
   { title: 'Name', dataIndex: 'name', key: 'name', fixed: true },
   { title: 'Age', dataIndex: 'age', key: 'age' },
@@ -64,4 +62,13 @@ const data = [
     description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.',
   },
 ];
+
+export default defineComponent({
+  setup() {
+    return {
+      data,
+      columns,
+    };
+  },
+});
 </script>

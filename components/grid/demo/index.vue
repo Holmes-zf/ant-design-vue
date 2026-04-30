@@ -1,17 +1,16 @@
 <template>
   <demo-sort :cols="1">
     <basic />
-    <gutter />
-    <offset />
-    <sort />
-    <flex />
     <flex-align />
     <flex-order />
     <flex-stretch />
-    <responsive />
+    <flex />
+    <gutter />
+    <offset />
     <ResponsiveMore />
+    <responsive />
+    <sort />
     <playfround />
-    <UseBreakpoint />
   </demo-sort>
 </template>
 <script lang="ts">
@@ -27,7 +26,6 @@ import ResponsiveMore from './responsive-more.vue';
 import Responsive from './responsive.vue';
 import Sort from './sort.vue';
 import Playfround from './playfround.vue';
-import UseBreakpoint from './use-breakpoint.vue';
 import CN from '../index.zh-CN.md';
 import US from '../index.en-US.md';
 
@@ -46,7 +44,6 @@ export default defineComponent({
     Responsive,
     Sort,
     Playfround,
-    UseBreakpoint,
   },
 });
 </script>

@@ -24,6 +24,12 @@ If count equals 0, it won't display the dot.
     <a href="#">Link something</a>
   </a-badge>
 </template>
-<script lang="ts" setup>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import { NotificationOutlined } from '@ant-design/icons-vue';
+export default defineComponent({
+  components: {
+    NotificationOutlined,
+  },
+});
 </script>

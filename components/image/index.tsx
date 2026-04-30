@@ -3,24 +3,21 @@ import { defineComponent, computed } from 'vue';
 import ImageInternal from '../vc-image';
 import { imageProps } from '../vc-image/src/Image';
 import defaultLocale from '../locale/en_US';
-import useConfigInject from '../config-provider/hooks/useConfigInject';
+import useConfigInject from '../_util/hooks/useConfigInject';
 import PreviewGroup, { icons } from './PreviewGroup';
 import EyeOutlined from '@ant-design/icons-vue/EyeOutlined';
 import { getTransitionName } from '../_util/transition';
-import useStyle from './style';
-import classNames from '../_util/classNames';
+
 export type ImageProps = Partial<
   ExtractPropTypes<ReturnType<typeof imageProps>> &
     Omit<ImgHTMLAttributes, 'placeholder' | 'onClick'>
 >;
-const Image = defineComponent({
+const Image = defineComponent<ImageProps>({
   name: 'AImage',
   inheritAttrs: false,
-  props: imageProps(),
+  props: imageProps() as any,
   setup(props, { slots, attrs }) {
     const { prefixCls, rootPrefixCls, configProvider } = useConfigInject('image', props);
-    // Style
-    const [wrapSSR, hashId] = useStyle(prefixCls);
 
     const mergedPreview = computed(() => {
       const { preview } = props;
@@ -43,7 +40,7 @@ const Image = defineComponent({
     });
 
     return () => {
-      const imageLocale = configProvider.locale?.value?.Image || defaultLocale.Image;
+      const imageLocale = configProvider.locale?.Image || defaultLocale.Image;
       const defaultPreviewMask = () => (
         <div class={`${prefixCls.value}-mask-info`}>
           <EyeOutlined />
@@ -51,16 +48,15 @@ const Image = defineComponent({
         </div>
       );
       const { previewMask = slots.previewMask || defaultPreviewMask } = props;
-      return wrapSSR(
+      return (
         <ImageInternal
           {...{ ...attrs, ...props, prefixCls: prefixCls.value }}
           preview={mergedPreview.value}
-          rootClassName={classNames(props.rootClassName, hashId.value)}
           v-slots={{
             ...slots,
             previewMask: typeof previewMask === 'function' ? previewMask : null,
           }}
-        ></ImageInternal>,
+        ></ImageInternal>
       );
     };
   },

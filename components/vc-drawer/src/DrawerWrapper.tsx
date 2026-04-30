@@ -24,6 +24,7 @@ const DrawerWrapper = defineComponent({
     autofocus: true,
   }),
   emits: ['handleClick', 'close'],
+  slots: ['handler'],
   setup(props, { emit, slots }) {
     const dom = ref<HTMLElement>(null);
 
@@ -36,28 +37,22 @@ const DrawerWrapper = defineComponent({
     };
 
     return () => {
-      const {
-        getContainer,
-        wrapperClassName,
-        rootClassName,
-        rootStyle,
-        forceRender,
-        ...otherProps
-      } = props;
+      const { afterVisibleChange, getContainer, wrapperClassName, forceRender, ...otherProps } =
+        props;
 
       let portal = null;
       if (!getContainer) {
         return (
-          <Child
-            v-slots={slots}
-            {...otherProps}
-            rootClassName={rootClassName}
-            rootStyle={rootStyle}
-            open={props.open}
-            onClose={onClose}
-            onHandleClick={onHandleClick}
-            inline={true}
-          ></Child>
+          <div class={wrapperClassName} ref={dom}>
+            <Child
+              v-slots={slots}
+              {...otherProps}
+              open={props.open}
+              getContainer={() => dom.value}
+              onClose={onClose}
+              onHandleClick={onHandleClick}
+            ></Child>
+          </div>
         );
       }
 
@@ -66,7 +61,6 @@ const DrawerWrapper = defineComponent({
       if ($forceRender || props.open || dom.value) {
         portal = (
           <PortalWrapper
-            autoLock
             visible={props.open}
             forceRender={$forceRender}
             getContainer={getContainer}
@@ -78,8 +72,6 @@ const DrawerWrapper = defineComponent({
                   v-slots={slots}
                   {...otherProps}
                   {...rest}
-                  rootClassName={rootClassName}
-                  rootStyle={rootStyle}
                   open={visible !== undefined ? visible : props.open}
                   afterVisibleChange={
                     afterClose !== undefined ? afterClose : props.afterVisibleChange

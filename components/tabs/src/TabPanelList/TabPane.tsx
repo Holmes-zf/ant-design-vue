@@ -1,7 +1,6 @@
 import { defineComponent, ref, watch, computed } from 'vue';
 import type { CSSProperties, ExtractPropTypes } from 'vue';
 import PropTypes from '../../../_util/vue-types';
-import type { CustomSlotsType } from '../../../_util/type';
 
 const tabPaneProps = () => ({
   tab: PropTypes.any,
@@ -27,11 +26,7 @@ export default defineComponent({
   inheritAttrs: false,
   __ANT_TAB_PANE: true,
   props: tabPaneProps(),
-  slots: Object as CustomSlotsType<{
-    closeIcon: any;
-    tab: any;
-    default: any;
-  }>,
+  slots: ['closeIcon', 'tab'],
   setup(props, { attrs, slots }) {
     const visited = ref(props.forceRender);
     watch(

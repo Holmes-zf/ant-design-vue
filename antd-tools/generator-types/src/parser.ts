@@ -21,13 +21,13 @@ export type Articals = Artical[];
 function readLine(input: string) {
   const end = input.indexOf('\n');
 
-  return input.substring(0, end !== -1 ? end : input.length);
+  return input.substr(0, end !== -1 ? end : input.length);
 }
 
 function splitTableLine(line: string) {
   line = line.replace(/\\\|/g, 'JOIN');
 
-  const items = line.split('|').map(item => item.trim().replace(/JOIN/g, '|'));
+  const items = line.split('|').map(item => item.trim().replaceAll('JOIN', '|'));
 
   // remove pipe character on both sides
   items.pop();
@@ -47,7 +47,7 @@ function tableParse(input: string) {
   };
 
   while (start < end) {
-    const target = input.substring(start);
+    const target = input.substr(start);
     const line = readLine(target);
 
     if (!/^\|/.test(target)) {
@@ -79,7 +79,7 @@ export function mdParser(input: string): Articals {
   const end = input.length;
 
   while (start < end) {
-    const target = input.substring(start);
+    const target = input.substr(start);
 
     let match;
     if ((match = TITLE_REG.exec(target))) {
@@ -91,7 +91,7 @@ export function mdParser(input: string): Articals {
 
       start += match.index + match[0].length;
     } else if ((match = TABLE_REG.exec(target))) {
-      const { table, usedLength } = tableParse(target.substring(match.index));
+      const { table, usedLength } = tableParse(target.substr(match.index));
       artical.push({
         type: 'table',
         table,

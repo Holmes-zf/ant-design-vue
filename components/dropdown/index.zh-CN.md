@@ -3,8 +3,7 @@ category: Components
 subtitle: 下拉菜单
 type: 导航
 title: Dropdown
-cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*mBBcQ6goljkAAAAAAAAAAAAADrJ8AQ/original
-coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5qm4S4Zgh2QAAAAAAAAAAAAADrJ8AQ/original
+cover: https://gw.alipayobjects.com/zos/alicdn/eedWN59yJ/Dropdown.svg
 ---
 
 向下弹出的列表。
@@ -22,8 +21,6 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5qm4S4Zgh2QAAA
 
 | 参数 | 说明 | 类型 | 默认值 |  |
 | --- | --- | --- | --- | --- |
-| align | 该值将合并到 placement 的配置中，设置参考 [dom-align](https://github.com/yiminghe/dom-align) | Object | - |  |
-| arrow | 下拉框箭头是否显示 | boolean \| { pointAtCenter: boolean } | false | 3.3.0 |
 | destroyPopupOnHide | 关闭后是否销毁 Dropdown | boolean | false | 3.0 |
 | disabled | 菜单是否禁用 | boolean | - |  |
 | getPopupContainer | 菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。 | Function(triggerNode) | `() => document.body` |  |
@@ -32,7 +29,7 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5qm4S4Zgh2QAAA
 | overlayStyle | 下拉根元素的样式 | object | - |  |
 | placement | 菜单弹出位置 | `bottomLeft` \| `bottom` \| `bottomRight` \| `topLeft` \| `top` \| `topRight` | `bottomLeft` |  |
 | trigger | 触发下拉的行为, 移动端不支持 hover | Array&lt;`click`\|`hover`\|`contextmenu`> | `['hover']` |  |
-| open(v-model) | 菜单是否显示 | boolean | - |  |
+| visible(v-model) | 菜单是否显示 | boolean | - |  |
 
 `overlay` 菜单使用 [Menu](/components/menu-cn/)，还包括菜单项 `Menu.Item`，分割线 `Menu.Divider`。
 
@@ -42,9 +39,9 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5qm4S4Zgh2QAAA
 
 ### 事件
 
-| 事件名称 | 说明 | 回调参数 | 版本 |
-| --- | --- | --- | --- |
-| openChange | 菜单显示状态改变时调用，参数为 visible。点击菜单按钮导致的消失不会触发 | function(open) | 4.0 |
+| 事件名称 | 说明 | 回调参数 |
+| --- | --- | --- |
+| visibleChange | 菜单显示状态改变时调用，参数为 visible。点击菜单按钮导致的消失不会触发 | function(visible) |
 
 ### Dropdown.Button
 
@@ -58,11 +55,11 @@ coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*5qm4S4Zgh2QAAA
 | size | 按钮大小，和 [Button](/components/button-cn/) 一致 | string | 'default' |  |
 | trigger | 触发下拉的行为 | Array&lt;`click`\|`hover`\|`contextmenu`> | `['hover']` |  |
 | type | 按钮类型，和 [Button](/components/button-cn/) 一致 | string | 'default' |  |
-| open(v-model) | 菜单是否显示 | boolean | - |  |
+| visible(v-model) | 菜单是否显示 | boolean | - |  |
 
 ### Dropdown.Button 事件
 
-| 事件名称 | 说明 | 回调参数 | 版本 |
-| --- | --- | --- | --- |
+| 事件名称 | 说明 | 回调参数 |
+| --- | --- | --- |
 | click | 点击左侧按钮的回调，和 [Button](/components/button-cn/) 一致 | Function |
-| openChange | 菜单显示状态改变时调用，参数为 visible。点击菜单按钮导致的消失不会触发 | function(open) | 4.0 |
+| visibleChange | 菜单显示状态改变时调用，参数为 visible。点击菜单按钮导致的消失不会触发 | function(visible) |

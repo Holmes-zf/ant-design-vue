@@ -29,12 +29,22 @@ Making collapse's background to transparent.
     </a-collapse-panel>
   </a-collapse>
 </template>
-<script lang="ts" setup>
-import { ref, watch } from 'vue';
-const text = `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`;
-const activeKey = ref(['1']);
+<script lang="ts">
+import { defineComponent, ref, watch } from 'vue';
 
-watch(activeKey, val => {
-  console.log(val);
+export default defineComponent({
+  setup() {
+    const text = `A dog is a type of domesticated animal.Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.`;
+    const activeKey = ref(['1']);
+
+    watch(activeKey, val => {
+      console.log(val);
+    });
+
+    return {
+      text,
+      activeKey,
+    };
+  },
 });
 </script>
