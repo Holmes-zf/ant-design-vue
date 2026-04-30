@@ -12,7 +12,7 @@
           wrapper-class-name="drawer-wrapper"
           width="60%"
         >
-          <surelyVueVue />
+          <!-- <surelyVueVue /> -->
           <Menu :menus="dataSource" :active-menu-item="activeMenuItem" :is-zh-c-n="isZhCN" />
           <template #handle>
             <div class="drawer-handle" @click="handleClickShowButton">
@@ -28,7 +28,7 @@
             <section class="main-menu-inner">
               <!-- <Sponsors :is-c-n="isZhCN" /> -->
               <div>
-                <surelyVueVue />
+                <!-- <surelyVueVue /> -->
               </div>
               <Menu :menus="dataSource" :active-menu-item="activeMenuItem" :is-zh-c-n="isZhCN" />
             </section>
@@ -98,7 +98,7 @@ import Sponsors from '../components/rice/sponsors.vue';
 import RightBottomAd from '../components/rice/right_bottom_rice.vue';
 import { CloseOutlined, MenuOutlined, LinkOutlined } from '@ant-design/icons-vue';
 import ThemeIcon from './ThemeIcon.vue';
-import surelyVueVue from '../components/surelyVue.vue';
+// import surelyVueVue from '../components/surelyVue.vue';
 import WWAdsVue from '../components/rice/WWAds.vue';
 
 const rControl = /[\u0000-\u001f]/g;
@@ -118,7 +118,7 @@ export default defineComponent({
     CloseOutlined,
     MenuOutlined,
     ThemeIcon,
-    surelyVueVue,
+    // surelyVueVue,
     WWAdsVue,
     LinkOutlined,
   },
@@ -212,6 +212,7 @@ export default defineComponent({
         'main-container-component': isDemo.value,
       };
     });
+
     const handleClickShowButton = () => {
       visible.value = !visible.value;
     };

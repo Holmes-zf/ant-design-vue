@@ -4,7 +4,8 @@
     <Ecosystem />
   </template>
   <template v-else>
-    <a-select
+    <a-tag>3.x</a-tag>
+    <!-- <a-select
       key="version"
       class="version"
       size="small"
@@ -17,7 +18,7 @@
         2.x (Not Recommended)
       </a-select-option>
       <a-select-option value="1.x" @click="changeVersion('1x')">1.x (For Vue 2)</a-select-option>
-    </a-select>
+    </a-select> -->
     <a-button
       key="lang-button"
       size="small"
@@ -26,31 +27,31 @@
     >
       {{ $t('app.header.lang') }}
     </a-button>
-    <More />
-    <Github />
+    <!-- <More /> -->
+    <!-- <Github /> -->
   </template>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import Github from './Github.vue';
-import More from './More.vue';
+import { defineComponent } from 'vue';
+// import Github from './Github.vue';
+// import More from './More.vue';
 import Navigation from './Navigation.vue';
 import Ecosystem from './Ecosystem.vue';
-import { version } from 'ant-design-vue';
+// import { version } from 'ant-design-vue';
 import { isZhCN, isLocalStorageNameSupported, getLocalizedPathname } from '../../utils/util';
-import { useRoute } from 'vue-router';
+// import { useRoute } from 'vue-router';
 export default defineComponent({
   name: 'HeaderMenu',
   components: {
     Navigation,
-    Github,
-    More,
+    // Github,
+    // More,
     Ecosystem,
   },
   props: ['isMobile'],
   setup() {
-    const antdVersion = ref(version);
-    const route = useRoute();
+    // const antdVersion = ref(version); // PMS系统组件版本 3.x
+    // const route = useRoute();
     const onLangChange = () => {
       const {
         location: { pathname },
@@ -70,13 +71,13 @@ export default defineComponent({
         );
     };
 
-    const changeVersion = v => {
-      location.href = `https://${v}.antdv.com${route.fullPath}`;
-    };
+    // const changeVersion = v => {
+    //   location.href = `https://${v}.antdv.com${route.fullPath}`;
+    // };
     return {
       onLangChange,
-      antdVersion,
-      changeVersion,
+      // antdVersion,
+      // changeVersion,
     };
   },
 });

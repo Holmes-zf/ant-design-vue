@@ -38,6 +38,8 @@ An enterprise-class UI components based on Ant Design and Vue 3.
 | Edge | last 2 versions | last 2 versions | last 2 versions | last 2 versions | last 2 versions |
 
 ## 安装
+node 18.14.0
+yarn 1.22.22
 
 ### 使用 npm 或 yarn 安装
 

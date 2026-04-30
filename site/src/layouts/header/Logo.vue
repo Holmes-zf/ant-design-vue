@@ -1,8 +1,8 @@
 <template>
   <h1>
     <a id="logo" :href="isZhCN ? '/index-cn' : '/index'">
-      <img alt="logo" :src="logo" />
-      Ant Design Vue
+      <!-- <img alt="logo" :src="logo" /> -->
+      PBU文档组件
     </a>
   </h1>
 </template>
