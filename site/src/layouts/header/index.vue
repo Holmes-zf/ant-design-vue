@@ -16,12 +16,12 @@
 
       <CloseOutlined class="close-icon" @click="visibleAdblockBanner = false" />
     </div> -->
-    <div v-if="visibleAlertBanner && isZhCN" class="alert-banner">
+    <!-- <div v-if="visibleAlertBanner && isZhCN" class="alert-banner">
       Surely Form 2.0 发布，快速定制自己的问卷平台 &nbsp;&nbsp;
       <a href="https://form.antdv.com">立即体验</a>
 
       <CloseOutlined class="close-icon" @click="visibleAlertBanner = false" />
-    </div>
+    </div> -->
     <a-popover
       v-model:visible="menuVisible"
       overlay-class-name="popover-menu"
@@ -58,7 +58,7 @@ import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Logo from './Logo.vue';
 import Menu from './Menu.vue';
-import { UnorderedListOutlined, CloseOutlined } from '@ant-design/icons-vue';
+import { UnorderedListOutlined } from '@ant-design/icons-vue';
 import SearchBox from './SearchBox.vue';
 import { version } from 'ant-design-vue';
 export default defineComponent({
@@ -67,7 +67,6 @@ export default defineComponent({
     Menu,
     UnorderedListOutlined,
     SearchBox,
-    CloseOutlined,
   },
   setup() {
     const route = useRoute();

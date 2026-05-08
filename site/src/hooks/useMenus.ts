@@ -13,7 +13,7 @@ const typeOrder: any = {
   反馈: { order: 5, en: 'Feedback' },
   其他: { order: 6, en: 'Other' },
   废弃: { order: 7, en: 'Deprecated' },
-  业务: { order: 8, en: 'Buis' },
+  业务: { order: -0.5, en: 'Busi' },
 };
 const useMenus = (): {
   menus: ComputedRef<any[]>;
@@ -26,7 +26,6 @@ const useMenus = (): {
   const routes = router.getRoutes();
   const globalConfig = inject<any>(GLOBAL_CONFIG);
   const menus = computed(() => {
-    debugger;
     const path = route.path;
     const category = path.split('/')[1];
     const pattern = /^\/iframe/;

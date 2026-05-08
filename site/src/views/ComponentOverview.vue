@@ -81,33 +81,33 @@ export default defineComponent({
     const { dataSource } = useMenus();
     const menuItems = computed(() => {
       return [
-        {
-          children: [
-            {
-              category: 'Components',
-              cols: 1,
-              cover: 'https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg',
-              path: 'https://surely.cool/',
-              subtitle: '更强大的表格',
-              title: 'Surely Table',
-              type: 'Advanced And Powerful',
-              target: '_blank',
-            },
-            {
-              category: 'Components',
-              cols: 1,
-              cover: 'https://aliyuncdn.antdv.com/form/static/assets/landing-config.4f9d5425.png',
-              path: 'https://form.antdv.com/',
-              subtitle: '在线表单',
-              title: 'Surely Form',
-              type: 'Advanced And Powerful',
-              target: '_blank',
-            },
-          ],
-          enTitle: 'Advanced And Powerful',
-          title: '更强大',
-          order: 0,
-        },
+        // {
+        //   children: [
+        //     {
+        //       category: 'Components',
+        //       cols: 1,
+        //       cover: 'https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg',
+        //       path: 'https://surely.cool/',
+        //       subtitle: '更强大的表格',
+        //       title: 'Surely Table',
+        //       type: 'Advanced And Powerful',
+        //       target: '_blank',
+        //     },
+        //     {
+        //       category: 'Components',
+        //       cols: 1,
+        //       cover: 'https://aliyuncdn.antdv.com/form/static/assets/landing-config.4f9d5425.png',
+        //       path: 'https://form.antdv.com/',
+        //       subtitle: '在线表单',
+        //       title: 'Surely Form',
+        //       type: 'Advanced And Powerful',
+        //       target: '_blank',
+        //     },
+        //   ],
+        //   enTitle: 'Advanced And Powerful',
+        //   title: '更强大',
+        //   order: 0,
+        // },
       ].concat(
         dataSource.value
           .filter(i => i.order > -1)

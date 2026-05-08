@@ -6,24 +6,24 @@
     :selected-keys="[activeMenuItem]"
     disabled-overflow
   >
-    <a-menu-item key="docs/vue">
-      <router-link :to="getLocalizedPathname('/docs/vue/introduce', isZhCN)">
-        {{ $t('app.header.menu.documentation') }}
-      </router-link>
-    </a-menu-item>
     <a-menu-item key="components">
       <router-link :to="getLocalizedPathname('/components/overview/', isZhCN)">
         {{ $t('app.header.menu.components') }}
       </router-link>
     </a-menu-item>
-    <a-sub-menu v-if="isZhCN" key="advanced">
+    <a-menu-item key="docs/vue">
+      <router-link :to="getLocalizedPathname('/docs/vue/introduce', isZhCN)">
+        {{ $t('app.header.menu.documentation') }}
+      </router-link>
+    </a-menu-item>
+    <!-- <a-sub-menu v-if="isZhCN" key="advanced">
       <template #title>
         <span style="position: relative">
           高级组件
           <a-badge color="red" style="position: absolute; top: -35px; right: -15px" />
         </span>
       </template>
-      <!-- <a-menu-item key="surely-table">
+      <a-menu-item key="surely-table">
         <a
           href="https://www.surely.cool"
           target="_blank"
@@ -32,8 +32,8 @@
         >
           Surely Table
         </a>
-      </a-menu-item> -->
-      <!-- <a-menu-item key="surely-form">
+      </a-menu-item>
+      <a-menu-item key="surely-form">
         <a
           href="https://form.antdv.com"
           target="_blank"
@@ -43,8 +43,8 @@
           Surely Form
           <a-badge color="red" style="position: absolute; top: -18px; right: -15px" />
         </a>
-      </a-menu-item> -->
-    </a-sub-menu>
+      </a-menu-item>
+    </a-sub-menu> -->
     <!-- <a-menu-item key="store">
       <a
         href="https://store.antdv.com/pro/"
@@ -71,7 +71,7 @@
       <a-menu-item key="switch-lang" @click="$emit('langChange')">
         {{ $t('app.header.lang') }}
       </a-menu-item>
-      <a-menu-item key="github">
+      <!-- <a-menu-item key="github">
         <a
           href="https://github.com/vueComponent/ant-design-vue"
           target="_blank"
@@ -79,7 +79,7 @@
         >
           Github
         </a>
-      </a-menu-item>
+      </a-menu-item> -->
     </template>
   </a-menu>
 </template>

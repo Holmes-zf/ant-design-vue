@@ -1,8 +1,8 @@
 <template>
   <h1>
     <a id="logo" :href="isZhCN ? '/index-cn' : '/index'">
-      <!-- <img alt="logo" :src="logo" /> -->
-      PBU文档组件
+      <img alt="logo" :src="logo" />
+      <b>{{ isZhCN ? '组件文档' : 'Compoent Doc' }}</b>
     </a>
   </h1>
 </template>
@@ -11,7 +11,7 @@
 import type { GlobalConfig } from '../../App.vue';
 import { GLOBAL_CONFIG } from '../../SymbolKey';
 import { defineComponent, inject } from 'vue';
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/logo.png';
 export default defineComponent({
   setup() {
     return { logo, isZhCN: inject<GlobalConfig>(GLOBAL_CONFIG).isZhCN.value };

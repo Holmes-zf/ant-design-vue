@@ -37,13 +37,13 @@
       </template>
       <a-col :xxxl="20" :xxl="20" :xl="19" :lg="18" :md="18" :sm="24" :xs="24">
         <section :class="mainContainerClass">
-          <WWAdsVue v-if="isZhCN" />
-          <TopAd v-else />
+          <!-- <WWAdsVue v-if="isZhCN" />
+          <TopAd v-else /> -->
           <Demo v-if="isDemo" :page-data="pageData" :is-zh-c-n="isZhCN">
             <component :is="matchCom" />
           </Demo>
           <router-view v-else />
-          <a-affix v-if="headers.length" class="toc-affix" :offset-top="20">
+          <!-- <a-affix v-if="headers.length" class="toc-affix" :offset-top="20">
             <a-anchor>
               <a-anchor-link
                 v-for="h in headers"
@@ -57,7 +57,7 @@
                 </template>
               </a-anchor-link>
             </a-anchor>
-          </a-affix>
+          </a-affix> -->
         </section>
         <a-back-top />
         <div class="fixed-widgets" :style="isZhCN ? { bottom: '175px' } : {}">
@@ -77,7 +77,7 @@
           </a-dropdown>
         </div>
         <PrevAndNext :menus="menus" :current-menu-index="currentMenuIndex" :is-zh-c-n="isZhCN" />
-        <Footer />
+        <!-- <Footer /> -->
       </a-col>
     </a-row>
   </div>
@@ -88,7 +88,7 @@ import { GLOBAL_CONFIG } from '../SymbolKey';
 import { defineComponent, inject, computed, ref, provide, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Header from './header/index.vue';
-import Footer from './Footer.vue';
+// import Footer from './Footer.vue';
 import Menu from './Menu.vue';
 import PrevAndNext from './PrevAndNext.vue';
 import Demo from './Demo.vue';
@@ -112,7 +112,7 @@ export default defineComponent({
     RightBottomAd,
     Demo,
     Header,
-    Footer,
+    // Footer,
     Menu,
     PrevAndNext,
     CloseOutlined,

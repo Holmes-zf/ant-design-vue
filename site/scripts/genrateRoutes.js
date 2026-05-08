@@ -6,13 +6,15 @@ const matter = require('gray-matter');
 const { ESLint } = require('eslint');
 
 (async () => {
-  const paths = await globby('components/*/index.*.md');
+  const paths = await globby('components/**/*/index.*.md');
   const components = {};
 
   paths.forEach(path => {
     const content = fs.readFileSync(path).toString();
-    const componentName = path.split('/')[1];
-
+    let componentName = path.split('/')[1];
+    if (componentName == 'busi') {
+      componentName = path.split('/')[1] + '/' + path.split('/')[2];
+    }
     if (componentName !== 'color-picker') {
       const { data } = matter(content);
       components[componentName] = { ...components[componentName], ...data };
