@@ -1,68 +1,33 @@
 <template>
-  <a-button :class="['radius-button', className]" v-bind="$attrs">
-    <slot></slot>
+  <a-button class="radius-button" v-bind="$attrs">
+    <slot />
   </a-button>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 const props = defineProps({
-  width: {
+  minWidth: {
     type: [String, Number],
     default: undefined,
   },
-  grey: {
-    type: Boolean,
-    default: false,
-  },
 });
-const width = computed(() => {
-  if (typeof props.width == 'number') {
-    return props.width + 'px';
-  } else if (typeof props.width == 'string') {
-    if (props.width.includes('%')) return props.width;
-    return props.width.replace('px', '') + 'px';
-  } else {
-    return;
+const minWidthCss = computed(() => {
+  const value = props.minWidth;
+  if (value == null || (typeof value === 'string' && value.trim() === '')) {
+    return undefined;
   }
-});
-const className = computed(() => {
-  return {
-    'ant-btn-grey': props.grey,
-  };
+  const num = Number(value);
+  // 有限数字（数字/纯数字字符串）补 px；带单位字符串或非有限值（vw/%/Infinity 等）原样透传
+  return Number.isFinite(num) ? num + 'px' : value;
 });
 </script>
 
-<style lang="less">
-body {
-  .radius-button {
-    padding: 0 20px;
-  }
-}
+<style lang="less" scoped>
 .radius-button {
-  border-radius: 4px !important;
+  padding: 0 10px;
+  border-radius: 4px;
   overflow: hidden;
-  min-width: v-bind(width);
-  &.ant-btn-grey {
-    color: #9ba7af;
-    border-color: #d7dcdf;
-    background: #d7dcdf;
-    box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
-    &:hover {
-      color: #9ba7af;
-      background: #e4e8eb;
-      border-color: #e4e8eb;
-    }
-    &:active {
-      color: #9ba7af;
-      background: #cdcfd1;
-      border-color: #cdcfd1;
-    }
-    &:focus {
-      color: #9ba7af;
-      background: #cdcfd1;
-      border-color: #cdcfd1;
-    }
-  }
+  min-width: v-bind(minWidthCss);
 }
 </style>

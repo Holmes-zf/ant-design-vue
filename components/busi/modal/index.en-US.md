@@ -2,7 +2,7 @@
 category: Components
 type: Busi
 title: Modal
-cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlkn/Modal.svg
+cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 ---
 
 A custom modal dialog based on Ant Design [Modal](/components/modal/). Provides standardized footer buttons with `RadiusButton`, loading state management, dark mask styling, and Chinese defaults.
@@ -32,14 +32,13 @@ A custom modal dialog based on Ant Design [Modal](/components/modal/). Provides 
 | destroyOnClose | Whether to unmount child components on onClose | boolean | `false` |  |
 | dialogClass | className of floating layer | string | - |  |
 | dialogStyle | Style of floating layer, typically used at least for adjusting the position | object | - |  |
-| footer | Whether to show the footer buttons | boolean | `true` |  |
 | forceRender | Force render Modal | boolean | `false` |  |
 | getContainer | Return the mount node for Modal | (instance): HTMLElement | `() => document.body` |  |
 | mask | Whether show mask or not | boolean | `true` |  |
 | maskClosable | Whether to close the modal dialog when the mask is clicked (**fixed to `false`**) | boolean | `false` |  |
 | maskStyle | Style for modal's mask element (uses a business dark theme by default) | object | `{ background: 'rgba(0, 13, 22, 0.7200)', backdropFilter: 'blur(1px)' }` |  |
 | okButtonProps | The ok button props | [ButtonProps](/components/button/#API) | - |  |
-| okText | Text of the confirm button | string \| slot | `确定` |  |
+| okText | Text of the confirm button | string \| slot | `确认` |  |
 | okType | Button `type` of the OK button | string | `primary` |  |
 | onCancel | Custom cancel callback | Function | - |  |
 | title | The modal dialog's title | string \| slot | - |  |
@@ -64,7 +63,7 @@ A custom modal dialog based on Ant Design [Modal](/components/modal/). Provides 
 | okText | Custom confirm button text |  |
 | cancelText | Custom cancel button text |  |
 
-> **Note**: The default `footer` is rendered internally with `RadiusButton` components. Set `footer` prop to `false` to hide it, or use the `footer` slot for custom content.
+> **Note**: The default `footer` is rendered internally with `RadiusButton` components. Use the `footer` slot for custom content.
 
 ### ConfirmModal
 
@@ -93,11 +92,11 @@ A confirmation dialog variant with status icon. Inherits from [a-modal](/compone
 | maskClosable | Whether to close the modal dialog when the mask is clicked (**fixed to `false`**) | boolean | `false` |  |
 | maskStyle | Style for modal's mask element (uses a business dark theme by default) | object | `{ background: 'rgba(0, 13, 22, 0.7200)', backdropFilter: 'blur(1px)' }` |  |
 | okButtonProps | The ok button props | [ButtonProps](/components/button/#API) | - |  |
-| okText | Text of the confirm button | string \| slot | `确定` |  |
+| okText | Text of the confirm button | string \| slot | `确认` |  |
 | okType | Button `type` of the OK button | string | `primary` |  |
 | onCancel | Custom cancel callback | Function | - |  |
 | type | Status type for the icon | `''` \| `success` \| `warning` \| `error` | `warning` |  |
-| title | The modal dialog's title (**fixed to `操作提示`**) | string \| slot | `操作提示` |  |
+| title | The modal dialog's title (**fixed to `操作确认`**) | string \| slot | `操作确认` |  |
 | width | Width of the modal dialog (**fixed to `700px`**) | string \| number | `700` |  |
 | wrapClassName | The class name of the container of the modal dialog | string | - |  |
 | zIndex | The `z-index` of the Modal | number | `1000` |  |

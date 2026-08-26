@@ -6,12 +6,11 @@ subtitle: 圆角按钮
 cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 ---
 
-基于 Ant Design [Button](/components/button/) 封装的圆角按钮组件。支持自定义最小宽度和灰色禁用样式。
+基于 Ant Design [Button](/components/button/) 封装的圆角按钮组件。支持自定义最小宽度。
 
 ## 何时使用
 
 - 当需要在应用中统一使用 4px 圆角按钮时。
-- 当需要灰色禁用或次要状态的按钮样式时。
 - 当需要强制按钮最小宽度时。
 
 ## API
@@ -20,8 +19,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| width | 按钮的最小宽度 | string \| number | - |  |
-| grey | 是否启用灰色禁用样式 | boolean | `false` |  |
+| minWidth | 按钮的最小宽度 | string \| number | - |  |
 | block | 将按钮宽度调整为其父宽度的选项 | boolean | `false` |  |
 | danger | 设置危险按钮 | boolean | `false` |  |
 | disabled | 禁用状态 | boolean | `false` |  |

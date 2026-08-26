@@ -8,7 +8,7 @@ title:
 
 ## zh-CN
 
-确认型弹窗，支持 `success`、`warning`、`error` 三种状态图标。内置标题"操作提示"和 700px 宽度。
+确认型弹窗，支持 `success`、`warning`、`error` 三种状态图标。内置标题"操作确认"和 700px 宽度。
 
 ## en-US
 

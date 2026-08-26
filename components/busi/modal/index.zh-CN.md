@@ -3,7 +3,7 @@ category: Components
 type: 业务
 title: Modal
 subtitle: 自定义弹窗
-cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlkn/Modal.svg
+cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 ---
 
 基于 Ant Design [Modal](/components/modal/) 封装的业务弹窗组件。提供标准化的圆角按钮底部栏、加载状态管理、深色遮罩样式和中文本地化默认值。
@@ -33,14 +33,13 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlkn/Modal.svg
 | destroyOnClose | 关闭时销毁 Modal 里的子元素 | boolean | `false` |  |
 | dialogClass | 可用于设置浮层的类名 | string | - |  |
 | dialogStyle | 可用于设置浮层的样式，调整浮层位置等 | object | - |  |
-| footer | 是否显示底部按钮栏 | boolean | `true` |  |
 | forceRender | 强制渲染 Modal | boolean | `false` |  |
 | getContainer | 指定 Modal 挂载的 HTML 节点 | (instance): HTMLElement | `() => document.body` |  |
 | mask | 是否展示遮罩 | boolean | `true` |  |
 | maskClosable | 点击蒙层是否允许关闭（**固定为 `false`**） | boolean | `false` |  |
 | maskStyle | 遮罩样式（默认使用业务深色主题） | object | `{ background: 'rgba(0, 13, 22, 0.7200)', backdropFilter: 'blur(1px)' }` |  |
 | okButtonProps | ok 按钮 props | [ButtonProps](/components/button/#API) | - |  |
-| okText | 确认按钮文字 | string \| slot | `确定` |  |
+| okText | 确认按钮文字 | string \| slot | `确认` |  |
 | okType | 确认按钮类型 | string | `primary` |  |
 | onCancel | 自定义取消回调 | Function | - |  |
 | title | 标题 | string \| slot | 无 |  |
@@ -65,7 +64,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlkn/Modal.svg
 | okText | 自定义确认按钮文字 |  |
 | cancelText | 自定义取消按钮文字 |  |
 
-> **注意**：默认 `footer` 使用 `RadiusButton` 组件内部渲染。将 `footer` 属性设为 `false` 可隐藏，或使用 `footer` 插槽自定义内容。
+> **注意**：默认 `footer` 使用 `RadiusButton` 组件内部渲染。使用 `footer` 插槽可自定义内容。
 
 ### ConfirmModal
 
@@ -94,11 +93,11 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlkn/Modal.svg
 | maskClosable | 点击蒙层是否允许关闭（**固定为 `false`**） | boolean | `false` |  |
 | maskStyle | 遮罩样式（默认使用业务深色主题） | object | `{ background: 'rgba(0, 13, 22, 0.7200)', backdropFilter: 'blur(1px)' }` |  |
 | okButtonProps | ok 按钮 props | [ButtonProps](/components/button/#API) | - |  |
-| okText | 确认按钮文字 | string \| slot | `确定` |  |
+| okText | 确认按钮文字 | string \| slot | `确认` |  |
 | okType | 确认按钮类型 | string | `primary` |  |
 | onCancel | 自定义取消回调 | Function | - |  |
 | type | 状态图标类型 | `''` \| `success` \| `warning` \| `error` | `warning` |  |
-| title | 标题（**固定为 `操作提示`**） | string \| slot | `操作提示` |  |
+| title | 标题（**固定为 `操作确认`**） | string \| slot | `操作确认` |  |
 | width | 宽度（**固定为 `700px`**） | string \| number | `700` |  |
 | wrapClassName | 对话框外层容器的类名 | string | - |  |
 | zIndex | 设置 Modal 的 `z-index` | number | `1000` |  |

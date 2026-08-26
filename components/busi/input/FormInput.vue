@@ -1,160 +1,133 @@
 <template>
   <a-input
-    v-bind="$attrs"
-    v-model:value="state.inputValue"
-    auto-complete="off"
-    :class="state.className"
-    :placeholder="placeholder"
+    v-model:value="inputValue"
+    :class="className"
+    :placeholder="placeholder || '请输入'"
     allow-clear
-    :readonly="!state.autoFlag"
-    @mouseenter="mouseenter"
+    :readonly="!autoFlag"
+    autoComplete="off"
+    v-bind="$attrs"
     @blur="handleBlur"
     @change="handleChange"
+    @mouseenter="mouseenter"
   >
-    <template v-for="slotName in Object.keys($slots)" #[slotName]="slotData">
-      <slot :name="slotName" v-bind="slotData || {}"></slot>
+    <template v-for="slotName in Object.keys($slots)" #[slotName]>
+      <slot :name="slotName"></slot>
     </template>
   </a-input>
 </template>
 
-<script setup lang="ts">
-import { reactive, watch, computed, inject, unref, ref } from 'vue';
-
-// 定义属性
-interface Props {
-  mode?: 'light' | 'dark' | '';
-  placeholder?: string;
-  formType?: '' | 'fail';
-  isAutoComplete?: boolean;
-  value?: string;
-  trim?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  mode: '',
-  placeholder: '',
-  formType: '',
-  isAutoComplete: true,
-  value: '',
-  trim: true,
+<script setup>
+import { computed, ref, watch } from 'vue';
+const props = defineProps({
+  // ① 数据绑定
+  value: {
+    type: String,
+    default: '',
+  },
+  trim: {
+    type: Boolean,
+    default: true,
+  },
+  // ② 展示相关
+  placeholder: {
+    type: String,
+    default: '',
+  },
+  formType: {
+    type: String,
+    default: '',
+    validator: value => {
+      return ['', 'fail'].includes(value);
+    },
+  },
+  // ③ 行为控制
+  isAutoComplete: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-// 定义事件
-const emit = defineEmits<{
-  (e: 'blur', event: FocusEvent): void;
-  (e: 'update:value', value: string): void;
-  (e: 'change', event: Event): void;
-}>();
+const emits = defineEmits(['blur', 'update:value', 'change']);
 
-// 注入表单盒子属性
-const formBoxProps = inject('formBoxProps', ref(null));
+const autoFlag = ref(props.isAutoComplete);
+const inputValue = ref(props.value ?? undefined);
 
-// 组件状态
-const state = reactive({
-  autoFlag: props.isAutoComplete,
-  inputValue: props.value || undefined,
-  boxMode: computed(() => {
-    return (unref(formBoxProps) && unref(formBoxProps).mode) || undefined;
-  }),
-  className: computed(() => {
-    const mode = props.mode || 'light';
-    const baseClasses = ['form-input', `${mode}-form-input`];
-
-    if (props.formType === 'fail') {
-      baseClasses.push('fail-form-input');
-    }
-
-    return baseClasses;
-  }),
+const className = computed(() => {
+  return ['form-input', { 'fail-form-input': props.formType == 'fail' }];
 });
 
-// 鼠标悬停事件
 const mouseenter = () => {
-  if (!state.autoFlag) {
-    state.autoFlag = true;
-  }
+  if (!autoFlag.value) autoFlag.value = true;
 };
 
-// 失焦处理
-const handleBlur = (e: FocusEvent) => {
-  let value = (e.target as HTMLInputElement).value;
-
+const handleBlur = e => {
+  let value = e.target.value;
   if (props.trim) {
     value = value.trim();
-    // 仅失焦触发 v-model 同步更新
-    emit('update:value', value);
+    if (value !== inputValue.value) {
+      emits('update:value', value);
+    }
   }
-
-  // 原始 blur 事件
-  emit('blur', e);
+  emits('blur', e);
 };
 
-// 变化处理
-const handleChange = (e: Event) => {
-  // 实时输入保持原值同步
-  emit('update:value', state.inputValue);
-  emit('change', e);
+const handleChange = e => {
+  emits('update:value', inputValue.value);
+  emits('change', e);
 };
 
-// 监听外部值的变化
 watch(
   () => props.value,
   newVal => {
-    if (state.inputValue !== newVal) {
-      state.inputValue = newVal;
+    if (inputValue.value !== newVal) {
+      inputValue.value = newVal;
     }
   },
 );
 </script>
 
-<style lang="less">
-@primary-color: #0032a0; // 全局主色
-@link-color: #0032a0; // 链接色 1890ff
-@success-color: #52c41a; // 成功色
-@warning-color: #faad14; // 警告色
-@error-color: #f6530f; // 错误色
-@danger-color: #f5222d; // 危险色
+<style lang="less" scoped>
+@primary-color: #0032a0;
+@error-color: #f6530f;
+
 .form-input {
-  border-radius: 4px !important;
-
-  &.light-form-input {
-    background-color: #fff !important;
-    border-color: #d9d9d9 !important;
+  // Base: normal state
+  &.ant-input-affix-wrapper {
+    border-radius: 4px;
+    background-color: #fff;
+    border-color: #d9d9d9;
   }
 
-  &.dark-form-input {
-    background-color: #f5f5f5 !important;
-    border-color: #ccc !important;
+  // Focus state
+  &.ant-input-affix-wrapper.ant-input-affix-wrapper-focused {
+    border-color: @primary-color;
+    box-shadow: none;
   }
 
-  &.ant-input-affix-wrapper-focused {
-    border-color: @primary-color !important;
-    box-shadow: 0 0 0 2px fade(@primary-color, 20%) !important;
-  }
+  // Error state
+  &.fail-form-input.ant-input-affix-wrapper {
+    border-color: @error-color;
 
-  &.light-form-input,
-  &.dark-form-input {
-    &.fail-form-input,
-    &.fail-form-input input {
-      border-color: @error-color !important;
-      color: @error-color !important;
+    .ant-input {
+      color: @error-color;
+    }
 
-      &:focus {
-        border-color: @error-color !important;
-        color: @error-color !important;
-      }
+    .ant-input::placeholder {
+      color: @error-color;
+    }
 
-      &::placeholder {
-        color: @error-color !important;
-      }
+    &.ant-input-affix-wrapper-focused {
+      border-color: @error-color;
     }
   }
 
-  &.ant-input-affix-wrapper-disabled {
-    background: #f5f5f5 !important;
+  // Disabled state
+  &.ant-input-affix-wrapper-disabled.ant-input-affix-wrapper {
+    background: #f5f5f5;
 
     .ant-input[disabled] {
-      color: rgba(0, 0, 0, 0.85) !important;
+      color: rgba(0, 0, 0, 0.85);
     }
   }
 }

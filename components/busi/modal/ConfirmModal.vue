@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="操作提示"
+    title="操作确认"
     width="700px"
     class="confirm-modal"
     v-model:visible="state.visible"
@@ -19,7 +19,7 @@
               @click="methods.confirm"
             >
               <slot name="okText">
-                {{ okText || '确定' }}
+                {{ okText || '确认' }}
               </slot>
             </RadiusButton>
           </slot>

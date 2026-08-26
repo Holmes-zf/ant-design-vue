@@ -127,7 +127,7 @@ router.beforeEach((to, from, next) => {
 当你需要 context 信息（例如使用全局注册的组件）时，可以通过 `appContext` 属性传递当前组件 context, 当你需要保留属性响应式时，你可以使用函数返回：
 
 ```tsx
-import { getCurrentInstance } from 'vue';
+import { getCurrentInstance, ref } from 'vue';
 
 const appContext = getCurrentInstance().appContext;
 const title = ref('some message');

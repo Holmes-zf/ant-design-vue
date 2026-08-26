@@ -5,12 +5,11 @@ title: RadiusButton
 cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 ---
 
-A rounded corner button wrapper based on Ant Design [Button](/components/button/). Supports custom minimum width and a grey disabled style.
+A rounded corner button wrapper based on Ant Design [Button](/components/button/). Supports custom minimum width.
 
 ## When To Use
 
 - When you need a button with consistent 4px border-radius across the application.
-- When you need a grey-out style for disabled or secondary states.
 - When you want to enforce a minimum button width.
 
 ## API
@@ -19,8 +18,7 @@ A rounded corner button wrapper based on Ant Design [Button](/components/button/
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| width | Minimum width of the button | string \| number | - |  |
-| grey | Enable grey disabled style | boolean | `false` |  |
+| minWidth | Minimum width of the button | string \| number | - |  |
 | block | Option to fit button width to its parent width | boolean | `false` |  |
 | danger | Set the danger status of button | boolean | `false` |  |
 | disabled | Disabled state of button | boolean | `false` |  |

@@ -4,11 +4,11 @@
     v-model:visible="state.visible"
     :maskClosable="false"
     :maskStyle="state.maskStyle"
-    v-bind="state.$attrs"
+    v-bind="attrs"
     @cancel="methods.cancel"
   >
     <template #footer>
-      <slot name="footer" v-if="props.footer">
+      <slot name="footer">
         <a-space :size="16">
           <RadiusButton
             type="primary"
@@ -16,7 +16,7 @@
             @click="methods.confirm"
           >
             <slot name="okText">
-              {{ okText || '确定' }}
+              {{ okText || '确认' }}
             </slot>
           </RadiusButton>
           <RadiusButton
@@ -32,18 +32,19 @@
         </a-space>
       </slot>
     </template>
-    <template v-for="slotName in Object.keys($slots)" #[slotName]>
+    <template
+      v-for="slotName in Object.keys($slots).filter(s => s !== 'footer')"
+      #[slotName]
+    >
       <slot :name="slotName"></slot>
     </template>
   </a-modal>
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, reactive, watch } from 'vue';
-import { message } from 'ant-design-vue';
+import { reactive, useAttrs, watch } from 'vue';
 import RadiusButton from '../button/RadiusButton.vue';
 
-const { proxy } = getCurrentInstance();
 const props = defineProps({
   okText: {
     type: String,
@@ -65,31 +66,16 @@ const props = defineProps({
     type: Function,
     default: undefined,
   },
-  footer: {
-    type: Boolean,
-    default: true,
-  },
 });
 
+const attrs = useAttrs();
+
 const state = reactive({
-  visible: false,
+  visible: props.visible,
   maskStyle: {
     background: 'rgba(0, 13, 22, 0.7200)',
     backdropFilter: 'blur(1px)',
   },
-  $attrs: computed(() => {
-    const obj = {
-      ...proxy.$attrs,
-      footer: undefined,
-    };
-    if (!props.footer) {
-      obj.footer = null;
-    }
-    return obj;
-  }),
-  loadingFlag: computed(() => {
-    return props.loading || !state.visible;
-  }),
 });
 
 const $emit = defineEmits(['ok', 'update:visible']);
@@ -102,19 +88,13 @@ watch(
       $emit('update:visible', false);
     }
   },
-  { immediate: true },
 );
 
 const methods = {
   confirm() {
-    if (state.loadingFlag) return;
     $emit('ok');
   },
   cancel: () => {
-    if (props.loading) {
-      message.warning('正在保存，请稍等...');
-      return;
-    }
     if (!!props.onCancel) {
       props.onCancel();
       return;
@@ -125,15 +105,10 @@ const methods = {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .define-modal {
-  .ant-modal-content {
-    .form-row {
-      padding: 0;
-    }
-  }
-  .ant-modal-footer {
-    padding: 16px 24px;
+  :deep(.ant-modal-footer) {
+    padding: 12px 24px;
   }
 }
 </style>

@@ -8,11 +8,11 @@ title:
 
 ## zh-CN
 
-基础的圆角按钮用法，支持 `type`、`width`、`grey` 等属性。
+基础的圆角按钮用法，支持 `type`、`minWidth` 等属性。
 
 ## en-US
 
-Basic rounded button usage, supports `type`, `width`, `grey` and other props.
+Basic rounded button usage, supports `type`, `minWidth` and other props.
 
 </docs>
 <template>
@@ -20,8 +20,7 @@ Basic rounded button usage, supports `type`, `width`, `grey` and other props.
     <RadiusButton type="primary">Primary</RadiusButton>
     <RadiusButton>Default</RadiusButton>
     <RadiusButton type="primary" ghost>Ghost</RadiusButton>
-    <RadiusButton type="primary" :width="160">Fixed Width</RadiusButton>
-    <RadiusButton grey>Grey</RadiusButton>
+    <RadiusButton type="primary" :min-width="160">Fixed Width</RadiusButton>
   </a-space>
 </template>
 

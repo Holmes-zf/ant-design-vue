@@ -1,11 +1,10 @@
 <template>
   <demo-sort>
     <basic />
-    <mode />
   </demo-sort>
 </template>
 
-<script>
+<script lang="ts">
 import Basic from './basic.vue';
 import CN from '../index.zh-CN.md';
 import US from '../index.en-US.md';
@@ -19,4 +18,3 @@ export default defineComponent({
   },
 });
 </script>
-<style></style>
