@@ -3,7 +3,7 @@ category: Components
 type: 业务
 title: ActionBody
 subtitle: 表格操作区容器
-cover: https://gw.alipayobjects.com/zos/alicdn/4FnnISyB4/Table.svg
+cover: https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg
 ---
 
 表格附属组件，基于 Flex 的横向操作区容器，用于承载表格工具栏、弹窗底部按钮组等横向排列的操作项。通过 `align` 控制内容对齐方式（`left` / `center` / `right`），默认左对齐；子项间距固定 8px，且不换行。

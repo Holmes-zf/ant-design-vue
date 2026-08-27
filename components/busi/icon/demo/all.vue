@@ -36,7 +36,7 @@ const copyText = (text: string) => {
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard
       .writeText(text)
-      .then(() => message.success(`copy: ${text}`))
+      .then(() => message.success(`已复制: ${text}`))
       .catch(() => message.error('复制失败，请手动复制'));
     return;
   }

@@ -296,6 +296,7 @@
     "site/*",
     "components/style.ts",
     "components/**/style/*",
+    "components/busi/icon/assets/iconfont/iconfont.js",
     "*.vue",
     "*.md",
     "dist/*",

@@ -14,6 +14,7 @@ const typeOrder: any = {
   其他: { order: 6, en: 'Other' },
   废弃: { order: 7, en: 'Deprecated' },
   业务: { order: -0.5, en: 'Busi' },
+  主题: { order: -0.75, en: 'Theme' },
 };
 const useMenus = (): {
   menus: ComputedRef<any[]>;
