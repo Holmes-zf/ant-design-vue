@@ -290,7 +290,9 @@
     "scroll-into-view-if-needed": "^2.2.25",
     "shallow-equal": "^1.0.0",
     "vue-types": "^3.0.0",
-    "warning": "^4.0.0"
+    "vxe-table": "^4.5.19",
+    "warning": "^4.0.0",
+    "xe-utils": "^3.9.1"
   },
   "sideEffects": [
     "site/*",

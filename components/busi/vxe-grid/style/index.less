@@ -1,0 +1,533 @@
+// ============================================
+// 组件库覆盖：vxe-grid / vxe-pager / vxe-form
+// （复刻自业务系统 src/style/plugins/vxe-grid.less，
+//   CSS 变量取自业务系统 themes/light/vars.less 与 css-vars.less 的浅色值）
+// ============================================
+
+// ============================================
+// vxe-table 官方主题变量覆盖
+// （复刻自业务系统 themes/light/vxe-table.scss 编译常量：
+//   该文件以 SCSS 常量 + @import 'vxe-table/styles/index.scss' 编译出业务主题；
+//   vxe-table 4.5.x 编译产物为 CSS 变量驱动，此处用 :root 覆盖达到同等效果，
+//   变量取值与 SCSS 常量一一对应，lighten/darken 派生色为近似值）
+// ============================================
+:root {
+  // 1. vxe 基础色（对应 $vxe-font-color / $vxe-primary-color 等）
+  --vxe-font-color: #132043; // = $vxe-font-color
+  --vxe-table-header-font-color: #132043;
+  --vxe-table-footer-font-color: #132043;
+  --vxe-primary-color: #0032a0; // = $vxe-primary-color（= @primary-color）
+  --vxe-primary-lighten-color: #1a46aa;
+  --vxe-primary-darken-color: #00287d;
+  --vxe-primary-disabled-color: #999999; // = $vxe-primary-disabled-color（= @disabled-color）
+  --vxe-success-color: #3fac46; // = $vxe-success-color
+  --vxe-success-lighten-color: #66bd70;
+  --vxe-success-darken-color: #348a3a;
+  --vxe-success-disabled-color: #a3d7a9;
+  --vxe-info-color: #909399; // = $vxe-info-color
+  --vxe-warning-color: #faad14; // = $vxe-warning-color（= @warning-color）
+  --vxe-warning-lighten-color: #fbc157;
+  --vxe-warning-darken-color: #d99610;
+  --vxe-warning-disabled-color: #fdd88c;
+  --vxe-danger-color: #df443b; // = $vxe-danger-color
+  --vxe-danger-lighten-color: #e76f68;
+  --vxe-danger-darken-color: #c2352d;
+  --vxe-danger-disabled-color: #efa3a0;
+
+  // 2. 禁用态（= $vxe-disabled-color）
+  --vxe-font-disabled-color: #999999;
+
+  // 3. 表格背景/选中色（对应 $vxe-table-header-background-color 等）
+  --vxe-table-header-background-color: #f5f6f7; // = @table-header-bg
+  --vxe-table-row-striped-background-color: #f5f5f5; // = @vxe-striped-bg
+  --vxe-table-row-hover-striped-background-color: #f5f5f5;
+  --vxe-table-row-checkbox-checked-background-color: #f5f7fa; // = @select-bg-color
+  --vxe-table-row-hover-checkbox-checked-background-color: #f5f7fa; // = @select-bg-color
+  --vxe-table-row-radio-checked-background-color: #f0f4fb; // 主色浅色派生
+  --vxe-table-row-hover-radio-checked-background-color: #f0f4fb;
+  --vxe-table-resizable-drag-line-color: #0032a0;
+
+  // 4. 行高（对应 $vxe-table-row-height-default/medium: 42px）
+  --vxe-table-row-height-default: 42px;
+  --vxe-table-row-height-medium: 42px;
+  --vxe-input-date-month-year-row-height-default: 42px;
+  --vxe-input-date-month-year-row-height-medium: 42px;
+}
+
+:root {
+  --primary-color: #0032a0; // 全局主色
+  --link-color: #0032a0; // 链接色（与主色同值）
+  --success-color: #52c41a; // 成功色
+  --error-color: #f6530f; // 错误色
+  --text-color: rgba(0, 0, 0, 0.65); // 主文本色
+  --disabled-color: #999999; // 失效文字色
+  --bg-color-white: #fff; // 通用白色背景（卡片/表格/弹窗）
+  --busi-bg-color: #f0f0f7; // 业务区底色
+  --disabled-bg-color: #eceeed; // 禁用态背景
+  --layout-mini-btn-color: #999; // 布局迷你按钮图标色
+  --border-radius-base: 4px; // 组件/浮层圆角
+  --z-index-grid: 500; // vxe-grid 默认表格生态层级
+  --vxe-btn-hover-color: #0032a0; // 按钮 hover 色（与主色同值）
+  --vxe-sort-btn-color: #c0c4cc; // 排序箭头默认色
+  --vxe-table-border-color: #e8eaec; // 单元格边框色
+  --air-cell-bg: #fffff0; // 空运单元格底色
+  --box-cell-bg: #f8fff8; // 箱单单元格底色
+  --pack-cell-bg: #fff7f1; // 拼箱单元格底色
+}
+
+// vxe-grid default主题
+.grid-wrap {
+  height: 100%;
+  margin: 8px;
+  padding: 8px;
+  overflow: hidden;
+  background: var(--bg-color-white);
+
+  &.grid--default {
+    position: relative;
+    z-index: var(--z-index-grid);
+    padding: 0;
+    margin: 0;
+    background: var(--busi-bg-color);
+
+    .iconfont {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .ant-tabs {
+      height: 100%;
+
+      .ant-tabs-content {
+        height: 100%;
+      }
+    }
+
+    .vxe-grid {
+      background: var(--busi-bg-color);
+
+      .vxe-grid--form-wrapper {
+        padding: 2px 10px 10px 10px;
+        padding-bottom: 4px;
+        background: var(--bg-color-white);
+        border-bottom: 12px solid var(--busi-bg-color);
+        border-radius: 0;
+      }
+
+      .vxe-grid--toolbar-wrapper {
+        padding: 0 10px;
+        background: var(--bg-color-white);
+        border-radius: 0;
+
+        .vxe-button.type--button.is--circle {
+          border-radius: var(--border-radius-base); // 4px（尺寸类，引用层统一 var()）
+
+          .vxe-button--icon {
+            font-weight: bold;
+          }
+        }
+      }
+
+      .vxe-grid--pager-wrapper {
+        background: var(--bg-color-white);
+        border-radius: 0;
+      }
+
+      .airCell {
+        background-color: var(--air-cell-bg); // 编译基线 #fffff0
+      }
+
+      .boxCell {
+        background-color: var(--box-cell-bg); // 编译基线 #f8fff8
+      }
+
+      .packCell {
+        background-color: var(--pack-cell-bg); // 编译基线 #fff7f1
+      }
+    }
+
+    .vxe-form--item {
+      &.is--vertical {
+        .vxe-form--item-inner {
+          .vxe-form--item-title {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+
+    .row-box {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .row-box-item {
+        padding: 4px 0;
+        width: 100%;
+      }
+    }
+
+    .badge-tab {
+      .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          padding: 12px 12px;
+        }
+      }
+    }
+  }
+
+  &.grid--modal {
+    padding: 0;
+    margin: 0;
+
+    .iconfont {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .vxe-form--item {
+      &.is--vertical {
+        .vxe-form--item-inner {
+          .vxe-form--item-title {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// vxe-grid个性化处理处理
+.vxe-grid {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .vxe-table {
+    flex: 1;
+
+    .vxe-table--border-line {
+      border: 1px solid transparent;
+    }
+
+    .vxe-table--render-wrapper {
+      .vxe-table--render-wrapper {
+        .fixed-right--wrapper {
+          .vxe-cell {
+            &.c--tooltip {
+              display: grid;
+              align-items: center;
+              grid-template-columns: 50% 50%;
+            }
+
+            a {
+              text-decoration: underline;
+            }
+          }
+
+          .ant-dropdown-trigger {
+            text-align: center;
+
+            .anticon-more {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+
+      .vxe-cell a {
+        text-decoration: underline;
+        color: var(--link-color);
+
+        &.error-color {
+          color: var(--error-color);
+        }
+
+        &.success-color {
+          color: var(--success-color);
+        }
+      }
+    }
+
+    .vxe-header--row {
+      .vxe-header--column {
+        .c--tooltip {
+          .vxe-cell--sort {
+            .vxe-sort--asc-btn {
+              &:before {
+                border-bottom-color: var(--vxe-sort-btn-color);
+              }
+
+              &.sort--active:before {
+                border-bottom-color: var(--primary-color);
+              }
+            }
+
+            .vxe-sort--desc-btn {
+              &:before {
+                border-top-color: var(--vxe-sort-btn-color);
+              }
+
+              &.sort--active:before {
+                border-top-color: var(--primary-color);
+              }
+            }
+          }
+        }
+      }
+
+      & > .vxe-header--column:first-child {
+        border-left: 1px solid var(--vxe-table-border-color);
+      }
+    }
+
+    .vxe-body--row {
+      & > .vxe-body--column:first-child {
+        border-left: 1px solid var(--vxe-table-border-color);
+      }
+    }
+
+    .operate-item {
+      display: inline-block;
+      width: auto;
+    }
+
+    .vxe-table--body-wrapper {
+      &.body--wrapper {
+        background-color: var(--bg-color-white); // 编译基线 #fff
+      }
+    }
+
+    .vxe-table--body {
+      .vxe-cell--checkbox.is--disabled {
+        .vxe-checkbox--icon {
+          background-color: var(--disabled-bg-color); // 编译基线 #eceeed
+          border-radius: var(--border-radius-base); // 4px（尺寸类，引用层统一 var()）
+        }
+      }
+    }
+  }
+
+  .vxe-grid--form-wrapper {
+    .vxe-button {
+      &:not(.is--disabled):hover {
+        background-color: var(--bg-color-white);
+        border-color: var(--vxe-btn-hover-color);
+      }
+
+      &.theme--primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: var(--bg-color-white);
+
+        &:not(.is--disabled):hover {
+          color: var(--bg-color-white);
+          border-color: var(--vxe-btn-hover-color);
+          background: var(--vxe-btn-hover-color);
+        }
+      }
+    }
+
+    .vxe-input:not(.is--disabled) {
+      &:hover {
+        .vxe-input--inner {
+          border: 1px solid var(--primary-color);
+        }
+
+        .vxe-input--clear-icon {
+          color: var(--layout-mini-btn-color);
+        }
+      }
+    }
+  }
+
+  .vxe-grid--toolbar-wrapper {
+    .vxe-button {
+      &.theme--primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: var(--bg-color-white);
+
+        &:hover {
+          color: var(--bg-color-white);
+        }
+
+        &:not(.is--disabled):hover {
+          border-color: var(--vxe-btn-hover-color);
+          background: var(--vxe-btn-hover-color);
+        }
+      }
+    }
+  }
+
+  .vxe-grid--pager-wrapper {
+    .vxe-pager {
+      width: 100%;
+      color: var(--text-color);
+      align-items: center;
+      justify-content: left;
+
+      .vxe-pager--wrapper {
+        display: flex;
+        width: 100%;
+        align-items: center;
+      }
+
+      &.none {
+        display: none;
+      }
+
+      &.pager-center {
+        justify-content: center;
+      }
+
+      &.pager-left {
+        .vxe-pager--wrapper {
+          justify-content: left;
+
+          // 针对默认表格配置 个性化全局处理页脚布局
+          .vxe-pager--right-wrapper {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: right;
+          }
+        }
+      }
+
+      // 默认右边
+      &.pager-right {
+        .vxe-pager--wrapper {
+          justify-content: right;
+
+          // 针对默认表格配置 个性化全局处理页脚布局
+          .vxe-pager--left-wrapper {
+            display: flex;
+            flex: 1;
+            justify-content: left;
+
+            white-space: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+          }
+        }
+      }
+
+      &.is--perfect {
+        border: 1px solid transparent;
+      }
+
+      &.is--background .vxe-pager--prev-btn,
+      &.is--background .vxe-pager--next-btn,
+      &.is--background .vxe-pager--jump-prev,
+      &.is--background .vxe-pager--num-btn,
+      &.is--background .vxe-pager--jump-next,
+      &.is--perfect .vxe-pager--prev-btn,
+      &.is--perfect .vxe-pager--next-btn,
+      &.is--perfect .vxe-pager--jump-prev,
+      &.is--perfect .vxe-pager--num-btn,
+      &.is--perfect .vxe-pager--jump-next {
+        height: 30px;
+        line-height: 1;
+
+        &.is--disabled {
+          color: var(--disabled-color);
+        }
+
+        &:not(.is--disabled) {
+          color: var(--text-color);
+          background-color: var(--bg-color-white);
+
+          &.is--active {
+            background-color: var(--bg-color-white);
+          }
+        }
+
+        &:not(.is--disabled):focus {
+          box-shadow: none;
+        }
+
+        &.is--active {
+          font-weight: normal;
+        }
+      }
+
+      &.is--border:not(.is--background) .vxe-pager--prev-btn,
+      &.is--border:not(.is--background) .vxe-pager--next-btn,
+      &.is--border:not(.is--background) .vxe-pager--num-btn,
+      &.is--border:not(.is--background) .vxe-pager--jump-prev,
+      &.is--border:not(.is--background) .vxe-pager--jump-next,
+      &.is--perfect:not(.is--background) .vxe-pager--prev-btn,
+      &.is--perfect:not(.is--background) .vxe-pager--next-btn,
+      &.is--perfect:not(.is--background) .vxe-pager--num-btn,
+      &.is--perfect:not(.is--background) .vxe-pager--jump-prev,
+      &.is--perfect:not(.is--background) .vxe-pager--jump-next {
+        &:not(.is--disabled).is--active,
+        &:not(.is--disabled):hover {
+          border-color: var(--primary-color);
+        }
+      }
+
+      .vxe-pager--btn-wrapper {
+        .vxe-pager--jump-prev {
+          line-height: 25px;
+        }
+      }
+    }
+  }
+
+  .vxe-form--item-trigger-node {
+    color: var(--primary-color);
+    font-size: 14px;
+
+    i {
+      margin: 0 0.25em 0.25em 0.25em;
+    }
+
+    .vxe-icon--arrow-top,
+    .vxe-icon--arrow-bottom,
+    .vxe-icon--arrow-left,
+    .vxe-icon--arrow-right {
+      &:before {
+        border-right-color: var(--primary-color);
+        border-top-color: var(--primary-color);
+      }
+    }
+  }
+
+  .vxe-table--checkbox-range,
+  .vxe-table--cell-main-area,
+  .vxe-table--cell-extend-area,
+  .vxe-table--cell-active-area,
+  .vxe-table--cell-copy-area {
+    z-index: 10;
+  }
+
+  .vxe-form--item {
+    &.blankTitle {
+      .vxe-form--item-content {
+        align-content: flex-end;
+        display: flex;
+        flex-wrap: wrap;
+      }
+    }
+
+    &.mt {
+      margin-top: -28px;
+    }
+
+    .vxe-form--item-inner {
+      .vxe-form--item-content {
+        max-width: 100%;
+      }
+    }
+  }
+
+  &.is--loading {
+    &:before {
+      background-color: rgba(0, 0, 0, 0);
+    }
+  }
+}
