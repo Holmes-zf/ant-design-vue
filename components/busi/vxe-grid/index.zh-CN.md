@@ -6,18 +6,18 @@ subtitle: 高性能业务表格
 cover: https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg
 ---
 
-业务表格组件，基于 [vxe-table](https://vxetable.cn/v4/)（`vxe-grid`）封装。所有属性、事件、插槽均通过 `v-bind="$attrs"` / `$slots` 透传给 `vxe-grid`，并内置了业务默认配置组合、空数据展示、单元格/表头双击复制、列宽缓存等独立方法。
+业务表格组件，基于 `vxe-grid` 封装。所有属性、事件、插槽均透传给 `vxe-grid`，并内置了业务默认配置组合、空数据展示、单元格/表头双击复制、列宽缓存等独立方法。
 
 依赖 `vxe-table@4.5.19` 与 `xe-utils`，需与业务系统使用的版本保持一致。
 
 ## 何时使用
 
 - 需要大数据量、虚拟滚动、列宽拖拽、区域选择复制等增强表格能力时。
-- 需要与业务系统（kats-tenement）表格行为保持一致时。
+- 需要与业务系统表格行为保持一致时。
 
 ## 初始化
 
-使用前需在应用入口注册 vxe-table 模块（内置全局默认参数与国际化）：
+使用前需在应用入口注册 vxe-table 模块（内置全局默认参数）：
 
 ```ts
 import { createApp } from 'vue';

@@ -6,18 +6,18 @@ subtitle: 高性能业务表格
 cover: https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg
 ---
 
-A business table component based on [vxe-table](https://vxetable.cn/v4/) (`vxe-grid`). All props, events and slots are passed through to `vxe-grid` via `v-bind="$attrs"` / `$slots`, with built-in business default configs, empty data display, cell/header double-click copy, column width cache and other standalone methods.
+A business table component based on `vxe-grid`. All props, events and slots are passed through, with built-in business default configs, empty data display, cell/header double-click copy, column width cache and other standalone methods.
 
 It depends on `vxe-table@4.5.19` and `xe-utils`, which must match the version used by the business system.
 
 ## When To Use
 
 - When you need large datasets, virtual scrolling, resizable columns, area selection & copy and other enhanced table capabilities.
-- When you need consistent table behavior with the business system (kats-tenement).
+- When you need consistent table behavior with the business system.
 
 ## Initialization
 
-Register vxe-table modules at the app entry before usage (includes global default params and i18n):
+Register vxe-table modules at the app entry before usage (includes global default params):
 
 ```ts
 import { createApp } from 'vue';
