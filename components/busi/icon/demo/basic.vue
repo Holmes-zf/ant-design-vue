@@ -2,17 +2,17 @@
 ---
 order: 0
 title:
-  zh-CN: 基本用法
-  en-US: Basic Usage
+  zh-CN: 业务图标基本用法
+  en-US: Business Icons Basic Usage
 ---
 
 ## zh-CN
 
-通过 `icon` 属性指定 SVG sprite 中的图标 ID，`size` 调整尺寸。使用前需引入图标资源（见"图标资源"章节）。
+业务图标库（`icon-YT*` 前缀，142 个）与框架图标库并存于同一页面，通过 `icon` 属性引用 `icon-YTxxx` 图标 ID。使用前需引入业务图标资源（见"图标资源"章节）。
 
 ## en-US
 
-Specify the icon ID in SVG sprite via `icon` prop, adjust size via `size` prop. Import the icon assets first (see "Icon Assets" section).
+The business icon library (`icon-YT*` prefix, 142 icons) coexists with the framework icon library on the same page. Reference `icon-YTxxx` IDs via the `icon` prop. Import the business icon assets first (see "Icon Assets" section).
 
 </docs>
 <template>
@@ -27,8 +27,8 @@ Specify the icon ID in SVG sprite via `icon` prop, adjust size via `size` prop. 
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-// 引入图标资源：自动注入 SVG sprite，供下方 SvgIcon 按 ID 引用
-import '../assets/iconfont/iconfont.js';
+// 引入业务图标资源：脚本执行时定义 window._iconfont_svg_string_5104230 并自动将 SVG sprite 注入页面
+import '../assets/iconfont-busi/iconfont.js';
 import SvgIcon from '../SvgIcon.vue';
 
 export default defineComponent({

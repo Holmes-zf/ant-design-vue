@@ -24,7 +24,7 @@ Wraps `a-modal`, props are passed through via `$attrs`.
 | --- | --- | --- | --- | --- |
 | previewList | Files to preview, see [PreviewItem](#previewitem) | array | `[]` |  |
 | tools | Toolbar capabilities, `print` / `download`; the rendered tools are the intersection of `tools` and what each format supports | string[] | `['download']` |  |
-| percentage | Scroll position percentage (0 ~ 1) when a PDF opens | number | `0` |  |
+| percentage | Scroll position percentage (0 ~ 1) of the document height after the PDF first renders, for resume-reading; applies once on mount | number | `0` |  |
 | visible(v-model) | Whether the dialog is visible (passed to `a-modal`) | boolean | `false` |  |
 | title | Title (**fixed to `预览`**) | string \| slot | `预览` |  |
 | width | Width (**fixed to `80vw`**) | string \| number | `80vw` |  |

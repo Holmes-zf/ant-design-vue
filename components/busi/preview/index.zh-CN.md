@@ -24,7 +24,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/D1dXz9PZqa/image.svg
 | --- | --- | --- | --- | --- |
 | previewList | 预览文件列表，项结构见 [PreviewItem](#previewitem) | array | `[]` |  |
 | tools | 工具栏能力声明，可选 `print`、`download`，实际渲染为各格式支持能力的交集 | string[] | `['download']` |  |
-| percentage | PDF 打开时滚动定位的百分比（0 ~ 1） | number | `0` |  |
+| percentage | PDF 首次渲染完成后滚动定位到文档高度的百分比（0 ~ 1），用于续读定位，仅挂载时生效一次 | number | `0` |  |
 | visible(v-model) | 对话框是否可见（透传 `a-modal`） | boolean | `false` |  |
 | title | 标题（**固定为 `预览`**） | string \| slot | `预览` |  |
 | width | 宽度（**固定为 `80vw`**） | string \| number | `80vw` |  |

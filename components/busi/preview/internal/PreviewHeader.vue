@@ -9,10 +9,10 @@
     <div class="preview-tools">
       <a-space>
         <div v-if="props.tools.includes('print')" class="tool-print">
-          <SvgIcon icon="icon-YTprint" size="18px" @click="emit('print')" />
+          <SvgIcon icon="icon-core-print" size="18px" @click="emit('print')" />
         </div>
         <div v-if="props.tools.includes('download')" class="preview-item">
-          <SvgIcon icon="icon-YTdownload" size="18px" @click="emit('download')" />
+          <SvgIcon icon="icon-core-download" size="18px" @click="emit('download')" />
         </div>
       </a-space>
     </div>
@@ -20,6 +20,8 @@
 </template>
 
 <script setup>
+// 引入框架图标资源：脚本执行时自动将 SVG sprite 注入页面（icon-core-*）
+import '../../icon/assets/iconfont-core/iconfont.js';
 import SvgIcon from '../../icon/SvgIcon.vue';
 
 const props = defineProps({
