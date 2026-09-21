@@ -188,6 +188,11 @@ function compile(modules) {
   const assets = gulp
     .src(['components/**/*.@(png|svg)'])
     .pipe(gulp.dest(modules === false ? esDir : libDir));
+  // .vue 按源码原样随包发布（gulp 不编译 SFC，由消费方构建链编译）；
+  // demo 只服务文档站点，不进包
+  const vue = gulp
+    .src(['components/**/*.vue', '!components/**/demo/**'])
+    .pipe(gulp.dest(modules === false ? esDir : libDir));
   let error = 0;
 
   // =============================== FILE ===============================
@@ -259,7 +264,7 @@ function compile(modules) {
   tsResult.on('end', check);
   const tsFilesStream = babelify(tsResult.js, modules);
   const tsd = tsResult.dts.pipe(gulp.dest(modules === false ? esDir : libDir));
-  return merge2([less, tsFilesStream, tsd, assets, transformFileStream].filter(s => s));
+  return merge2([less, tsFilesStream, tsd, assets, vue, transformFileStream].filter(s => s));
 }
 
 function tag() {

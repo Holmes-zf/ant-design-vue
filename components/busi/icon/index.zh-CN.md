@@ -42,10 +42,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 组件本身不内置 sprite，使用前需引入对应图库的资源（全局引入一次即可；两套库并存时各自引入，symbol id 前缀不同不会冲突）：
 
 ```ts
-// 入口文件或组件中
-import 'components/busi/icon/assets/iconfont-core/iconfont.js'; // 框架图标
-import 'components/busi/icon/assets/iconfont-busi/iconfont.js'; // 业务图标
+// 入口文件或组件中（ESM 产物；CommonJS 项目改用 ant-design-vue/lib/…）
+import 'ant-design-vue/es/busi/icon/assets/iconfont-core/iconfont.js'; // 框架图标
+import 'ant-design-vue/es/busi/icon/assets/iconfont-busi/iconfont.js'; // 业务图标
 ```
+
+> 说明：包内只带 `iconfont.js`（SVG sprite）；`iconfont.css` / `.ttf` / `.woff` / `.woff2` / `iconfont.json` 是 iconfont.cn 的原始产物，不随包发布，SvgIcon 方案也不需要。若宿主已有自己的 sprite 注入机制（自行提供 `window._iconfont_svg_string_<项目 ID>`），则无需再引入包内资源。
 
 引入后即可通过 `icon` 属性引用图标：
 

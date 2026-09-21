@@ -1,11 +1,11 @@
 ---
 category: Components
 type: Busi
-title: FormBox
+title: Form
 cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 ---
 
-A form layout component family: `FormRow` (pure CSS equal-width layout), `FormARow` (grid-based layout with column span support), `FormACol` (span-configurable form item container), and `FormBox` (white container). It implements multi-column equal-width layouts with Flex or the 24-column grid, and empty nodes are filtered automatically.
+A form layout and action bar component family: `FormRow` (pure CSS equal-width layout), `FormARow` (grid-based layout with column span support), `FormACol` (span-configurable form item container), `FormBox` (white container), `FormTitle` (title bar), and `FormFooter` (footer action bar). It implements multi-column equal-width layouts with Flex or the 24-column grid, and empty nodes are filtered automatically.
 
 ## When To Use
 
@@ -13,6 +13,8 @@ A form layout component family: `FormRow` (pure CSS equal-width layout), `FormAR
 - When the number of children is dynamic and needs to wrap with equal widths.
 - When children need to span multiple columns, use `FormARow` + `FormACol`.
 - When you need a unified white card container for form content, use `FormBox`.
+- When you need a section title with an action area on the right, use `FormTitle`.
+- When you need a unified footer action bar, possibly pinned to the bottom, use `FormFooter`.
 
 ## API
 
@@ -20,24 +22,24 @@ A form layout component family: `FormRow` (pure CSS equal-width layout), `FormAR
 
 A form row component based on Flex layout. `colNum` controls the number of columns per row and children are evenly divided. It supports any child node (usually `a-form-item`).
 
-| Property | Description | Type | Default | Version |
-| --- | --- | --- | --- | --- |
-| colNum | Number of columns per row | string \| number | `4` |  |
+| Property | Description               | Type             | Default | Version |
+| -------- | ------------------------- | ---------------- | ------- | ------- |
+| colNum   | Number of columns per row | string \| number | `4`     |         |
 
 #### FormRow Slots
 
-| Slot Name | Description | Version |
-| --- | --- | --- |
-| default | Children inside the row, usually `a-form-item`, can be any content |  |
+| Slot Name | Description                                                        | Version |
+| --------- | ------------------------------------------------------------------ | ------- |
+| default   | Children inside the row, usually `a-form-item`, can be any content |         |
 
 ### FormARow
 
 A form row layout based on antd `a-row` / `a-col`. Differences from `FormRow`: column span uses the 24-column grid (`span`), equal-width columns use `flex` (any column count), and spacing uses `gutter`.
 
-| Property | Description | Type | Default | Version |
-| --- | --- | --- | --- | --- |
-| colNum | Number of columns per row | string \| number | `4` |  |
-| gutter | Column spacing (passed to a-row gutter) | string \| number | `16` |  |
+| Property | Description                             | Type             | Default | Version |
+| -------- | --------------------------------------- | ---------------- | ------- | ------- |
+| colNum   | Number of columns per row               | string \| number | `4`     |         |
+| gutter   | Column spacing (passed to a-row gutter) | string \| number | `16`    |         |
 
 #### Column Span Declaration
 
@@ -50,9 +52,9 @@ Two equivalent ways to declare a column span:
 
 #### FormARow Slots
 
-| Slot Name | Description | Version |
-| --- | --- | --- |
-| default | Children inside the row, usually `a-form-item` or `FormACol` |  |
+| Slot Name | Description                                                  | Version |
+| --------- | ------------------------------------------------------------ | ------- |
+| default   | Children inside the row, usually `a-form-item` or `FormACol` |         |
 
 ### FormACol
 
@@ -65,9 +67,9 @@ A span-configurable form item container, rendered as `a-form-item` internally. I
 
 #### FormACol Slots
 
-| Slot Name | Description | Version |
-| --- | --- | --- |
-| default | Form control content (e.g. `a-input`, `FormInput`) |  |
+| Slot Name | Description                                        | Version |
+| --------- | -------------------------------------------------- | ------- |
+| default   | Form control content (e.g. `a-input`, `FormInput`) |         |
 
 #### FormACol Inherited Props
 
@@ -79,8 +81,38 @@ A white background container component for wrapping form content. No props.
 
 #### FormBox Slots
 
+| Slot Name | Description       | Version |
+| --------- | ----------------- | ------- |
+| default   | Container content |         |
+
+### FormTitle
+
+A section title bar with the title text on the left and the action area on the right, separated by a divider line.
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| inset | Horizontal inset: a number is suffixed with px, a string with a unit is passed through, and `0` aligns with the host container | string \| number | `20` |  |
+
+#### FormTitle Slots
+
+| Slot Name | Description              | Version |
+| --------- | ------------------------ | ------- |
+| default   | Title text               |         |
+| tool      | Action area on the right |         |
+
+### FormFooter
+
+A footer action bar that scrolls with the content by default and is pinned to the bottom when `fixed` is set.
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| fixed | Pinned to the bottom (`position: absolute`; the positioning context is provided by the parent, not created by this component) | boolean | `false` |  |
+| inset | Horizontal inset: a number is suffixed with px, a string with a unit is passed through, and `0` means full width | string \| number | `12` |  |
+
+#### FormFooter Slots
+
 | Slot Name | Description | Version |
 | --- | --- | --- |
-| default | Container content |  |
+| default | Content of the action area, usually `RadiusButton`, with 16px spacing on the left |  |
 
 > Note: The key priority of children in the components above is VNode `key` > field `name` (arrays are joined with `.`) > index fallback. Empty text and comment nodes are filtered out automatically.

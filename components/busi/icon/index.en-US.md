@@ -41,10 +41,12 @@ Sprite global variables of the two libraries:
 The component does not embed the sprite itself. Import the assets of the library you need first (once globally; when both libraries coexist, import each of them — their distinct symbol id prefixes never conflict):
 
 ```ts
-// In your entry file or component
-import 'components/busi/icon/assets/iconfont-core/iconfont.js'; // framework icons
-import 'components/busi/icon/assets/iconfont-busi/iconfont.js'; // business icons
+// In your entry file or component (ESM build; use ant-design-vue/lib/… for CommonJS)
+import 'ant-design-vue/es/busi/icon/assets/iconfont-core/iconfont.js'; // framework icons
+import 'ant-design-vue/es/busi/icon/assets/iconfont-busi/iconfont.js'; // business icons
 ```
+
+> Note: only `iconfont.js` (the SVG sprite) is shipped in the package. `iconfont.css` / `.ttf` / `.woff` / `.woff2` / `iconfont.json` are the raw iconfont.cn artifacts and are not published, nor are they needed by the SvgIcon approach. If your host app already has its own sprite injection mechanism (providing `window._iconfont_svg_string_<project id>`), importing the packaged assets is unnecessary.
 
 Then reference icons via the `icon` prop:
 
