@@ -5,11 +5,11 @@ title: FormSelect
 cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 ---
 
-A business form select based on Ant Design [Select](/components/select/). Provides error (`fail`) state styling, no-wrap multi-select display, single-option auto-select, and inherits all `a-select` props.
+A business form select based on Ant Design [Select](/components/select/). Provides error (`fail`) state styling, single-option auto-select, and inherits all `a-select` props.
 
 ## When To Use
 
-- When you need a form select with business styling (error state, no-wrap multi-select).
+- When you need a form select with business styling (error state).
 - When you need form scenarios like dictionary data source (`dictCode`) or single-option auto-select (`defaultSelect`).
 
 ## API
@@ -22,7 +22,7 @@ A business form select based on Ant Design [Select](/components/select/). Provid
 | options | Options data source | Array&lt;{value, label, disabled?}> | `[]` |  |
 | joinArrayValue | When the option value is an array, join it into a string for display | boolean | `false` |  |
 | formType | Form display type, `fail` shows the error state style | `''` \| `fail` | `''` |  |
-| heightClass | Height/display extension class name, `nowrap` keeps multi-select options on one line | string | `nowrap` |  |
+| heightClass | Extra class name appended to the root node. The default `nowrap` is a legacy extension whose no-wrap multi-select styling has been retired; multi-select now follows the `a-select` default wrapping | string | `nowrap` |  |
 | fieldNames | Customize the label and value fields of options | object | `{ label: 'label', value: 'value' }` |  |
 | dictCode | Dictionary code (dictionary service is not integrated in this business component version, pass data via `options` instead) | string | `''` |  |
 | filterValues | Used with dictionary, keeps only options with the given values (not effective currently) | array | `[]` |  |
@@ -50,8 +50,8 @@ A business form select based on Ant Design [Select](/components/select/). Provid
 
 ### FormSelect Slots
 
-| Slot Name | Description | Version |
-| --- | --- | --- |
-| suffixIcon | Customize the current suffix icon |  |
+| Slot Name  | Description                       | Version |
+| ---------- | --------------------------------- | ------- |
+| suffixIcon | Customize the current suffix icon |         |
 
 > Except for `suffixIcon`, other slots (e.g. `option`, `notFoundContent`) are passed through to the underlying `a-select`.

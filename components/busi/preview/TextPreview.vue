@@ -28,7 +28,7 @@ import { usePreviewDownload } from './internal/previewHooks';
 import { downloadBlobFile } from './internal/fileService';
 
 // 文本高亮降级阈值：超过后关闭高亮，纯转义渲染防 v-html 全量正则卡顿
-const HIGHLIGHT_MAX_SIZE = 1024 * 1024;
+const HIGHLIGHT_MAX_SIZE = 20 * 1024;
 
 const emits = defineEmits(['closeCallback']);
 const props = defineProps({

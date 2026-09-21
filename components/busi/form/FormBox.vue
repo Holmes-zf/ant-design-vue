@@ -12,7 +12,6 @@
   position: relative;
   .form-box-body {
     width: 100%;
-    min-height: 100px;
     background: #ffffff;
   }
 }

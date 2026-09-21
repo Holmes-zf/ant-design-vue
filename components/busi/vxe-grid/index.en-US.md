@@ -6,7 +6,7 @@ subtitle: 高性能业务表格
 cover: https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg
 ---
 
-A business table component based on `vxe-grid`. All props, events and slots are passed through, with built-in business default configs, empty data display, cell/header double-click copy, column width cache and other standalone methods.
+A business table component based on `vxe-grid`. All props, events and slots are passed through, with built-in business default configs, area selection & copy, empty data display, cell/header double-click copy, column width cache and other capabilities.
 
 It depends on `vxe-table@4.5.19` and `xe-utils`, which must match the version used by the business system.
 
@@ -61,9 +61,9 @@ app.mount('#app');
 | checkboxConfig | Checkbox config, **default `reserve: true`, `highlight: true`, `range: true`** | object | - |  |
 | editConfig | Edit config, **default click trigger, row mode, show status** | object | - |  |
 | scrollX / scrollY | Virtual scrolling, **default enabled when rows > 20 (`gt: 20`)** | object | - |  |
-| mouseConfig | Mouse config (`area: true` enables area selection, requires area plugin) | object | - |  |
-| areaConfig | Area selection config | object | - |  |
-| keyboardConfig | Keyboard config (`isClip: true` enables Ctrl+C copy of selection) | object | - |  |
+| mouseConfig | Mouse config, **default `area: true`** (cell area selection is enabled by default via the built-in vxeCellArea plugin) | object | - |  |
+| areaConfig | Area selection config, **default `multiple: true`**; `isCopyHeader: true` copies the header row as well (default `false`) | object | - |  |
+| keyboardConfig | Keyboard config, **default `isClip: true`** (enables Ctrl+C copy of the selection) | object | - |  |
 
 > The "**default xxx**" values above come from the shared defaults in `setGridOpts('props', opts)` (`gridComOptions`); explicit props override them. Full props reference: [vxe-grid docs](https://vxetable.cn/v4/#/grid/api).
 
@@ -79,8 +79,22 @@ Events are passed through to vxe-grid, recommended with `setGridOpts('events', {
 | resizableChange | Column resize end, **default caches column widths** (requires `id`) | `{ $grid, column, ... }` |  |
 | formCollapse | Query form collapse | `{ $grid, ... }` |  |
 | proxyQuery | Proxy query done | `{ $grid, ... }` |  |
-| zoom | Table zoom | `{ $grid, ... }` |  |
+| zoom | Table zoom; **by default toggles the `grid-maximize` class on `.grid-wrap`** (keeps the fullscreen grid above other layers) | `{ $grid, type, ... }` |  |
 | Others | All passed through to vxe-grid, e.g. `checkboxChange` `cellClick` | - |  |
+
+### Area Selection & Copy (built-in vxeCellArea plugin)
+
+Enabled by default (`mouseConfig.area`, `areaConfig.multiple` and `keyboardConfig.isClip` are all `true` in `gridComOptions`); no extra configuration is needed:
+
+| Action | Behavior |
+| --- | --- |
+| Long press a cell for 350ms, then drag | Enters area selection (a quick click does not trigger it and keeps the normal cell click/edit logic) |
+| `Ctrl+C` or the "复制" button at the bottom right of the selection | Writes the selection to the clipboard as TSV (paste directly into Excel), shows a "复制成功" toast, and switches the selection to the copied (dashed) state |
+| The "关闭" button at the bottom right of the selection, or clicking anywhere else | Clears the selection |
+| Long press starting on a checkbox column | Selects rows in range while dragging (the target state is the inverse of the start row's current state) |
+| Double click a cell / a header | Copies the cell text / the whole column (default behaviors, see the events table) |
+
+> Note: the selection action buttons are styled by the component's built-in stylesheet (`.vxe-cell-area-actions` in `style/index.less`); import equivalent styles when using the plugin standalone. The selection frame is repainted automatically after scrolling or data refresh.
 
 ### Slots
 

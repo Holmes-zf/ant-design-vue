@@ -18,7 +18,7 @@ A rounded corner button wrapper based on Ant Design [Button](/components/button/
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| minWidth | Minimum width of the button | string \| number | - |  |
+| minWidth | Minimum width of the button | string \| number | `80` |  |
 | block | Option to fit button width to its parent width | boolean | `false` |  |
 | danger | Set the danger status of button | boolean | `false` |  |
 | disabled | Disabled state of button | boolean | `false` |  |
@@ -34,15 +34,15 @@ A rounded corner button wrapper based on Ant Design [Button](/components/button/
 
 ### events
 
-| Events Name | Description | Arguments | Version |
-| --- | --- | --- | --- |
-| click | Set the handler to handle `click` event | (event) => void |  |
+| Events Name | Description                             | Arguments       | Version |
+| ----------- | --------------------------------------- | --------------- | ------- |
+| click       | Set the handler to handle `click` event | (event) => void |         |
 
 It accepts all props which native buttons support.
 
 ### Methods
 
-| Name | Description | Version |
-| --- | --- | --- |
-| blur() | Remove focus |  |
-| focus() | Get focus |  |
+| Name    | Description  | Version |
+| ------- | ------------ | ------- |
+| blur()  | Remove focus |         |
+| focus() | Get focus    |         |

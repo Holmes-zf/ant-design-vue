@@ -8,11 +8,11 @@ title:
 
 ## zh-CN
 
-开启 `mouseConfig.area` + `keyboardConfig.isClip` 后，可用鼠标拖拽框选单元格区域，`Ctrl+C` 复制（TSV 格式，可直接粘贴到 Excel）；双击单元格默认复制单元格文本，双击表头默认复制整列数据；点击单元格默认进入行编辑（`editConfig`），编辑后单元格显示状态标记。
+区域选择与复制默认已开启（`mouseConfig.area` / `areaConfig.multiple` / `keyboardConfig.isClip`）。长按单元格 350ms 后拖拽可框选区域，用 `Ctrl+C` 或选区右下角「复制」按钮即可复制（TSV 格式，可直接粘贴到 Excel），「关闭」按钮或点击其它位置解除选区；长按起点为 checkbox 列时，框选会同步勾选范围内的行。双击单元格默认复制单元格文本，双击表头默认复制整列数据；点击单元格默认进入行编辑（`editConfig`），编辑后单元格显示状态标记。
 
 ## en-US
 
-With `mouseConfig.area` + `keyboardConfig.isClip` enabled, drag to select a cell area and press `Ctrl+C` to copy (TSV format, can be pasted into Excel directly). Double click a cell copies its text and double click a header copies the whole column by default. Clicking a cell enters row editing (`editConfig`), and edited cells show dirty status marks.
+Area selection & copy is enabled by default (`mouseConfig.area` / `areaConfig.multiple` / `keyboardConfig.isClip`). Long press a cell for 350ms and drag to select an area, then press `Ctrl+C` or click the "复制" button at the bottom right of the selection to copy it (TSV format, paste directly into Excel); click "关闭" or anywhere else to clear the selection. When the long press starts on a checkbox column, rows in range are checked as well. Double click a cell copies its text and double click a header copies the whole column by default. Clicking a cell enters row editing (`editConfig`), and edited cells show dirty status marks.
 
 </docs>
 <template>
@@ -47,13 +47,11 @@ export default defineComponent({
     const instance = getCurrentInstance();
     useTable(instance?.appContext.app);
 
-    // 开启区域框选复制与键盘复制
+    // 区域框选复制与键盘复制为内置默认（gridComOptions 中已开启），无需额外配置
     const gridOptions = setGridOpts('props', {
       id: 'dcVxeGridClipboardDemo',
       columns,
       data: dataSource,
-      mouseConfig: { area: true },
-      keyboardConfig: { isClip: true },
     });
     const gridEvents = setGridOpts('events', {});
     return { gridOptions, gridEvents };

@@ -8,11 +8,11 @@ title:
 
 ## zh-CN
 
-透传 `multiple` 属性开启多选。多选时标签默认不换行（`heightClass="nowrap"`），超出宽度后横向滚动。
+透传 `multiple` 属性开启多选。多选时标签按 `a-select` 默认行为展示（超出容器宽度后换行）；`heightClass` 的 `nowrap` 不换行样式已停用。
 
 ## en-US
 
-Pass `multiple` to enable multi-select. Selected tags stay on one line (`heightClass="nowrap"`) by default and scroll horizontally when overflowing.
+Pass `multiple` to enable multi-select. Selected tags follow the default `a-select` behavior (they wrap when exceeding the container width); the `nowrap` styling of `heightClass` has been retired.
 
 </docs>
 <template>

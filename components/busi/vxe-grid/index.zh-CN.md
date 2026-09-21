@@ -6,7 +6,7 @@ subtitle: 高性能业务表格
 cover: https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg
 ---
 
-业务表格组件，基于 `vxe-grid` 封装。所有属性、事件、插槽均透传给 `vxe-grid`，并内置了业务默认配置组合、空数据展示、单元格/表头双击复制、列宽缓存等独立方法。
+业务表格组件，基于 `vxe-grid` 封装。所有属性、事件、插槽均透传给 `vxe-grid`，并内置了业务默认配置组合、区域框选与复制、空数据展示、单元格/表头双击复制、列宽缓存等能力。
 
 依赖 `vxe-table@4.5.19` 与 `xe-utils`，需与业务系统使用的版本保持一致。
 
@@ -61,9 +61,9 @@ app.mount('#app');
 | checkboxConfig | 复选框配置，**默认 `reserve: true`、`highlight: true`、`range: true`** | object | - |  |
 | editConfig | 编辑配置，**默认点击触发、行编辑、显示状态** | object | - |  |
 | scrollX / scrollY | 虚拟滚动配置，**默认 `gt: 20` 超过 20 条启用** | object | - |  |
-| mouseConfig | 鼠标配置（`area: true` 时启用区域选择，需 area 插件） | object | - |  |
-| areaConfig | 区域选择配置 | object | - |  |
-| keyboardConfig | 键盘配置（`isClip: true` 时支持 Ctrl+C 复制选区） | object | - |  |
+| mouseConfig | 鼠标配置，**默认 `area: true`**（默认开启单元格区域框选，由内置 vxeCellArea 插件提供） | object | - |  |
+| areaConfig | 区域选择配置，**默认 `multiple: true`**；`isCopyHeader: true` 时复制内容包含表头（默认 `false`） | object | - |  |
+| keyboardConfig | 键盘配置，**默认 `isClip: true`**（支持 Ctrl+C 复制选区） | object | - |  |
 
 > 以上「**默认 xxx**」为 `setGridOpts('props', opts)` 组合的通用默认值（`gridComOptions`），显式传入会覆盖默认值。完整属性参考 [vxe-grid 官方文档](https://vxetable.cn/v4/#/grid/api)。
 
@@ -79,16 +79,30 @@ app.mount('#app');
 | resizableChange | 列宽调整结束，**默认缓存列宽**（需配置 `id`） | `{ $grid, column, ... }` |  |
 | formCollapse | 查询表单折叠 | `{ $grid, ... }` |  |
 | proxyQuery | 代理查询完成 | `{ $grid, ... }` |  |
-| zoom | 表格缩放 | `{ $grid, ... }` |  |
+| zoom | 表格缩放，**默认给 `.grid-wrap` 加/移除 `grid-maximize` 层级类**（全屏时避免被其它生态遮挡） | `{ $grid, type, ... }` |  |
 | 其余事件 | 全部透传给 vxe-grid，如 `checkboxChange` `cellClick` 等 | - |  |
+
+### 区域选择与复制（内置 vxeCellArea 插件）
+
+默认开启（`gridComOptions` 中 `mouseConfig.area`、`areaConfig.multiple`、`keyboardConfig.isClip` 均为 `true`），无需额外配置即可使用：
+
+| 操作 | 行为 |
+| --- | --- |
+| 长按单元格 350ms 后拖拽 | 进入区域框选（快速单击不触发，仍走原单元格单击/编辑逻辑） |
+| `Ctrl+C`、选区右下角「复制」按钮 | 将选区按 TSV 格式写入剪贴板（可直接粘贴到 Excel），复制成功后提示「复制成功」，选区切换为复制态虚线框 |
+| 选区右下角「关闭」按钮、点击其它任意位置 | 解除选区 |
+| 长按起点为 checkbox 列 | 框选的同时按选区行范围同步勾选（目标状态取起始行当前状态的反） |
+| 双击单元格 / 双击表头 | 复制单元格文本 / 复制整列数据（默认行为，见事件表） |
+
+> 说明：选区操作按钮样式来自组件内置样式（`style/index.less` 的 `.vxe-cell-area-actions`），单独使用该插件时需自行引入对应样式；滚动、数据刷新后选区框会自动重绘跟随。
 
 ### 插槽
 
-| 插槽名称 | 说明 | 版本 |
-| --- | --- | --- |
-| empty | 空数据内容，**默认展示简版 Empty（`a-empty` SIMPLE 图）** |  |
-| pagerLeft | 分页左侧内容，**默认为空**（用于分页统计等） |  |
-| 其余插槽 | 全部透传给 vxe-grid，如列 `slots.default`、`toolbar` 等 |  |
+| 插槽名称  | 说明                                                      | 版本 |
+| --------- | --------------------------------------------------------- | ---- |
+| empty     | 空数据内容，**默认展示简版 Empty（`a-empty` SIMPLE 图）** |      |
+| pagerLeft | 分页左侧内容，**默认为空**（用于分页统计等）              |      |
+| 其余插槽  | 全部透传给 vxe-grid，如列 `slots.default`、`toolbar` 等   |      |
 
 ### Ref 方法
 

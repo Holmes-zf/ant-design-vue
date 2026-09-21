@@ -6,11 +6,11 @@ subtitle: 业务表单选择器
 cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 ---
 
-基于 Ant Design [Select](/components/select/) 封装的业务表单选择器。提供错误（`fail`）状态样式、多选时不换行展示、默认自动选中单条数据等能力，并继承 `a-select` 的全部属性。
+基于 Ant Design [Select](/components/select/) 封装的业务表单选择器。提供错误（`fail`）状态样式、默认自动选中单条数据等能力，并继承 `a-select` 的全部属性。
 
 ## 何时使用
 
-- 当需要一个带业务样式（错误状态、多选不换行）的表单下拉选择器时。
+- 当需要一个带业务样式（错误状态）的表单下拉选择器时。
 - 当需要数据源为字典（`dictCode`）、单条数据自动选中（`defaultSelect`）等表单场景能力时。
 
 ## API
@@ -23,7 +23,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | options | 下拉选项数据源 | Array&lt;{value, label, disabled?}> | `[]` |  |
 | joinArrayValue | options 的 value 为数组时，合并拼接为字符串用于下拉展示 | boolean | `false` |  |
 | formType | 表单展示类型，`fail` 时展示错误状态样式 | `''` \| `fail` | `''` |  |
-| heightClass | 高度/展示扩展类名，`nowrap` 表示多选时选项不换行 | string | `nowrap` |  |
+| heightClass | 追加到根节点的扩展类名。默认值 `nowrap` 为历史扩展，其「多选不换行」样式已停用，现归还 `a-select` 默认换行展示 | string | `nowrap` |  |
 | fieldNames | 自定义节点 label、value 的字段 | object | `{ label: 'label', value: 'value' }` |  |
 | dictCode | 字典编码（当前业务组件版本未接入字典服务，暂不生效，请通过 `options` 传入数据） | string | `''` |  |
 | filterValues | 配合字典使用，仅保留指定 value 的选项（当前暂不生效） | array | `[]` |  |
@@ -44,15 +44,15 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 
 ### FormSelect 事件
 
-| 事件名称 | 说明 | 回调参数 | 版本 |
-| --- | --- | --- | --- |
-| change | 选中 option 时调用 | function(value, option:Option) |  |
-| update:value | 选中值变化时的回调 | (value: string \| number \| Array) |  |
+| 事件名称     | 说明               | 回调参数                           | 版本 |
+| ------------ | ------------------ | ---------------------------------- | ---- |
+| change       | 选中 option 时调用 | function(value, option:Option)     |      |
+| update:value | 选中值变化时的回调 | (value: string \| number \| Array) |      |
 
 ### FormSelect 插槽
 
-| 插槽名称 | 说明 | 版本 |
-| --- | --- | --- |
-| suffixIcon | 自定义的选择框后缀图标 |  |
+| 插槽名称   | 说明                   | 版本 |
+| ---------- | ---------------------- | ---- |
+| suffixIcon | 自定义的选择框后缀图标 |      |
 
 > 除 `suffixIcon` 外，其余插槽（如 `option`、`notFoundContent` 等）透传给底层 `a-select`。

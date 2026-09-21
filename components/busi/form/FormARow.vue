@@ -1,10 +1,10 @@
 <template>
-  <div class="form-arow">
+  <div class="form-a-row">
     <a-row :gutter="gutter">
       <a-col
         v-for="(item, index) in items"
         :key="getItemKey(item, index)"
-        class="form-col"
+        class="form-a-col"
         v-bind="getColProps(item)"
       >
         <component :is="item" />
@@ -53,15 +53,15 @@ const getItemKey = (item, index) => {
   return item?.key != null
     ? item.key
     : name != null
-      ? Array.isArray(name)
-        ? name.join('.')
-        : String(name)
-      : index;
+    ? Array.isArray(name)
+      ? name.join('.')
+      : String(name)
+    : index;
 };
 
 // 计算每个子项对应的 a-col 属性：跨列走 span（24 栅格），等分走 flex（任意列数）
 // 统一读属性契约，不依赖组件身份判断（FormACol 解耦）
-const getColProps = (item) => {
+const getColProps = item => {
   const vnodeProps = item.props || {};
   const colspan = Number(vnodeProps.colspan ?? vnodeProps['data-colspan']) || 0;
   const span = Number(vnodeProps.span ?? vnodeProps['data-span']) || 0;
@@ -78,7 +78,7 @@ const getColProps = (item) => {
 </script>
 
 <style lang="less" scoped>
-.form-arow {
+.form-a-row {
   width: 100%;
   padding: 0 20px;
 }

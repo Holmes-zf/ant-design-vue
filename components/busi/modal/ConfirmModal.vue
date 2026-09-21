@@ -13,11 +13,7 @@
       <slot name="footer">
         <a-space :size="16">
           <slot name="confirm">
-            <RadiusButton
-              type="primary"
-              :loading="loading"
-              @click="methods.confirm"
-            >
+            <RadiusButton type="primary" :loading="loading" @click="methods.confirm">
               <slot name="okText">
                 {{ okText || '确认' }}
               </slot>
@@ -99,12 +95,13 @@ const state = reactive({
     backdropFilter: 'blur(1px)',
   },
   icon: computed(() => {
-    let icon = 'icon-YTconfirmModalSuccess';
+    // 状态图标属于框架图标库（icon-core-*），业务图标库不再重复维护
+    let icon = 'icon-core-confirmModalSuccess';
     if (props.type == 'warning') {
-      icon = 'icon-YTconfirmModalWarn';
+      icon = 'icon-core-confirmModalWarn';
     }
     if (props.type == 'error') {
-      icon = 'icon-YTconfirmModalError';
+      icon = 'icon-core-confirmModalError';
     }
     return icon;
   }),

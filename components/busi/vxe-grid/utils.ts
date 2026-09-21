@@ -9,7 +9,12 @@ import { isString } from 'lodash-es';
 
 // ---------- 通用空值判断（复刻 /@/utils/dispose/packaging isEmptyValue） ----------
 export const isEmptyValue = (value: any, options: any = {}) => {
-  const { includeZero = false, includeFalse = false, includeNaN = true, includeTrim = true } = options;
+  const {
+    includeZero = false,
+    includeFalse = false,
+    includeNaN = true,
+    includeTrim = true,
+  } = options;
 
   // null 或 undefined
   if (value == null) {
@@ -58,7 +63,7 @@ export const isEmptyValue = (value: any, options: any = {}) => {
 // ---------- 剪贴板（复刻 /@/utils/busi copyTextToClipboard） ----------
 export function copyTextToClipboard(
   input: string,
-  { target = document.body, keepSelectState = true }: any = {}
+  { target = document.body, keepSelectState = true }: any = {},
 ) {
   const element = document.createElement('textarea');
   const previouslyFocusedElement = document.activeElement;
@@ -111,25 +116,38 @@ class ProxyStorage {
   constructor(storageModel: Storage) {
     this.storage = storageModel;
   }
-  // 取
+  // 取（存储被禁用 / 存量数据损坏时视为无值，避免每个调用点各自 try/catch）
   getItem(key: string) {
     try {
       return JSON.parse(this.storage.getItem(`${STORAGE_PREFIX}${key}`));
-    } catch (e) {
+    } catch (error) {
       return undefined;
     }
   }
-  // 存
+  // 存（容量超限 / 循环引用等异常不外抛，避免中断调用方主流程；以返回值告知是否写入成功）
   setItem(key: string, value: any) {
-    this.storage.setItem(`${STORAGE_PREFIX}${key}`, JSON.stringify(value));
+    try {
+      this.storage.setItem(`${STORAGE_PREFIX}${key}`, JSON.stringify(value));
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
-  // 删
+  // 删（删除失败不影响主流程）
   removeItem(key: string) {
-    this.storage.removeItem(`${STORAGE_PREFIX}${key}`);
+    try {
+      this.storage.removeItem(`${STORAGE_PREFIX}${key}`);
+    } catch (error) {
+      // 静默：存储不可用时无需中断调用方
+    }
   }
-  // 清空
+  // 清空（同上）
   clear() {
-    this.storage.clear();
+    try {
+      this.storage.clear();
+    } catch (error) {
+      // 静默：存储不可用时无需中断调用方
+    }
   }
   // 获取命名key值, 仅用于对象数据可用
   getNamespaceItem(namespace: string, key: string) {
@@ -137,7 +155,7 @@ class ProxyStorage {
     if (!item || Object.prototype.toString.call(item) !== '[object Object]') return;
     return item[key];
   }
-  // 设置命名key值，仅用于对象数据可用
+  // 设置命名key值，仅用于对象数据可用；返回值同 setItem（是否写入成功）
   setNamespaceItem(namespace: string, key: string, value: any) {
     let item = this.getItem(namespace);
     // 为空或者非对象，则重置为对象
@@ -145,7 +163,7 @@ class ProxyStorage {
       item = {};
     }
     item[key] = value;
-    this.setItem(namespace, item);
+    return this.setItem(namespace, item);
   }
 }
 
@@ -171,7 +189,7 @@ export const repairColumnWidth = (menuCode: string, item: any) => {
   const cacheColumns = storageLocal.getNamespaceItem('tableColumnsConfig', menuCode) || [];
   const title = getColumnTitle(item.title);
   const cItem = cacheColumns.find(
-    (cache: any) => (item.field && cache.field == item.field) || cache?.title == title
+    (cache: any) => (item.field && cache.field == item.field) || cache?.title == title,
   );
   return getColumnWidth(item, cItem);
 };

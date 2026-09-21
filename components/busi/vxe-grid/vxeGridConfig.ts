@@ -10,7 +10,13 @@
  */
 import { cloneDeep } from 'lodash-es';
 import { columnsSort } from './sort';
-import { copyTextToClipboard, defaultFormatter, gridHeaderCellDblclick, repairColumnWidth, storageColumns } from './utils';
+import {
+  copyTextToClipboard,
+  defaultFormatter,
+  gridHeaderCellDblclick,
+  repairColumnWidth,
+  storageColumns,
+} from './utils';
 
 // ---------- 默认分页常量（与业务系统 custom/const/render PAGE 一致） ----------
 export const PAGE = {
@@ -50,16 +56,7 @@ export const gridComOptions = {
     pagerCount: 5,
     pageSize: PAGE.PAGE_SIZE,
     pageSizes: PAGE.PAGE_LIST,
-    layouts: [
-      'Home',
-      'PrevPage',
-      'JumpNumber',
-      'NextPage',
-      'End',
-      'Sizes',
-      'FullJump',
-      'Total',
-    ],
+    layouts: ['Home', 'PrevPage', 'JumpNumber', 'NextPage', 'End', 'Sizes', 'FullJump', 'Total'],
     slots: {
       left: 'pagerLeft',
     },
@@ -77,8 +74,7 @@ export const gridComOptions = {
     showStatus: true,
   },
   scrollX: {
-    // enabled: false, // 横行虚拟与区域计算还存在兼容性，加上横向数据有限，对性能上限影响很小，可不用开启
-    enabled: true,
+    enabled: true, // 横行虚拟与区域计算还存在兼容性，加上横向数据有限，对性能上限影响很小，可不用开启
     gt: 20,
     oSize: 10,
   },
@@ -87,15 +83,15 @@ export const gridComOptions = {
     gt: 20,
     oSize: 10,
   },
-  // 区域选择与复制验证（vxeCellArea 插件）：拖拽框选 + Ctrl+C 复制
+  // 区域选择与复制（vxeCellArea 插件）：默认全表格开启长按框选 + 复制
   mouseConfig: {
-    // area: true,
+    area: true,
   },
   areaConfig: {
-    // multiple: true,
+    multiple: true,
   },
   keyboardConfig: {
-    // isClip: true, // vxe 全局 copy 事件转交 handleCopyCellAreaEvent 的前置条件
+    isClip: true, // vxe 全局 copy 事件转交 handleCopyCellAreaEvent 的前置条件
   },
 };
 
@@ -117,8 +113,16 @@ export const gridComEvents = {
   formCollapse() {},
   // 查询（原逻辑刷新代办数量，业务可按需覆盖）
   proxyQuery() {},
-  // 缩放（原逻辑刷新代办数量，业务可按需覆盖）
-  zoom() {},
+  // 缩放：全屏（最大化）时给 grid-wrap 加/移除层级类，避免被其它生态遮挡
+  // （原逻辑还会刷新代办数量，业务可按需覆盖）
+  zoom({ $grid, type }: any) {
+    const wrap = $grid?.instance?.parent?.vnode?.el;
+    if (type == 'max') {
+      wrap?.classList.add('grid-maximize');
+    } else {
+      wrap?.classList.remove('grid-maximize');
+    }
+  },
   keydown({ event, key, row, column, cell, $grid }: any) {
     // 一次操作回调2次keydown事件
     if ($grid) {
@@ -165,14 +169,14 @@ export const setGridOpts = (type: 'props' | 'events' | 'busi', opts: any) => {
 
 // 更新查询参数：仅保留 obj 中存在的键（不存在的置 undefined）
 export const updateQueryParams = (queryParams: any, obj: any) => {
-  Object.keys(queryParams).forEach((key) => (queryParams[key] = obj[key] || undefined));
+  Object.keys(queryParams).forEach(key => (queryParams[key] = obj[key] || undefined));
 };
 
 // 更新表格自定义列
 // 解耦说明：原逻辑会从 Vuex 读取服务端个性化列配置（menuJson）做列显隐/排序过滤，
 // 独立版不再读取，始终走默认分支：列宽修复 + 默认 formatter
 export const updateColumns = (menuCode: string, columns: any[]) => {
-  const list = columns.map((item) => {
+  const list = columns.map(item => {
     item = repairColumnWidth(menuCode, item);
     return {
       ...item,

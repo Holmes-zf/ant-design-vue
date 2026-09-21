@@ -26,7 +26,7 @@
     <template #suffixIcon>
       <slot name="suffixIcon">
         <SvgIcon
-          :icon="open ? 'icon-YTupward' : 'icon-YTdownward'"
+          :icon="open ? 'icon-core-upward' : 'icon-core-downward'"
           size="10px"
           @click="() => (open = !open)"
         />
@@ -110,6 +110,8 @@ const selectValue = ref(props.value ?? undefined);
 const className = computed(() => {
   return [
     'form-select',
+    // light 主题类名写死保留（当前仅 light 一种样式，供外部覆盖选择器使用；后续扩展 dark 时再接 mode）
+    'light-form-select',
     { 'fail-form-select': props.formType == 'fail' },
     props.heightClass,
   ];
@@ -247,9 +249,7 @@ onMounted(() => {
   }
 
   &.ant-select-open,
-  &.ant-select-focused:not(.ant-select-disabled):not(
-      .ant-select-customize-input
-    ) {
+  &.ant-select-focused:not(.ant-select-disabled):not(.ant-select-customize-input) {
     :deep(.ant-select-selector) {
       border-color: @primary-color;
       box-shadow: none;
@@ -269,24 +269,27 @@ onMounted(() => {
     }
   }
 
-  &.nowrap {
-    &.ant-select[multiple='multiple'] {
-      :deep(.ant-select-selector) {
-        width: 100%;
-        .ant-select-selection-overflow {
-          flex-wrap: nowrap;
-          min-width: 0;
-          width: 0;
-          word-break: break-word;
-          overflow: auto;
-          text-overflow: ellipsis;
-          scrollbar-width: none;
-          &::-webkit-scrollbar {
-            display: none;
-          }
-        }
-      }
-    }
-  }
+  // 「多选不换行 + 横向滚动」的历史临时方案，已停用：
+  // 它把标签区写死 width:0（标签显示更多但不参与内容宽度），导致多选撑不出宽度、塌成小方块；
+  // 现归还 antd 默认（按内容自适应，超出容器再换行）。如后续仍需该效果可再启用。
+  // &.nowrap {
+  //   &.ant-select[multiple='multiple'] {
+  //     :deep(.ant-select-selector) {
+  //       width: 100%;
+  //       .ant-select-selection-overflow {
+  //         flex-wrap: nowrap;
+  //         min-width: 0;
+  //         width: 0;
+  //         word-break: break-word;
+  //         overflow: auto;
+  //         text-overflow: ellipsis;
+  //         scrollbar-width: none;
+  //         &::-webkit-scrollbar {
+  //           display: none;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }
 </style>

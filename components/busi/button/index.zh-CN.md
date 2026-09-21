@@ -19,7 +19,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| minWidth | 按钮的最小宽度 | string \| number | - |  |
+| minWidth | 按钮的最小宽度 | string \| number | `80` |  |
 | block | 将按钮宽度调整为其父宽度的选项 | boolean | `false` |  |
 | danger | 设置危险按钮 | boolean | `false` |  |
 | disabled | 禁用状态 | boolean | `false` |  |
@@ -35,15 +35,15 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 
 ### 事件
 
-| 事件名称 | 说明 | 回调参数 | 版本 |
-| --- | --- | --- | --- |
-| click | 点击按钮时的回调 | (event) => void |  |
+| 事件名称 | 说明             | 回调参数        | 版本 |
+| -------- | ---------------- | --------------- | ---- |
+| click    | 点击按钮时的回调 | (event) => void |      |
 
 支持原生 button 的其他所有属性。
 
 ### 方法
 
-| 名称 | 说明 | 版本 |
-| --- | --- | --- |
-| blur() | 移除焦点 |  |
-| focus() | 获取焦点 |  |
+| 名称    | 说明     | 版本 |
+| ------- | -------- | ---- |
+| blur()  | 移除焦点 |      |
+| focus() | 获取焦点 |      |

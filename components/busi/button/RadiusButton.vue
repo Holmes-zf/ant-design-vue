@@ -9,7 +9,7 @@ import { computed } from 'vue';
 const props = defineProps({
   minWidth: {
     type: [String, Number],
-    default: undefined,
+    default: 80,
   },
 });
 const minWidthCss = computed(() => {

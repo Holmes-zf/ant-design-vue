@@ -54,7 +54,12 @@ const autoFlag = ref(props.isAutoComplete);
 const inputValue = ref(props.value ?? undefined);
 
 const className = computed(() => {
-  return ['form-input', { 'fail-form-input': props.formType == 'fail' }];
+  return [
+    'form-input',
+    // light 主题类名写死保留（当前仅 light 一种样式，供外部覆盖选择器使用；后续扩展 dark 时再接 mode）
+    'light-form-input',
+    { 'fail-form-input': props.formType == 'fail' },
+  ];
 });
 
 const mouseenter = () => {
