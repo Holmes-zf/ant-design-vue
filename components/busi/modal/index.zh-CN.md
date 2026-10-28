@@ -49,32 +49,32 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 
 ### 事件
 
-| 事件名称 | 说明 | 回调参数 | 版本 |
-| --- | --- | --- | --- |
-| cancel | 点击遮罩层或右上角叉或取消按钮的回调 | function(e) |  |
-| ok | 点击确认按钮时的回调 | - |  |
-| update:visible | 对话框可见性变化时的回调 | (visible: boolean) |  |
+| 事件名称       | 说明                                 | 回调参数           | 版本 |
+| -------------- | ------------------------------------ | ------------------ | ---- |
+| cancel         | 点击遮罩层或右上角叉或取消按钮的回调 | function(e)        |      |
+| ok             | 点击确认按钮时的回调                 | -                  |      |
+| update:visible | 对话框可见性变化时的回调             | (visible: boolean) |      |
 
 ### Modal 插槽
 
-| 插槽名称 | 说明 | 版本 |
-| --- | --- | --- |
-| default | 弹窗主体内容 |  |
-| footer | 自定义底部内容（覆盖 RadiusButton 默认底部） |  |
-| okText | 自定义确认按钮文字 |  |
-| cancelText | 自定义取消按钮文字 |  |
+| 插槽名称   | 说明                                         | 版本 |
+| ---------- | -------------------------------------------- | ---- |
+| default    | 弹窗主体内容                                 |      |
+| footer     | 自定义底部内容（覆盖 RadiusButton 默认底部） |      |
+| okText     | 自定义确认按钮文字                           |      |
+| cancelText | 自定义取消按钮文字                           |      |
 
 > **注意**：默认 `footer` 使用 `RadiusButton` 组件内部渲染。使用 `footer` 插槽可自定义内容。
 
 ### ConfirmModal
 
-确认型弹窗，带有状态图标。继承 [a-modal](/components/modal/#API) 属性，并有以下定制：
+确认型弹窗，带有状态图标。外壳复用本库 `Modal`（遮罩、底部按钮区、可见性与关闭语义、属性透传均由 `Modal` 提供），本组件只负责「确认语义 + 状态图标」的正文，因此同样继承 [a-modal](/components/modal/#API) 属性，并有以下定制：
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | visible(v-model) | 对话框是否可见 | boolean | `false` |  |
 | loading | 操作按钮的加载状态 | boolean | `false` |  |
-| content | 主要内容文本 | string | `content` |  |
+| content | 主要内容文本（为空时不渲染该行） | string | - |  |
 | tips | 内容下方的提示文本 | string | - |  |
 | afterClose | Modal 完全关闭后的回调 | function | 无 |  |
 | bodyStyle | Modal body 样式 | object | `{}` |  |
@@ -96,7 +96,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | okText | 确认按钮文字 | string \| slot | `确认` |  |
 | okType | 确认按钮类型 | string | `primary` |  |
 | onCancel | 自定义取消回调 | Function | - |  |
-| type | 状态图标类型 | `''` \| `success` \| `warning` \| `error` | `warning` |  |
+| type | 状态图标类型（未命中时按 `warning` 处理） | `success` \| `warning` \| `error` | `warning` |  |
 | title | 标题（**固定为 `操作确认`**） | string \| slot | `操作确认` |  |
 | width | 宽度（**固定为 `700px`**） | string \| number | `700` |  |
 | wrapClassName | 对话框外层容器的类名 | string | - |  |
@@ -104,21 +104,22 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 
 ### ConfirmModal 事件
 
-| 事件名称 | 说明 | 回调参数 | 版本 |
-| --- | --- | --- | --- |
-| cancel | 点击遮罩层或右上角叉或取消按钮的回调 | function(e) |  |
-| ok | 点击确认按钮时的回调 | - |  |
-| update:visible | 对话框可见性变化时的回调 | (visible: boolean) |  |
+| 事件名称       | 说明                                 | 回调参数           | 版本 |
+| -------------- | ------------------------------------ | ------------------ | ---- |
+| cancel         | 点击遮罩层或右上角叉或取消按钮的回调 | function(e)        |      |
+| ok             | 点击确认按钮时的回调                 | -                  |      |
+| update:visible | 对话框可见性变化时的回调             | (visible: boolean) |      |
 
 ### ConfirmModal 插槽
 
-| 插槽名称 | 说明 | 版本 |
-| --- | --- | --- |
-| default | 自定义主体内容（替代 content + tips + 图标） |  |
-| footer | 自定义底部内容（覆盖默认按钮） |  |
-| confirm | 自定义确认按钮区域 |  |
-| okText | 自定义确认按钮文字 |  |
-| cancelText | 自定义取消按钮文字 |  |
+| 插槽名称   | 说明                                                           | 版本 |
+| ---------- | -------------------------------------------------------------- | ---- |
+| default    | 自定义主体内容（替代 `content` + `tips` 文案行，状态图标保留） |      |
+| footer     | 自定义底部内容（覆盖 `Modal` 默认按钮区）                      |      |
+| okText     | 自定义确认按钮文字                                             |      |
+| cancelText | 自定义取消按钮文字                                             |      |
+
+> 具名插槽仅在调用方传入时向下透传；未传时沿用 `Modal` 外壳自己的默认按钮区与文案兜底。`default` 是正文的唯一落点，不会再被转发成外壳的默认插槽。
 
 #### 注意
 

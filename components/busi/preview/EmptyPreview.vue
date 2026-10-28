@@ -6,17 +6,14 @@
       </template>
     </PreviewHeader>
     <div class="word-body">
-      <a-empty
-        :image="Empty.PRESENTED_IMAGE_SIMPLE"
-        :description="`【${props.info?.type}】该类型文件暂不支持预览`"
-      />
+      <Empty :description="`【${props.info?.type}】该类型文件暂不支持预览`" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { Empty } from 'ant-design-vue';
 import { computed } from 'vue';
+import Empty from '../empty/Empty.vue';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';
 

@@ -5,7 +5,7 @@
         <slot :name="slotsName" v-bind="scope" />
       </template>
       <template v-if="!$slots['empty']" #empty>
-        <a-empty :image="SIMPLE_IMAGE" />
+        <Empty />
       </template>
       <template v-if="!$slots['pagerLeft']" #pagerLeft></template>
     </vxe-grid>
@@ -17,8 +17,8 @@ export default {
 };
 </script>
 <script setup>
-import { Empty } from 'ant-design-vue';
 import { ref } from 'vue';
+import Empty from '../empty/Empty.vue';
 
 defineProps({
   gridTheme: {
@@ -27,7 +27,6 @@ defineProps({
   },
 });
 
-const SIMPLE_IMAGE = Empty.PRESENTED_IMAGE_SIMPLE;
 const xGrid = ref();
 // vxe 自身已内置 onActivated → recalculate → refreshScroll 与 autoResize ResizeObserver，
 // 切回时的重算不依赖此处；若表格空白问题复发再恢复 element-resize-detector 方案

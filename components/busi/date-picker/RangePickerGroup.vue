@@ -136,6 +136,15 @@ const methods = {
     flex: 0 1 auto;
     max-width: 160px;
     border-right: 1px solid var(--border-color-line, #d9d9d9);
+
+    // 下拉自身的内框必须显式抹掉：官方 `bordered=false` 对 `a-select` 实测未生效
+    // （FormSelect 的 `light-form-select` 全局规则把 `.ant-select-selector` 的 border-color
+    // 以 !important 写死成 #d9d9d9），不抹就会与容器外框叠成"双边框 / 粗边框"。
+    // 用 `border-width: 0` 而不是只改颜色：宽度归零后内容区才与右侧区间控件同高同基线。
+    // `!important` 是为压过 FormSelect 自身 scoped 规则的 (0,5,0)。
+    :deep(.ant-select-selector) {
+      border-width: 0 !important;
+    }
   }
 }
 </style>

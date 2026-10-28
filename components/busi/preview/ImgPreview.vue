@@ -19,11 +19,7 @@
           class="img-preview"
           @click="() => methods.previewImage(state.src)"
         />
-        <a-empty
-          v-else
-          :image="Empty.PRESENTED_IMAGE_SIMPLE"
-          :description="`【${props.info?.type}】该类型文件暂不支持预览`"
-        />
+        <Empty v-else :description="`【${props.info?.type}】该类型文件暂不支持预览`" />
       </a-spin>
     </div>
   </div>
@@ -31,9 +27,10 @@
 
 <script setup>
 import { api as viewerApi } from 'v-viewer';
-import { Empty, message } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 import { reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import 'viewerjs/dist/viewer.css';
+import Empty from '../empty/Empty.vue';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';
 import { downloadBlobFile } from './internal/fileService';

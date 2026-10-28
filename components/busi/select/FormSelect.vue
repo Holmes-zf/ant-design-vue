@@ -3,7 +3,7 @@
     allow-clear
     :class="className"
     :placeholder="'请选择'"
-    :getPopupContainer="methods.getPopupContainer"
+    :getPopupContainer="popupContainer"
     :mode="$attrs.multiple"
     v-model:open="open"
     @dropdownVisibleChange="methods.dropdownVisibleChange"
@@ -98,6 +98,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // 弹层挂载容器：不传 ⇒ 挂到下拉自己的父节点（历史默认，调用点行为不变）。
+  // 声明成 prop（而非靠 `$attrs` 透传）⇒ 外部覆盖不再依赖模板里 `v-bind="$attrs"` 的书写顺序。
+  // 组合件（SelectGroup / SelectMultiInput）用它把弹层挂到「合成框的上一层」。
+  getPopupContainer: {
+    type: Function,
+    default: undefined,
+  },
 });
 
 const emits = defineEmits(['update:value', 'change']);
@@ -152,7 +159,7 @@ const methods = {
       methods.clearErrorValue(selectValue.value);
     }
   },
-  // dom节点容器处理
+  // 默认弹层容器：挂到下拉自己的父节点（外部通过 `getPopupContainer` prop 传入时以外部为准）
   getPopupContainer(triggerNode) {
     return triggerNode.parentNode;
   },
@@ -185,6 +192,9 @@ const methods = {
     }
   },
 };
+
+// 弹层容器：外部传了就用外部的（组合件把弹层挂到「合成框的上一层」），否则挂到下拉自己的父节点
+const popupContainer = computed(() => props.getPopupContainer || methods.getPopupContainer);
 
 // ========== 状态同步 watch 区 ==========
 

@@ -29,6 +29,7 @@ A business form select based on Ant Design [Select](/components/select/). Provid
 | showAll | Whether to show all options; when `false`, filters out options with empty-string value (not effective currently) | boolean | `true` |  |
 | defaultSelect | When options has only one item and no value is set, select it by default | boolean | `false` |  |
 | isClearErrorValue | Whether to clear the value when it does not match any option (default: keep) | boolean | `false` |  |
+| getPopupContainer | Container to mount the dropdown into. When not set, the dropdown mounts into the select's own parent node; composite components (`SelectGroup` / `SelectMultiInput`) use it to mount the dropdown one layer above the composed box | function(triggerNode) | - |  |
 | allowClear | Allow clearing | boolean | `true` |  |
 | disabled | Whether the select is disabled | boolean | `false` |  |
 | loading | Whether the select is loading | boolean | `false` |  |

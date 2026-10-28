@@ -86,7 +86,7 @@
             </EmptyPreview>
           </div>
         </template>
-        <a-empty v-else :image="Empty.PRESENTED_IMAGE_SIMPLE" />
+        <Empty v-else />
       </div>
       <slot></slot>
     </a-spin>
@@ -105,9 +105,10 @@
 </template>
 
 <script setup lang="ts">
-import { Empty, message } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 import { debounce, uniqueId, isEqual } from 'lodash-es';
 import { reactive, nextTick, onMounted, onUnmounted, watch } from 'vue';
+import Empty from '../empty/Empty.vue';
 import RadiusButton from '../button/RadiusButton.vue';
 import PDFPreview from './PDFPreview.vue';
 import ImgPreview from './ImgPreview.vue';

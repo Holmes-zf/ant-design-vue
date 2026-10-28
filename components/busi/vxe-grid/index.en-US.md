@@ -100,7 +100,7 @@ Enabled by default (`mouseConfig.area`, `areaConfig.multiple` and `keyboardConfi
 
 | Slot | Description | Version |
 | --- | --- | --- |
-| empty | Empty data content, **default renders simple Empty (`a-empty` SIMPLE image)** |  |
+| empty | Empty data content, **default renders the simple empty state (business `Empty`: simple image + `暂无数据`)** |  |
 | pagerLeft | Pager left content, **default empty** (for pager statistics etc.) |  |
 | Others | All passed through to vxe-grid, e.g. column `slots.default`, `toolbar` |  |
 

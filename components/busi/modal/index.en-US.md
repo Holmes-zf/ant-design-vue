@@ -56,24 +56,24 @@ A custom modal dialog based on Ant Design [Modal](/components/modal/). Provides 
 
 ### Modal Slots
 
-| Slot Name | Description | Version |
-| --- | --- | --- |
-| default | Modal body content |  |
-| footer | Custom footer (overrides the default RadiusButton footer) |  |
-| okText | Custom confirm button text |  |
-| cancelText | Custom cancel button text |  |
+| Slot Name  | Description                                               | Version |
+| ---------- | --------------------------------------------------------- | ------- |
+| default    | Modal body content                                        |         |
+| footer     | Custom footer (overrides the default RadiusButton footer) |         |
+| okText     | Custom confirm button text                                |         |
+| cancelText | Custom cancel button text                                 |         |
 
 > **Note**: The default `footer` is rendered internally with `RadiusButton` components. Use the `footer` slot for custom content.
 
 ### ConfirmModal
 
-A confirmation dialog variant with status icon. Inherits from [a-modal](/components/modal/#API) with the following customizations:
+A confirmation dialog variant with status icon. The shell reuses this library's `Modal` (mask, footer buttons, visibility and close semantics, attribute forwarding are all provided by `Modal`); this component only owns the confirmation body with the status icon. It therefore also inherits from [a-modal](/components/modal/#API) with the following customizations:
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | visible(v-model) | Whether the modal dialog is visible or not | boolean | `false` |  |
 | loading | Loading state for action buttons | boolean | `false` |  |
-| content | Main content text | string | `content` |  |
+| content | Main content text (the row is not rendered when empty) | string | - |  |
 | tips | Additional tip text below content | string | - |  |
 | afterClose | Specify a function that will be called when modal is closed completely | function | - |  |
 | bodyStyle | Body style for modal body element | object | `{}` |  |
@@ -95,7 +95,7 @@ A confirmation dialog variant with status icon. Inherits from [a-modal](/compone
 | okText | Text of the confirm button | string \| slot | `确认` |  |
 | okType | Button `type` of the OK button | string | `primary` |  |
 | onCancel | Custom cancel callback | Function | - |  |
-| type | Status type for the icon | `''` \| `success` \| `warning` \| `error` | `warning` |  |
+| type | Status type for the icon (falls back to `warning` when unmatched) | `success` \| `warning` \| `error` | `warning` |  |
 | title | The modal dialog's title (**fixed to `操作确认`**) | string \| slot | `操作确认` |  |
 | width | Width of the modal dialog (**fixed to `700px`**) | string \| number | `700` |  |
 | wrapClassName | The class name of the container of the modal dialog | string | - |  |
@@ -113,11 +113,12 @@ A confirmation dialog variant with status icon. Inherits from [a-modal](/compone
 
 | Slot Name | Description | Version |
 | --- | --- | --- |
-| default | Custom body content (replaces content + tips + icon) |  |
-| footer | Custom footer (overrides the default buttons) |  |
-| confirm | Custom confirm button area |  |
+| default | Custom body content (replaces the `content` + `tips` text rows, the status icon is kept) |  |
+| footer | Custom footer (overrides the `Modal` default button area) |  |
 | okText | Custom confirm button text |  |
 | cancelText | Custom cancel button text |  |
+
+> Named slots are forwarded downward only when provided; otherwise the `Modal` shell's own default button area and text fallbacks are used. `default` is the single landing point of the body and is never forwarded as the shell's default slot.
 
 #### Note
 

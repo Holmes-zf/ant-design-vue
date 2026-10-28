@@ -90,6 +90,12 @@ const dateAttrs = computed(() => omit(attrs, ['class', 'style']));
     flex: none;
     max-width: 160px;
     border-right: 1px solid var(--border-color-line, #d9d9d9);
+
+    // 同 RangePickerGroup：`bordered=false` 对 `a-select` 未生效，抹掉子件内框，
+    // 只保留容器这一层边框（否则叠成双边框）
+    :deep(.ant-select-selector) {
+      border-width: 0 !important;
+    }
   }
 
   .form-date-picker {

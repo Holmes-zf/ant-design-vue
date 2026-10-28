@@ -13,23 +13,19 @@
         :src="state.src || props.source"
         class="excel-office"
       />
-      <a-empty
-        v-else
-        :image="Empty.PRESENTED_IMAGE_SIMPLE"
-        :description="`【${props.info?.type}】该类型文件暂不支持预览`"
-      />
+      <Empty v-else :description="`【${props.info?.type}】该类型文件暂不支持预览`" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { Empty } from 'ant-design-vue';
 import { reactive, computed, watch, onMounted } from 'vue';
 // 引入 VueOfficeExcel 组件
 import VueOfficeExcel from '@vue-office/excel';
 // 引入相关样式
 import '@vue-office/excel/lib/index.css';
 import Papa from 'papaparse';
+import Empty from '../empty/Empty.vue';
 import excel from './internal/excel';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';

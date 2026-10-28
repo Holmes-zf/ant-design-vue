@@ -10,9 +10,8 @@
         <div v-if="state.highlighted" class="text-content">
           <pre><code v-html="state.highlighted"></code></pre>
         </div>
-        <a-empty
+        <Empty
           v-else-if="!state.loading"
-          :image="Empty.PRESENTED_IMAGE_SIMPLE"
           :description="`【${props.info?.type}】该类型文件暂不支持预览`"
         />
       </a-spin>
@@ -21,8 +20,9 @@
 </template>
 
 <script setup>
-import { Empty, message } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 import { reactive, computed, watch, onMounted } from 'vue';
+import Empty from '../empty/Empty.vue';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';
 import { downloadBlobFile } from './internal/fileService';

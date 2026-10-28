@@ -30,6 +30,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | showAll | 是否显示全部，为 `false` 时过滤掉 value 为空字符串的选项（当前暂不生效） | boolean | `true` |  |
 | defaultSelect | options 只有一条数据且当前无值时，是否默认选中该条 | boolean | `false` |  |
 | isClearErrorValue | 值不符合 options 时，是否清除错误值（默认不清除） | boolean | `false` |  |
+| getPopupContainer | 弹层挂载容器。不传时挂到下拉自身的父节点；组合件（`SelectGroup` / `SelectMultiInput`）用它把弹层挂到合成框的上一层 | function(triggerNode) | - |  |
 | allowClear | 支持清除 | boolean | `true` |  |
 | disabled | 是否禁用 | boolean | `false` |  |
 | loading | 是否加载中 | boolean | `false` |  |

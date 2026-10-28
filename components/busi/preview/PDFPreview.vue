@@ -20,20 +20,17 @@
           @rendered="renderedHandler"
         />
 
-        <a-empty
-          v-else
-          :image="Empty.PRESENTED_IMAGE_SIMPLE"
-          :description="`【${props.info?.type}】该类型文件暂不支持预览`"
-        />
+        <Empty v-else :description="`【${props.info?.type}】该类型文件暂不支持预览`" />
       </a-spin>
     </div>
   </div>
 </template>
 
 <script setup>
-import { Empty, message } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 import VueOfficePdf from '@vue-office/pdf';
 import { ref, reactive, computed, watch, onMounted } from 'vue';
+import Empty from '../empty/Empty.vue';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';
 import { downloadBlobFile } from './internal/fileService';
