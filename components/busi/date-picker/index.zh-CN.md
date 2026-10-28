@@ -3,7 +3,7 @@ category: Components
 type: 业务
 title: DatePicker
 subtitle: 时间组件群
-cover: https://gw.alipayobjects.com/zos/alicdn/sfuBfXbDZh/DatePicker.svg
+cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 ---
 
 业务时间组件群：围绕「日期 / 日期时间」的单值与区间输入，提供七个组件，统一字符串值契约（字符串进 / 字符串出）、统一的范围限制语义（方向 `curLimit` + 跨度 `span` + 偏移 `pointTime`）与统一的视觉规范（聚焦主色边框、无外发光）。

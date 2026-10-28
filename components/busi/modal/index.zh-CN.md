@@ -91,7 +91,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | getContainer | 指定 Modal 挂载的 HTML 节点 | (instance): HTMLElement | `() => document.body` |  |
 | mask | 是否展示遮罩 | boolean | `true` |  |
 | maskClosable | 点击蒙层是否允许关闭（**固定为 `false`**） | boolean | `false` |  |
-| maskStyle | 遮罩样式（默认使用业务深色主题） | object | `{ background: 'rgba(0, 13, 22, 0.7200)', backdropFilter: 'blur(1px)' }` |  |
+| maskStyle | 遮罩样式（取主题 token `--modal-mask-bg`，未定义时回落深色遮罩） | object | `{ background: 'var(--modal-mask-bg, rgba(0, 13, 22, 0.7200))', backdropFilter: 'blur(1px)' }` |  |
 | okButtonProps | ok 按钮 props | [ButtonProps](/components/button/#API) | - |  |
 | okText | 确认按钮文字 | string \| slot | `确认` |  |
 | okType | 确认按钮类型 | string | `primary` |  |

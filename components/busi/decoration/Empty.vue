@@ -5,13 +5,14 @@
 </template>
 
 <script setup lang="ts">
-import { Empty } from 'ant-design-vue';
+// 直接引本库的 Empty 源码模块（不走包名自引用，避免 busi 组件与库入口形成循环依赖）
+import AntEmpty from '../../empty';
 
 defineProps({
   // 默认项目统一用简版插画；需要换图时由调用点传 antd 的 image（字符串 src 或 PRESENTED_IMAGE_*）
   image: {
     type: [String, Object],
-    default: () => Empty.PRESENTED_IMAGE_SIMPLE,
+    default: () => AntEmpty.PRESENTED_IMAGE_SIMPLE,
   },
   description: {
     type: String,

@@ -90,7 +90,7 @@ A confirmation dialog variant with status icon. The shell reuses this library's 
 | getContainer | Return the mount node for Modal | (instance): HTMLElement | `() => document.body` |  |
 | mask | Whether show mask or not | boolean | `true` |  |
 | maskClosable | Whether to close the modal dialog when the mask is clicked (**fixed to `false`**) | boolean | `false` |  |
-| maskStyle | Style for modal's mask element (uses a business dark theme by default) | object | `{ background: 'rgba(0, 13, 22, 0.7200)', backdropFilter: 'blur(1px)' }` |  |
+| maskStyle | Style for modal's mask element (takes the `--modal-mask-bg` token, falls back to a dark mask) | object | `{ background: 'var(--modal-mask-bg, rgba(0, 13, 22, 0.7200))', backdropFilter: 'blur(1px)' }` |  |
 | okButtonProps | The ok button props | [ButtonProps](/components/button/#API) | - |  |
 | okText | Text of the confirm button | string \| slot | `确认` |  |
 | okType | Button `type` of the OK button | string | `primary` |  |

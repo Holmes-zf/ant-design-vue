@@ -3,7 +3,7 @@ category: Components
 type: Business
 title: DatePicker
 subtitle: Date & Time Family
-cover: https://gw.alipayobjects.com/zos/alicdn/sfuBfXbDZh/DatePicker.svg
+cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 ---
 
 Business date & time component family: single-value and range inputs for dates and datetimes. All seven components share a string value contract (string in / string out), a unified range-limit semantics (`curLimit` direction + `span` limit + `pointTime` offset) and a unified visual spec (primary-color focus border, no glow).
