@@ -30,7 +30,7 @@ import { api as viewerApi } from 'v-viewer';
 import { message } from 'ant-design-vue';
 import { reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import 'viewerjs/dist/viewer.css';
-import Empty from '../empty/Empty.vue';
+import Empty from '../decoration/Empty.vue';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';
 import { downloadBlobFile } from './internal/fileService';

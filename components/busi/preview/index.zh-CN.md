@@ -14,6 +14,20 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/D1dXz9PZqa/image.svg
 - 需要一次预览多个文件，并支持上一份/下一份切换时。
 - 需要统一的下载/打印工具栏时。
 
+## 组件选型
+
+| 组件           | 角色                                           | 典型场景          |
+| -------------- | ---------------------------------------------- | ----------------- |
+| `PreviewModal` | 入口弹窗：按 `type` 分发格式 + 多文件上/下翻页 | 通用多文件预览    |
+| `PDFPreview`   | PDF 渲染器（含续读定位 `percentage`）          | 页面内嵌 PDF 预览 |
+| `ImgPreview`   | 图片渲染器                                     | 页面内嵌图片预览  |
+| `ExcelPreview` | Excel/CSV 渲染器                               | 页面内嵌表格预览  |
+| `WordPreview`  | Word 渲染器                                    | 页面内嵌文档预览  |
+| `TextPreview`  | 纯文本 / XML 等代码类渲染器                    | 页面内嵌文本预览  |
+| `EmptyPreview` | 不支持类型的降级页                             | 兜底展示          |
+
+> 一般只与 `PreviewModal` 打交道；预览器单独使用时需自行提供固定高度的容器。
+
 ## API
 
 ### PreviewModal

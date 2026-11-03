@@ -30,7 +30,7 @@
 import { message } from 'ant-design-vue';
 import VueOfficePdf from '@vue-office/pdf';
 import { ref, reactive, computed, watch, onMounted } from 'vue';
-import Empty from '../empty/Empty.vue';
+import Empty from '../decoration/Empty.vue';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';
 import { downloadBlobFile } from './internal/fileService';

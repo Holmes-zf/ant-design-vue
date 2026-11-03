@@ -14,6 +14,15 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 - 当需要对异步操作进行加载状态控制，防止重复提交时。
 - 当需要标准化确认/取消按钮布局时。
 
+## 组件选型
+
+| 组件 | 角色 | 典型场景 |
+| --- | --- | --- |
+| `Modal` | 增强 `a-modal`：`RadiusButton` 圆角按钮底栏、loading、深色遮罩 | 表单录入 / 内容弹窗 |
+| `ConfirmModal` | 带图标的确认框（正文只放文案，塞不了表单） | 删除、启停、提交审批等二次确认 |
+
+> 行内轻量确认不打断操作时，用 `Popconfirm`（见 `busi/popconfirm`）。
+
 ## API
 
 ### Modal

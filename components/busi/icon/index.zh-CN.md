@@ -1,6 +1,6 @@
 ---
 category: Components
-type: 业务
+type: 主题
 title: SvgIcon
 subtitle: SVG 图标
 cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg

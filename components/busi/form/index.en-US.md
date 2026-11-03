@@ -16,6 +16,17 @@ A form layout and action bar component family: `FormRow` (pure CSS equal-width l
 - When you need a section title with an action area on the right, use `FormTitle`.
 - When you need a unified footer action bar, possibly pinned to the bottom, use `FormFooter`.
 
+## Component Selection
+
+| Component | Role | Typical Scenario |
+| --- | --- | --- |
+| `FormRow` | Pure CSS equal-width layout (no column spanning) | Legacy equal-width rows |
+| `FormARow` | Row layout on the 24 grid (`gutter` spacing + any column count) | Preferred form row for new code |
+| `FormACol` | Field container: forwards `label` / `name` / `rules` to `a-form-item`, supports column spanning | Field items paired with `FormARow` |
+| `FormBox` | White visual container (no props) | Card wrapping form content |
+| `FormTitle` | Section title + right-side action area | Form section titles |
+| `FormFooter` | Footer action bar (in flow / pinned to bottom) | Form "confirm / cancel" bar |
+
 ## API
 
 ### FormRow

@@ -25,7 +25,7 @@ import VueOfficeExcel from '@vue-office/excel';
 // 引入相关样式
 import '@vue-office/excel/lib/index.css';
 import Papa from 'papaparse';
-import Empty from '../empty/Empty.vue';
+import Empty from '../decoration/Empty.vue';
 import excel from './internal/excel';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';

@@ -17,7 +17,7 @@
 <script setup>
 import { message } from 'ant-design-vue';
 import { reactive, computed, watch, onMounted } from 'vue';
-import Empty from '../empty/Empty.vue';
+import Empty from '../decoration/Empty.vue';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';
 import { filePreview, downloadBlobFile } from './internal/fileService';

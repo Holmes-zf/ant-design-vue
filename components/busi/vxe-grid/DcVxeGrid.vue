@@ -18,7 +18,7 @@ export default {
 </script>
 <script setup>
 import { ref } from 'vue';
-import Empty from '../empty/Empty.vue';
+import Empty from '../decoration/Empty.vue';
 
 defineProps({
   gridTheme: {

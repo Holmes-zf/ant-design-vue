@@ -13,6 +13,15 @@ A custom modal dialog based on Ant Design [Modal](/components/modal/). Provides 
 - When you need loading state control to prevent duplicate submissions.
 - When you want standardized confirm/cancel button layout.
 
+## Component Selection
+
+| Component | Role | Typical Scenario |
+| --- | --- | --- |
+| `Modal` | Enhanced `a-modal`: `RadiusButton` footer, loading, dark mask | Form / content dialogs |
+| `ConfirmModal` | Icon confirm dialog (text-only body, cannot hold forms) | Secondary confirmation such as delete, enable/disable, submit |
+
+> For lightweight inline confirmation use `Popconfirm` (see `busi/popconfirm`).
+
 ## API
 
 ### Modal

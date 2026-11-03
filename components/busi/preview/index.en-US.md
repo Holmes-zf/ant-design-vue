@@ -14,6 +14,20 @@ A multi-format file preview family: `PreviewModal` dispatches files and handles 
 - When you need to preview multiple files at once with prev/next paging.
 - When you need a unified download/print toolbar.
 
+## Component Selection
+
+| Component | Role | Typical Scenario |
+| --- | --- | --- |
+| `PreviewModal` | Entry dialog: dispatches by `type` + multi-file prev/next paging | General multi-file preview |
+| `PDFPreview` | PDF renderer (with resume position `percentage`) | Embedded PDF preview |
+| `ImgPreview` | Image renderer | Embedded image preview |
+| `ExcelPreview` | Excel/CSV renderer | Embedded spreadsheet preview |
+| `WordPreview` | Word renderer | Embedded document preview |
+| `TextPreview` | Plain text / XML renderer | Embedded text preview |
+| `EmptyPreview` | Fallback page for unsupported types | Degraded display |
+
+> You normally only deal with `PreviewModal`; standalone previewers need a fixed-height container provided by the caller.
+
 ## API
 
 ### PreviewModal

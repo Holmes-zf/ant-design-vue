@@ -108,7 +108,7 @@
 import { message } from 'ant-design-vue';
 import { debounce, uniqueId, isEqual } from 'lodash-es';
 import { reactive, nextTick, onMounted, onUnmounted, watch } from 'vue';
-import Empty from '../empty/Empty.vue';
+import Empty from '../decoration/Empty.vue';
 import RadiusButton from '../button/RadiusButton.vue';
 import PDFPreview from './PDFPreview.vue';
 import ImgPreview from './ImgPreview.vue';

@@ -13,7 +13,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import Empty from '../empty/Empty.vue';
+import Empty from '../decoration/Empty.vue';
 import PreviewHeader from './internal/PreviewHeader.vue';
 import { usePreviewDownload } from './internal/previewHooks';
 

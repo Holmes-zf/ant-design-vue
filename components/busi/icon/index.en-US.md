@@ -1,6 +1,6 @@
 ---
 category: Components
-type: Busi
+type: Theme
 title: SvgIcon
 cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 ---

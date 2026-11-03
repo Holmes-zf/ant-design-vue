@@ -17,6 +17,17 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 - 当需要区块标题与右侧操作区时，使用 `FormTitle`。
 - 当需要统一的底部操作栏、或需要操作栏常驻底部时，使用 `FormFooter`。
 
+## 组件选型
+
+| 组件 | 角色 | 典型场景 |
+| --- | --- | --- |
+| `FormRow` | 纯 CSS 等分布局（不支持跨列） | 存量页面的等分行 |
+| `FormARow` | 基于 24 栅格的行布局（`gutter` 间距 + 任意列数等分） | 新代码首选的表单行 |
+| `FormACol` | 字段项容器：透传 `label` / `name` / `rules` 给 `a-form-item`，支持跨列 | 与 `FormARow` 搭配的字段项 |
+| `FormBox` | 白色视觉容器（无 props） | 包裹表单内容的卡片 |
+| `FormTitle` | 区块标题 + 右侧工具位 | 表单分区标题 |
+| `FormFooter` | 底部操作按钮条（流内 / 常驻底部） | 表单底部「确认 / 取消」 |
+
 ## API
 
 ### FormRow
