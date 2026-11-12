@@ -28,6 +28,17 @@
   </a-range-picker>
 </template>
 
+<script>
+/**
+ * DateTimeRangePicker —— 双月联动 + 底部日期/时间切换的日期时间范围选择器。
+ * `inheritAttrs: false`：`$attrs` 已交给根的 a-range-picker，属性只有一条落点。
+ */
+export default {
+  name: 'DateTimeRangePicker',
+  inheritAttrs: false,
+};
+</script>
+
 <script setup>
 /**
  * 日期时间范围选择器
@@ -122,7 +133,8 @@ const state = reactive({
   }),
   confirmDisabled: computed(() => {
     const [start, end] = state.panelValue;
-    return !start || !end;
+    if (!start || !end) return true;
+    return start.isAfter(end);
   }),
 });
 
@@ -168,9 +180,48 @@ const methods = {
     return disabledDate(current, state.writeIndex === 0 ? 'start' : 'end');
   },
 
-  /** 时间列禁用（预留：curLimit / pointTime 细化到时分秒） */
-  getPanelDisabledTime() {
-    return undefined;
+  /**
+   * 时间列置灰：同一自然日内两端时分不得倒挂
+   *
+   * 日期层的顺序已由 `useRangeLimit` 管住（本端不得越过对端），但「同一天」本身是合法日期，
+   * 日期层放行后时分层若不拦，就能选出 `10-29 15:45 ~ 10-29 15:44` 这种不存在的区间
+   * —— 典型来源是 `showTime.defaultValue` 被当跨天模板用（起 15:45 / 止 次日 15:44），
+   * 两端压进同一天后，止端钟点天生比起端早。
+   *
+   * 职责边界：这里只负责「让不可能的选项点不到」，**不做任何值修正**。
+   * 同日到底该解释成多长的区间属于业务口径，组件不猜（业务要特殊语义自己处理值）。
+   *
+   * 分钟 / 秒按 antd 语义给成函数：只有落到边界那一小时（那一分钟）时才收紧，
+   * 否则整列都禁用会把 16:00 之后的合法时刻一起误伤。
+   *
+   * @param {0|1} side 0 起始端 / 1 结束端
+   * @returns {Object|undefined} { disabledHours, disabledMinutes(hour), disabledSeconds(hour, minute) }
+   */
+  getPanelDisabledTime(side) {
+    const [start, end] = state.panelValue;
+    const own = side === 0 ? start : end;
+    const other = side === 0 ? end : start;
+    // 两端未齐，或两端不跨同一天（跨天时段分自由）→ 不限制
+    if (!own || !other || !own.isSame(other, 'day')) return undefined;
+
+    const range = (from, to) =>
+      from > to ? [] : Array.from({ length: to - from + 1 }, (_, i) => from + i);
+
+    // 止端不得早于起端 → 起端之前的时/分/秒置灰；起始端不得晚于止端 → 之后置灰
+    const isEnd = side === 1;
+    const boundary = isEnd ? start : end;
+
+    return {
+      disabledHours: isEnd ? range(0, boundary.hour() - 1) : range(boundary.hour() + 1, 23),
+      disabledMinutes: hour => {
+        if (hour !== boundary.hour()) return [];
+        return isEnd ? range(0, boundary.minute() - 1) : range(boundary.minute() + 1, 59);
+      },
+      disabledSeconds: (hour, minute) => {
+        if (hour !== boundary.hour() || minute !== boundary.minute()) return [];
+        return isEnd ? range(0, boundary.second() - 1) : range(boundary.second() + 1, 59);
+      },
+    };
   },
 
   // ===== 开合 =====
@@ -179,8 +230,9 @@ const methods = {
     if (open) {
       methods.resetPanel();
     } else {
-      // 点面板外关闭：草稿完整则等同确认（否则跨度自动修正的结果会凭空丢失），不完整则丢弃
-      if (state.processValue) methods.commit();
+      // 点面板外关闭：草稿完整**且合法**才等同确认（否则跨度自动修正的结果会凭空丢失），
+      // 不完整或倒挂一律丢弃 —— 与「确定」按钮同一判据，不能从旁路提交非法区间
+      if (state.processValue && !state.confirmDisabled) methods.commit();
       methods.resetOnClose();
     }
     $emit('openChange', open);

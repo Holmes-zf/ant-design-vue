@@ -4,6 +4,17 @@
   </a-button>
 </template>
 
+<script>
+/**
+ * RadiusButton —— a-button 薄壳（只补最小宽度与圆角）。
+ * `inheritAttrs: false`：`$attrs` 已交给根的 a-button，属性只有一条落点。
+ */
+export default {
+  name: 'RadiusButton',
+  inheritAttrs: false,
+};
+</script>
+
 <script setup>
 import { computed } from 'vue';
 const props = defineProps({

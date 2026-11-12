@@ -8,7 +8,7 @@
         :range-value="rangeValue"
         :hover-value="hoverValue"
         :disabled-date="disabledDate"
-        :disabled-time="state.leftDisabledTime"
+        :disabled-time="disabledTime"
         :show-time="showTime"
         :view-mode="viewMode"
         :time-value="timeValue[0]"
@@ -29,7 +29,7 @@
         :range-value="rangeValue"
         :hover-value="hoverValue"
         :disabled-date="disabledDate"
-        :disabled-time="state.rightDisabledTime"
+        :disabled-time="disabledTime"
         :show-time="showTime"
         :view-mode="viewMode"
         :time-value="timeValue[1]"
@@ -78,7 +78,12 @@ const props = defineProps({
     type: Function,
     default: undefined,
   },
-  /** 禁用时间工厂：(index) => disabledTimeProps */
+  /**
+   * 禁用时间工厂：(side) => { disabledHours, disabledMinutes(hour), disabledSeconds(hour, minute) }
+   *
+   * 原样透传给两侧面板，由 `DateTimeColumns` 带 side 调用 —— 别在这里提前调用成对象，
+   * 否则分钟/秒的「按当前小时收紧」拿不到候选时刻。
+   */
   disabledTime: {
     type: Function,
     default: undefined,
@@ -120,8 +125,6 @@ defineEmits([
 const state = reactive({
   leftTitle: computed(() => props.headerValue?.[0]?.format('YYYY-MM') || ''),
   rightTitle: computed(() => props.headerValue?.[1]?.format('YYYY-MM') || ''),
-  leftDisabledTime: computed(() => (props.disabledTime ? props.disabledTime(0) : undefined)),
-  rightDisabledTime: computed(() => (props.disabledTime ? props.disabledTime(1) : undefined)),
 });
 </script>
 

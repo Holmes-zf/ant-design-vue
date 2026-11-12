@@ -12,16 +12,20 @@
     @change="methods.handleChange"
   >
     <a-select-option
-      v-for="item in options"
+      v-for="(item, index) in options"
       :item="item"
       :label="item.label"
       :value="item.value"
       :key="item.value"
       :disabled="item.disabled"
     >
-      <span :title="item.label">
-        {{ item.label }}
-      </span>
+      <!-- 选项行内容出口：默认渲染纯文案；扩展件用 `#option` 注入「设默认」等动作。
+           注意 `:label` 仍由上面的 prop 决定下拉显示与选中回显，本插槽只影响下拉里「一行长什么样」。 -->
+      <slot name="option" :item="item" :index="index">
+        <span :title="item.label">
+          {{ item.label }}
+        </span>
+      </slot>
     </a-select-option>
     <template #suffixIcon>
       <slot name="suffixIcon">

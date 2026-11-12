@@ -10,12 +10,8 @@
   >
     <a-spin :spinning="state.loading">
       <div class="preview-modal-body">
-        <template
-          v-for="item in state.previewList"
-          v-if="state.refresh && state.previewList.length"
-          :key="item._uuid"
-        >
-          <div v-show="state.activeId === item._uuid" class="preview-item">
+        <template v-for="item in visiblePreviewList" :key="item._uuid">
+          <div class="preview-item" v-show="state.activeId === item._uuid">
             <PDFPreview
               v-if="item.isInit && /(.)?(pdf)/.test(item.type && item.type.toLowerCase())"
               :info="item"
@@ -86,7 +82,7 @@
             </EmptyPreview>
           </div>
         </template>
-        <Empty v-else />
+        <Empty v-if="!visiblePreviewList.length" />
       </div>
       <slot></slot>
     </a-spin>
@@ -104,15 +100,29 @@
   </a-modal>
 </template>
 
+<script lang="ts">
+/**
+ * PreviewModal —— 多格式预览弹框（PDF / Word / Excel / 图片 / 文本）。
+ * `inheritAttrs: false`：`$attrs` 已显式交给 a-modal，属性只有一条落点。
+ */
+export default {
+  name: 'PreviewModal',
+  inheritAttrs: false,
+};
+</script>
+
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
 import { debounce, uniqueId, isEqual } from 'lodash-es';
-import { reactive, nextTick, onMounted, onUnmounted, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, reactive, watch } from 'vue';
 import Empty from '../decoration/Empty.vue';
 import RadiusButton from '../button/RadiusButton.vue';
+// 文档站约束：子预览一律静态引入。外部实现用 defineAsyncComponent 做 chunk 拆分，
+// 在文档站会在路由切换时产生异步竞态（演示区偶发空白），本项目统一改为静态引入。
+// Excel 直接指向 impl（而非 ./ExcelPreview.vue 薄壳），避免"壳 → 壳"二跳
 import PDFPreview from './PDFPreview.vue';
 import ImgPreview from './ImgPreview.vue';
-import ExcelPreview from './ExcelPreview.vue';
+import ExcelPreview from './impl/ExcelPreviewImpl.vue';
 import WordPreview from './WordPreview.vue';
 import TextPreview from './TextPreview.vue';
 import EmptyPreview from './EmptyPreview.vue';
@@ -152,6 +162,9 @@ const state = reactive({
 });
 
 const $emit = defineEmits(['update:visible', 'closeCallback']);
+
+// refresh 为 false 时整块不渲染（与原先的 v-if 同义）；用派生列表代替 v-if + v-for 同元素
+const visiblePreviewList = computed(() => (state.refresh ? state.previewList : []));
 
 const methods = {
   // 数据初始化

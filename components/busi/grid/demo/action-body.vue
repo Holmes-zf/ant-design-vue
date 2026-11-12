@@ -1,6 +1,6 @@
 <docs>
 ---
-order: 0
+order: 5
 title:
   zh-CN: 表格工具栏
   en-US: Table Toolbar

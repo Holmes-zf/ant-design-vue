@@ -17,6 +17,17 @@
   </a-input>
 </template>
 
+<script>
+/**
+ * FormInput —— a-input 透传壳（本地行为仅两条：失焦 trim、只读态移入后解除）。
+ * `inheritAttrs: false`：`$attrs` 全部显式交给 a-input，属性只有一条落点。
+ */
+export default {
+  name: 'FormInput',
+  inheritAttrs: false,
+};
+</script>
+
 <script setup>
 import { computed, ref, watch } from 'vue';
 const props = defineProps({

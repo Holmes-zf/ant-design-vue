@@ -29,7 +29,12 @@ const props = defineProps({
     type: Object,
     default: undefined,
   },
-  /** 禁用时间：返回 { disabledHours, disabledMinutes, disabledSeconds } */
+  /** 本侧下标：0 起始 / 1 结束 */
+  side: {
+    type: Number,
+    default: 0,
+  },
+  /** 禁用时间工厂：(side) => { disabledHours, disabledMinutes(hour), disabledSeconds(hour, minute) } */
   disabledTime: {
     type: Function,
     default: undefined,
@@ -43,8 +48,18 @@ const columnsRef = ref(null);
 const state = reactive({
   // 当前时间值，缺省时以当前时刻兜底，保证列始终有选中项
   current: computed(() => props.value || Dayjs.getDayjsTime()),
-  disabledProps: computed(() => (props.disabledTime && props.disabledTime(state.current)) || {}),
+  disabledProps: computed(() => (props.disabledTime && props.disabledTime(props.side)) || {}),
 });
+
+/**
+ * 取某列的禁用项
+ *
+ * 既支持直接给数组（整列全禁），也支持 antd 语义的 `(hour[, minute]) => 数组`
+ * （落到边界那一小时/分钟才收紧）—— 时分层的顺序校验必须用后者，
+ * 否则「起端 15:45」会把止端 16:00~16:59 的合法分钟一起误禁。
+ */
+const resolveDisabled = (list, ...args) =>
+  typeof list === 'function' ? list(...args) || [] : list || [];
 
 const methods = {
   /** 生成某列的候选项 */
@@ -81,10 +96,10 @@ const columns = computed(() => {
     const currentValue = current[type]();
     const disabledList =
       type === 'hour'
-        ? disabledProps.disabledHours
+        ? resolveDisabled(disabledProps.disabledHours)
         : type === 'minute'
-        ? disabledProps.disabledMinutes
-        : disabledProps.disabledSeconds;
+        ? resolveDisabled(disabledProps.disabledMinutes, current.hour())
+        : resolveDisabled(disabledProps.disabledSeconds, current.hour(), current.minute());
     return {
       type,
       list: methods.buildList(type, currentValue, disabledList),

@@ -38,6 +38,7 @@
       <DateTimeColumns
         :format="timeFormat"
         :value="timeValue"
+        :side="state.sideIndex"
         :disabled-time="disabledTime"
         @select="methods.onTimeSelect"
       />
@@ -110,8 +111,9 @@ const props = defineProps({
     type: Function,
     default: undefined,
   },
+  /** 时间列禁用工厂：(side) => { disabledHours, disabledMinutes(hour), disabledSeconds(hour, minute) } */
   disabledTime: {
-    type: Object,
+    type: Function,
     default: undefined,
   },
   /** 是否展示时间（决定底部是否出现视图切换格） */
@@ -164,6 +166,8 @@ const pickerLocale = useAntPickerLocale();
 
 const state = reactive({
   locale: pickerLocale,
+  /** 本侧在范围值里的下标：left = 0（起始）/ right = 1（结束） */
+  sideIndex: computed(() => (props.position === 'left' ? 0 : 1)),
   /**
    * 本侧受控值 → 喂给 PickerPanel 的 `value`
    *
